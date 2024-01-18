@@ -1,0 +1,57 @@
+name: onboarding
+on:
+  workflow_dispatch:
+    inputs:
+      namespace:
+        required: true
+        description: Enter name for the new namespace to create
+
+env:
+  VAULT_ADDR: ${{ vars.VAULT_ADDR }}
+  VAULT_NAMESPACE: ${{ vars.VAULT_NAMESPACE }}
+  TF_VAR_namespace: ${{ github.event.inputs.namespace }}
+
+jobs:
+  provisioner:
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: github-actions
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Retrieve Vault token
+        uses: hashicorp/vault-action@v2.7.4
+        with:
+          exportToken: True
+          url: ${{ env.VAULT_ADDR }}
+          method: jwt
+          namespace: ${{ env.VAULT_NAMESPACE }}
+          path: jwt_github
+          role: github-admin
+
+      - name: Terraform plan
+        run: |
+          echo VAULT_ADDR: $VAULT_ADDR
+          echo VAULT_NAMESPACE: $VAULT_NAMESPACE
+          terraform init
+          terraform plan
+
+      - name: Terraform apply
+        run: |
+          echo VAULT_ADDR: $VAULT_ADDR
+          echo VAULT_NAMESPACE: $VAULT_NAMESPACE
+          terraform init
+          terraform apply -auto-approve
+
+      - name: Revoke Vault token
+        # This step always runs at the end regardless of the previous steps result
+        if: always()
+        run: |
+          curl -X POST -sv -H "X-Vault-Token: ${{ env.VAULT_TOKEN }}" \
+            ${{ env.VAULT_ADDR }}/v1/auth/token/revoke-self
