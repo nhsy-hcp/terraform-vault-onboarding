@@ -19,3 +19,5 @@
 
 # Terrafaor local tfvars
 terraform.tfvars
+
+scripts/env.sh
