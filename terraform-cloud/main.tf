@@ -1,4 +1,4 @@
-resource "vault_namespace" "this" {
+resource "vault_namespace" "default" {
   for_each = var.namespaces
   path     = each.value.name
   custom_metadata = {
@@ -25,5 +25,5 @@ data "vault_policy_document" "namespace_admin" {
 resource "vault_policy" "namespace_admin" {
   for_each = var.namespaces
   name     = "namespace-admin-${each.value.name}"
-  policy   = data.vault_policy_document.namespace_admin[each.value.name].hcl
+  policy   = data.vault_policy_document.namespace_admin[each.key].hcl
 }

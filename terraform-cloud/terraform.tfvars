@@ -1,4 +1,5 @@
 namespaces = {
-  bar = { name = "bar" }
-  foo = { name = "foo" }
+  bar  = { name = "bar" },
+  foo  = { name = "foo" },
+  zap  = { name = "zap" }
 }
