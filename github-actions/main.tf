@@ -1,4 +1,4 @@
-resource "vault_namespace" "this" {
+resource "vault_namespace" "default" {
   path = var.namespace
   custom_metadata = {
     created-by = "Terraform onboarding provisioner"

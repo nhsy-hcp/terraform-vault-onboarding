@@ -1,26 +1,3 @@
-data "vault_policy_document" "self_token_admin" {
-  # Allow tokens to query themselves
-  rule {
-    path         = "auth/token/lookup-self"
-    capabilities = ["read"]
-  }
-  # Allow tokens to renew themselves
-  rule {
-    path         = "auth/token/renew-self"
-    capabilities = ["update"]
-  }
-  # Allow tokens to revoke themselves
-  rule {
-    path         = "auth/token/revoke-self"
-    capabilities = ["update"]
-  }
-}
-
-resource "vault_policy" "self_token_admin" {
-  name   = "self-token-admin"
-  policy = data.vault_policy_document.self_token_admin.hcl
-}
-
 data "vault_policy_document" "github_admin" {
   rule {
     path         = "sys/namespaces"
@@ -80,7 +57,7 @@ resource "vault_jwt_auth_backend_role" "github_admin" {
   }
   role_type      = "jwt"
   role_name      = "github-admin"
-  token_policies = [vault_policy.github_admin.name]
+  token_policies = ["default", vault_policy.github_admin.name]
   #  token_ttl      = 60 * 5
   user_claim = "workflow"
 }
