@@ -66,3 +66,30 @@ variable "vault_role" {
   description = "Vault role name"
   default     = "tfc-admin"
 }
+
+variable "okta_org_url" {
+  type        = string
+  description = "Okta organization URL"
+}
+
+variable "okta_auth_path" {
+  type    = string
+  default = "oidc"
+}
+variable "okta_users" {
+  type = map(object({
+    first_name = string
+    last_name  = string
+    password   = string
+    groups     = list(string)
+  }))
+  default = {}
+}
+
+variable "okta_groups" {
+  type = list(string)
+  default = [
+    "vault-admin",
+    "vault-user"
+  ]
+}

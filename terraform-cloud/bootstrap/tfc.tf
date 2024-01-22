@@ -24,7 +24,7 @@ resource "tfe_workspace" "default" {
   name         = var.tfc_workspace
   organization = var.tfc_organization
 
-  auto_apply          = false
+  auto_apply          = true
   description         = "Terraform Cloud and Vault onboarding demo"
   project_id          = data.tfe_project.default.id
   speculative_enabled = true
