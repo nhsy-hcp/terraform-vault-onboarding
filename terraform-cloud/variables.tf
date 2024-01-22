@@ -1,6 +1,6 @@
 variable "namespaces" {
   type = map(object({
-    name = string
+    description = string
   }))
   default = {}
 }
