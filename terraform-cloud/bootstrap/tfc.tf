@@ -36,15 +36,15 @@ resource "tfe_workspace" "default" {
     "demo",
     "vault"
   ]
-  terraform_version = "1.7.5"
+  terraform_version = "~> 1.7.0"
   trigger_patterns  = ["terraform-cloud/**"]
 
-  vcs_repo {
-    branch     = "main"
-    identifier = format("%s/%s", var.github_organization, var.github_repository)
-    #      oauth_token_id = tfe_oauth_client.default.oauth_token_id
-    oauth_token_id = data.tfe_oauth_client.default.oauth_token_id
-  }
+  #  vcs_repo {
+  #    branch     = "main"
+  #    identifier = format("%s/%s", var.github_organization, var.github_repository)
+  #    #      oauth_token_id = tfe_oauth_client.default.oauth_token_id
+  #    oauth_token_id = data.tfe_oauth_client.default.oauth_token_id
+  #  }
   working_directory = "terraform-cloud"
 }
 
@@ -95,6 +95,7 @@ resource "tfe_variable" "tfc_vault_auth_path" {
 }
 
 resource "tfe_workspace_settings" "agent_pool" {
+  count          = var.enable_tfc_agent_pool ? 1 : 0
   workspace_id   = tfe_workspace.default.id
   agent_pool_id  = data.tfe_agent_pool.default.id
   execution_mode = "agent"

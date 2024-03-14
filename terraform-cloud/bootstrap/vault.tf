@@ -17,6 +17,11 @@ data "vault_policy_document" "github_admin" {
     path         = "sys/policies/*"
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
   }
+  # Create and manage quota policies
+  rule {
+    path         = "sys/quotas/*"
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+  }
 }
 
 resource "vault_policy" "tfc_admin" {

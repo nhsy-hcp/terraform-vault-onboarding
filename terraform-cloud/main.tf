@@ -25,6 +25,30 @@ data "vault_policy_document" "namespace_admin" {
 
 resource "vault_policy" "namespace_admin" {
   for_each = var.namespaces
-  name     = "namespace-admin-${each.key}"
+  name     = "ns-admin-${each.key}"
   policy   = data.vault_policy_document.namespace_admin[each.key].hcl
+}
+
+resource "vault_quota_rate_limit" "global" {
+  name = "global"
+  path = ""
+  #  block_interval = 0
+  interval = 30
+  rate     = 10000
+}
+
+resource "vault_quota_rate_limit" "namespace" {
+  for_each = var.namespaces
+  name     = each.key
+  path     = "${each.key}/"
+  #  block_interval = 0
+  interval = 30
+  rate     = lookup(each.value, "quota_rate_limit", 1000)
+}
+
+resource "vault_quota_lease_count" "namespace" {
+  for_each   = var.namespaces
+  name       = each.key
+  path       = "${each.key}/"
+  max_leases = lookup(each.value, "quota_lease_count", 10000)
 }

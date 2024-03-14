@@ -93,3 +93,8 @@ variable "okta_groups" {
     "vault-user"
   ]
 }
+
+variable "enable_tfc_agent_pool" {
+  type    = bool
+  default = false
+}
