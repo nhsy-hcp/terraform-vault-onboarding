@@ -20,6 +20,10 @@ data "tfe_project" "default" {
   organization = var.tfc_organization
 }
 
+data "tfe_agent_pool" "default" {
+  organization = var.tfc_organization
+  name         = "localhost"
+}
 resource "tfe_workspace" "default" {
   name         = var.tfc_workspace
   organization = var.tfc_organization
@@ -32,7 +36,7 @@ resource "tfe_workspace" "default" {
     "demo",
     "vault"
   ]
-  terraform_version = "1.7.0"
+  terraform_version = "1.7.5"
   trigger_patterns  = ["terraform-cloud/**"]
 
   vcs_repo {
@@ -88,4 +92,10 @@ resource "tfe_variable" "tfc_vault_auth_path" {
   value           = var.vault_auth_path
   category        = "env"
   variable_set_id = tfe_variable_set.default.id
+}
+
+resource "tfe_workspace_settings" "agent_pool" {
+  workspace_id   = tfe_workspace.default.id
+  agent_pool_id  = data.tfe_agent_pool.default.id
+  execution_mode = "agent"
 }

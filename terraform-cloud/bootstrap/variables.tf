@@ -58,7 +58,7 @@ variable "vault_address" {
 variable "vault_namespace" {
   type        = string
   description = "Vault namespace"
-  default     = "admin"
+  default     = "root"
 }
 
 variable "vault_role" {
