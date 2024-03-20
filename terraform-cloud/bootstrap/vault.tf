@@ -1,18 +1,18 @@
 data "vault_policy_document" "tfc_admin" {
-  rule {
-    path         = "sys/namespaces"
-    capabilities = ["list"]
-  }
+  #  rule {
+  #    path         = "sys/namespaces"
+  #    capabilities = ["list"]
+  #  }
   rule {
     path         = "sys/namespaces/*"
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
   }
-  # List existing policies
-  rule {
-    path         = "sys/policies"
-    capabilities = ["read", "list"]
-  }
-  # Create and manage ACL policies
+  #  # List existing policies
+  #  rule {
+  #    path         = "sys/policies"
+  #    capabilities = ["read", "list"]
+  #  }
+  #  # Create and manage ACL policies
   rule {
     path         = "sys/policies/*"
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
