@@ -1,4 +1,4 @@
-data "vault_policy_document" "github_admin" {
+data "vault_policy_document" "tfc_admin" {
   rule {
     path         = "sys/namespaces"
     capabilities = ["list"]
@@ -22,11 +22,22 @@ data "vault_policy_document" "github_admin" {
     path         = "sys/quotas/*"
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
   }
+  # Read auth mounts
+  rule {
+    path         = "sys/auth"
+    capabilities = ["read"]
+  }
+
+  #  rule {
+  #    path         = "sys/auth/*"
+  #    capabilities = ["read"]
+  #  }
+
 }
 
 resource "vault_policy" "tfc_admin" {
   name   = "tfc-admin"
-  policy = data.vault_policy_document.github_admin.hcl
+  policy = data.vault_policy_document.tfc_admin.hcl
 }
 
 resource "vault_jwt_auth_backend" "tfc" {

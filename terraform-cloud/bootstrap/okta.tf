@@ -3,6 +3,11 @@ locals {
   vault_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-admin")]
   vault_user_member_ids  = [for user in okta_user.default : user.id]
 
+  #TODO: Refactor to get the member ids for the group memberships
+  vault_app1_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-app1-admin")]
+  vault_app2_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-app2-admin")]
+  vault_app3_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-app3-admin")]
+
   okta_audiences = concat(
     tolist(okta_auth_server.default.audiences),
     [okta_app_oauth.default.client_id]
@@ -39,6 +44,21 @@ resource "okta_group_memberships" "vault_admin" {
 resource "okta_group_memberships" "vault_user" {
   group_id = okta_group.default["vault-user"].id
   users    = local.vault_user_member_ids
+}
+
+resource "okta_group_memberships" "vault_app1_admin" {
+  group_id = okta_group.default["vault-app1-admin"].id
+  users    = local.vault_app1_admin_member_ids
+}
+
+resource "okta_group_memberships" "vault_app2_admin" {
+  group_id = okta_group.default["vault-app2-admin"].id
+  users    = local.vault_app2_admin_member_ids
+}
+
+resource "okta_group_memberships" "vault_app3_admin" {
+  group_id = okta_group.default["vault-app3-admin"].id
+  users    = local.vault_app3_admin_member_ids
 }
 
 resource "okta_auth_server" "default" {
