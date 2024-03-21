@@ -14,13 +14,19 @@ locals {
   )
 
   # Fetch okta group ids
-  okta_group_ids = [for group in okta_group.default : group.id]
+  #  okta_group_ids = [for group in okta_group.default : group.id]
 
 }
 
-# Create okta groups
-resource "okta_group" "default" {
-  for_each = toset(var.okta_groups)
+# Create okta mgmt groups
+resource "okta_group" "mgmt" {
+  for_each = toset(var.okta_mgmt_groups)
+  name     = each.value
+}
+
+# Create okta namespace groups
+resource "okta_group" "namespace" {
+  for_each = toset(var.okta_namespace_groups)
   name     = each.value
 }
 
@@ -36,28 +42,29 @@ resource "okta_user" "default" {
 
 # Create group memberships
 resource "okta_group_memberships" "vault_admin" {
-  group_id = okta_group.default["vault-admin"].id
+  group_id = okta_group.mgmt["vault-admin"].id
   users    = local.vault_admin_member_ids
 }
 
 # Add each user to vault-user group for okta app assignment
 resource "okta_group_memberships" "vault_user" {
-  group_id = okta_group.default["vault-user"].id
+  group_id = okta_group.mgmt["vault-user"].id
   users    = local.vault_user_member_ids
 }
 
+
 resource "okta_group_memberships" "vault_app1_admin" {
-  group_id = okta_group.default["vault-app1-admin"].id
+  group_id = okta_group.namespace["vault-app1-admin"].id
   users    = local.vault_app1_admin_member_ids
 }
 
 resource "okta_group_memberships" "vault_app2_admin" {
-  group_id = okta_group.default["vault-app2-admin"].id
+  group_id = okta_group.namespace["vault-app2-admin"].id
   users    = local.vault_app2_admin_member_ids
 }
 
 resource "okta_group_memberships" "vault_app3_admin" {
-  group_id = okta_group.default["vault-app3-admin"].id
+  group_id = okta_group.namespace["vault-app3-admin"].id
   users    = local.vault_app3_admin_member_ids
 }
 
@@ -94,7 +101,7 @@ resource "okta_auth_server_policy_rule" "default" {
   auth_server_id  = okta_auth_server.default.id
   policy_id       = okta_auth_server_policy.default.id
   priority        = 1
-  group_whitelist = [okta_group.default["vault-user"].id]
+  group_whitelist = [okta_group.mgmt["vault-user"].id]
   scope_whitelist = ["openid", "profile"]
 
   grant_type_whitelist = [
@@ -126,7 +133,7 @@ resource "okta_app_oauth" "default" {
 # Assign the vault app to the vault-user group
 resource "okta_app_group_assignment" "default" {
   app_id   = okta_app_oauth.default.id
-  group_id = okta_group.default["vault-user"].id
+  group_id = okta_group.mgmt["vault-user"].id
 }
 
 resource "okta_app_oauth_api_scope" "default" {
@@ -148,25 +155,25 @@ resource "vault_policy" "okta_vault_admin" {
 }
 
 resource "vault_identity_group" "vault_user" {
-  name              = okta_group.default["vault-user"].name
+  name              = okta_group.mgmt["vault-user"].name
   type              = "external"
   external_policies = true
 }
 
 resource "vault_identity_group_alias" "vault_user" {
-  name           = okta_group.default["vault-user"].name
+  name           = okta_group.mgmt["vault-user"].name
   mount_accessor = vault_jwt_auth_backend.okta.accessor
   canonical_id   = vault_identity_group.vault_user.id
 }
 
 resource "vault_identity_group" "vault_admin" {
-  name              = okta_group.default["vault-admin"].name
+  name              = okta_group.mgmt["vault-admin"].name
   type              = "external"
   external_policies = true
 }
 
 resource "vault_identity_group_alias" "vault_admin" {
-  name           = okta_group.default["vault-admin"].name
+  name           = okta_group.mgmt["vault-admin"].name
   mount_accessor = vault_jwt_auth_backend.okta.accessor
   canonical_id   = vault_identity_group.vault_admin.id
 }
@@ -216,51 +223,3 @@ resource "vault_jwt_auth_backend_role" "okta_group" {
     issuer      = "iss"
   }
 }
-
-#resource "vault_jwt_auth_backend_role" "okta_role" {
-#  for_each       = var.roles
-#  backend        = vault_jwt_auth_backend.okta_oidc.path
-#  role_name      = each.key
-#  token_policies = each.value.token_policies
-#
-#  allowed_redirect_uris = [
-#    "${var.vault_addr}/ui/vault/auth/${vault_jwt_auth_backend.okta_oidc.path}/oidc/callback",
-#
-#    # This is for logging in with the CLI if you want.
-#    "http://localhost:${var.cli_port}/oidc/callback",
-#  ]
-#
-#  user_claim      = "email"
-#  role_type       = "oidc"
-#  bound_audiences = var.okta_bound_audiences
-#  oidc_scopes = [
-#    "openid",
-#    "profile",
-#    "email",
-#  ]
-#  bound_claims = {
-#    groups = join(",", each.value.bound_groups)
-#  }
-#}
-
-#variable "roles" {
-#  type    = map
-#  default = {}
-#
-#  description = <<EOF
-#Map of Vault role names to their bound groups and token policies. Structure looks like this:
-#
-#```
-#roles = {
-#  okta_admin = {
-#    token_policies = ["admin"]
-#    bound_groups = ["vault_admins"]
-#  },
-#  okta_devs  = {
-#    token_policies = ["devs"]
-#    bound_groups = ["vault_devs"]
-#  }
-#}
-#```
-#EOF
-#}

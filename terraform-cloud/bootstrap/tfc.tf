@@ -94,6 +94,14 @@ resource "tfe_variable" "tfc_vault_auth_path" {
   variable_set_id = tfe_variable_set.default.id
 }
 
+resource "tfe_variable" "tfc_okta_api_token" {
+  key             = "OKTA_API_TOKEN"
+  value           = var.okta_api_token
+  category        = "env"
+  sensitive       = true
+  variable_set_id = tfe_variable_set.default.id
+}
+
 resource "tfe_workspace_settings" "agent_pool" {
   count          = var.enable_tfc_agent_pool ? 1 : 0
   workspace_id   = tfe_workspace.default.id

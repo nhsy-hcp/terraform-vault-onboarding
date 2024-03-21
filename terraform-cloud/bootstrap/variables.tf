@@ -76,6 +76,7 @@ variable "okta_auth_path" {
   type    = string
   default = "oidc"
 }
+
 variable "okta_users" {
   type = map(object({
     first_name = string
@@ -86,12 +87,22 @@ variable "okta_users" {
   default = {}
 }
 
-variable "okta_groups" {
+variable "okta_api_token" {
+  type        = string
+  description = "Okta API token"
+}
+
+variable "okta_mgmt_groups" {
   type = list(string)
   default = [
     "vault-admin",
     "vault-user"
   ]
+}
+
+variable "okta_namespace_groups" {
+  type    = list(string)
+  default = []
 }
 
 variable "enable_tfc_agent_pool" {
