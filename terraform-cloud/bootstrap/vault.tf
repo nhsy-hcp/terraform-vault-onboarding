@@ -1,52 +1,62 @@
-data "vault_policy_document" "tfc_admin" {
-  #  rule {
-  #    path         = "sys/namespaces"
-  #    capabilities = ["list"]
-  #  }
-  rule {
-    path         = "sys/namespaces/*"
-    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-  }
-  #  # List existing policies
-  #  rule {
-  #    path         = "sys/policies"
-  #    capabilities = ["read", "list"]
-  #  }
-  #  # Create and manage ACL policies
-  rule {
-    path         = "sys/policies/*"
-    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-  }
-  # Create and manage quota policies
-  rule {
-    path         = "sys/quotas/*"
-    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-  }
-  # Read auth mounts
-  rule {
-    path         = "sys/auth"
-    capabilities = ["read"]
-  }
-
-
-  #  rule {
-  #    path         = "sys/auth/*"
-  #    capabilities = ["read"]
-  #  }
-
-  # Manage tokens
-  rule {
-    path         = "auth/token/*"
-    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-  }
-}
+#data "vault_policy_document" "tfc_admin" {
+#  #  rule {
+#  #    path         = "sys/namespaces"
+#  #    capabilities = ["list"]
+#  #  }
+#  rule {
+#    path         = "sys/namespaces/*"
+#    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+#  }
+#  #  # List existing policies
+#  #  rule {
+#  #    path         = "sys/policies"
+#  #    capabilities = ["read", "list"]
+#  #  }
+#  #  # Create and manage ACL policies
+#  rule {
+#    path         = "sys/policies/*"
+#    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+#  }
+#  # Create and manage quota policies
+#  rule {
+#    path         = "sys/quotas/*"
+#    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+#  }
+#  # Read auth mounts
+#  rule {
+#    path         = "sys/mounts/auth"
+#    capabilities = ["read"]
+#  }
+#  rule {
+#    path         = "sys/mounts/auth/*"
+#    capabilities = ["read"]
+#  }
+#
+#  # Manage tokens
+#  rule {
+#    path         = "auth/token/*"
+#    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+#  }
+#
+#  # Create and manage identities
+#  rule {
+#    path         = "identity/*"
+#    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+#  }
+#  # List namespace identities
+#  rule {
+#    path         = "identity"
+#    capabilities = ["list"]
+#  }
+#}
 
 resource "vault_policy" "tfc_admin" {
-  name   = "tfc-admin"
-  policy = data.vault_policy_document.tfc_admin.hcl
+  name = "tfc-admin"
+  #  policy = data.vault_policy_document.tfc_admin.hcl
+  policy = file("${path.module}/templates/tfc_admin_policy.hcl")
 }
 
-data "vault_policy_document" "tfc_namespace_rbac" {
+data "vault_policy_document" "tfc_namespace" {
   # Create and manage namespace ACL policies
   rule {
     path         = "+/sys/policies/acl/*"
@@ -57,25 +67,25 @@ data "vault_policy_document" "tfc_namespace_rbac" {
     path         = "+/sys/policies/acl"
     capabilities = ["list"]
   }
-  # Create and manage namespace identities
-  rule {
-    path         = "+/identity/group/*"
-    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-  }
-  # List namespace identities
-  rule {
-    path         = "+/identity/group"
-    capabilities = ["list"]
-  }
+  #  # Create and manage namespace group identities
+  #  rule {
+  #    path         = "+/identity/*"
+  #    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+  #  }
+  #  # List namespace identities
+  #  rule {
+  #    path         = "+/identity"
+  #    capabilities = ["list"]
+  #  }
   rule {
     path         = "+/auth/token/*"
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
   }
 }
 
-resource "vault_policy" "tfc_namespace_rbac" {
-  name   = "tfc_namespace_rbac"
-  policy = data.vault_policy_document.tfc_namespace_rbac.hcl
+resource "vault_policy" "tfc_namespace" {
+  name   = "tfc-namespace"
+  policy = data.vault_policy_document.tfc_namespace.hcl
 }
 
 resource "vault_jwt_auth_backend" "tfc" {
@@ -103,7 +113,11 @@ resource "vault_jwt_auth_backend_role" "tfc_admin" {
   bound_claims_type = "glob"
   role_type         = "jwt"
   role_name         = var.vault_role
-  token_policies    = ["default", vault_policy.tfc_admin.name, vault_policy.tfc_namespace_rbac.name]
-  token_ttl         = 60 * 5
-  user_claim        = "terraform_full_workspace"
+  token_policies = [
+    "default",
+    vault_policy.tfc_admin.name,
+    #    vault_policy.tfc_namespace.name
+  ]
+  token_ttl  = 60 * 5
+  user_claim = "terraform_full_workspace"
 }
