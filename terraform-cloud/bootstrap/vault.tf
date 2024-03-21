@@ -28,16 +28,54 @@ data "vault_policy_document" "tfc_admin" {
     capabilities = ["read"]
   }
 
+
   #  rule {
   #    path         = "sys/auth/*"
   #    capabilities = ["read"]
   #  }
 
+  # Manage tokens
+  rule {
+    path         = "auth/token/*"
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+  }
 }
 
 resource "vault_policy" "tfc_admin" {
   name   = "tfc-admin"
   policy = data.vault_policy_document.tfc_admin.hcl
+}
+
+data "vault_policy_document" "tfc_namespace_rbac" {
+  # Create and manage namespace ACL policies
+  rule {
+    path         = "+/sys/policies/acl/*"
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+  }
+  # List namespace ACL policies
+  rule {
+    path         = "+/sys/policies/acl"
+    capabilities = ["list"]
+  }
+  # Create and manage namespace identities
+  rule {
+    path         = "+/identity/group/*"
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+  }
+  # List namespace identities
+  rule {
+    path         = "+/identity/group"
+    capabilities = ["list"]
+  }
+  rule {
+    path         = "+/auth/token/*"
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+  }
+}
+
+resource "vault_policy" "tfc_namespace_rbac" {
+  name   = "tfc_namespace_rbac"
+  policy = data.vault_policy_document.tfc_namespace_rbac.hcl
 }
 
 resource "vault_jwt_auth_backend" "tfc" {
@@ -65,7 +103,7 @@ resource "vault_jwt_auth_backend_role" "tfc_admin" {
   bound_claims_type = "glob"
   role_type         = "jwt"
   role_name         = var.vault_role
-  token_policies    = ["default", vault_policy.tfc_admin.name]
+  token_policies    = ["default", vault_policy.tfc_admin.name, vault_policy.tfc_namespace_rbac.name]
   token_ttl         = 60 * 5
   user_claim        = "terraform_full_workspace"
 }
