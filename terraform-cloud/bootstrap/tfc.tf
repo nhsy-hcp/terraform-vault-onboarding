@@ -80,13 +80,6 @@ resource "tfe_variable" "tfc_vault_run_role" {
   variable_set_id = tfe_variable_set.default.id
 }
 
-resource "tfe_variable" "tfc_vault_namespace" {
-  key             = "TFC_VAULT_NAMESPACE"
-  value           = var.vault_namespace
-  category        = "env"
-  variable_set_id = tfe_variable_set.default.id
-}
-
 resource "tfe_variable" "tfc_vault_auth_path" {
   key             = "TFC_VAULT_AUTH_PATH"
   value           = var.vault_auth_path

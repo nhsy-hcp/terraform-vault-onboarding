@@ -39,22 +39,13 @@ resource "vault_identity_group_alias" "namespace_admin_external" {
   canonical_id   = vault_identity_group.namespace_admin_external.id
 }
 
-
-provider "vault" {
-  namespace = var.namespace
-  alias     = "namespace"
-}
-
 resource "vault_policy" "namespace_admin" {
-  #    provider = vault.namespace
-  namespace = var.namespace
-  #  namespace = vault_namespace.default.path
-  name   = "namespace-admin"
-  policy = file("${path.module}/templates/namespace_admin_policy.hcl")
+  namespace = vault_namespace.default.path
+  name      = "namespace-admin"
+  policy    = file("${path.module}/templates/namespace_admin_policy.hcl")
 }
 
 resource "vault_identity_group" "namespace_admin_internal" {
-  #  provider = vault.namespace
   namespace        = vault_namespace.default.path
   name             = data.okta_group.namespace_admin.name
   member_group_ids = [vault_identity_group.namespace_admin_external.id]

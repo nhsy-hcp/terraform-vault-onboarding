@@ -55,12 +55,6 @@ variable "vault_address" {
   description = "Vault HTTPS endpoint"
 }
 
-variable "vault_namespace" {
-  type        = string
-  description = "Vault namespace"
-  default     = "root"
-}
-
 variable "vault_role" {
   type        = string
   description = "Vault role name"
