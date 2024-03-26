@@ -24,11 +24,11 @@ module "app1" {
   quota_rate_limit  = 102
 }
 
-module "app2" {
-  source            = "./modules/namespace"
-  namespace         = "app2"
-  description       = "app2 namespace"
-  admin_group_name  = "vault-app2-admin"
-  quota_lease_count = 201
-  quota_rate_limit  = 202
-}
+#module "app2" {
+#  source            = "./modules/namespace"
+#  namespace         = "app2"
+#  description       = "app2 namespace"
+#  admin_group_name  = "vault-app2-admin"
+#  quota_lease_count = 201
+#  quota_rate_limit  = 202
+#}
