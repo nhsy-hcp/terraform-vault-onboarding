@@ -21,3 +21,4 @@
 terraform.tfvars
 
 scripts/env.sh
+scripts/local-env.sh
