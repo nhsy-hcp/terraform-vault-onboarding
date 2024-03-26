@@ -1,30 +1,34 @@
-resource "vault_namespace" "default" {
-  for_each = var.namespaces
-  path     = each.key
-  custom_metadata = {
-    created-by  = "Terraform onboarding provisioner"
-    description = each.value.description
-  }
+#module "namespaces" {
+#  source            = "./modules/namespace"
+#  for_each          = var.namespaces
+#  namespace         = each.key
+#  description       = each.value.description
+#  admin_group_name  = lookup(each.value, "admin_group_name")
+#  quota_rate_limit  = lookup(each.value, "quota_rate_limit")
+#  quota_lease_count = lookup(each.value, "quota_lease_count")
+#}
+
+resource "vault_quota_rate_limit" "global" {
+  name     = "global"
+  path     = ""
+  interval = 30
+  rate     = 10000
 }
 
-data "vault_policy_document" "namespace_admin" {
-  for_each = var.namespaces
-  rule {
-    path         = "sys/namespaces"
-    capabilities = ["list"]
-  }
-  rule {
-    path         = "sys/namespaces/${each.key}"
-    capabilities = ["list", "read"]
-  }
-  rule {
-    path         = "sys/namespaces/${each.key}/*"
-    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-  }
+module "app1" {
+  source            = "./modules/namespace"
+  namespace         = "app1"
+  description       = "app1 namespace"
+  admin_group_name  = "vault-app1-admin"
+  quota_lease_count = 101
+  quota_rate_limit  = 102
 }
 
-resource "vault_policy" "namespace_admin" {
-  for_each = var.namespaces
-  name     = "namespace-admin-${each.key}"
-  policy   = data.vault_policy_document.namespace_admin[each.key].hcl
-}
+#module "app2" {
+#  source            = "./modules/namespace"
+#  namespace         = "app2"
+#  description       = "app2 namespace"
+#  admin_group_name  = "vault-app2-admin"
+#  quota_lease_count = 201
+#  quota_rate_limit  = 202
+#}

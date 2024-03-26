@@ -1,27 +1,7 @@
-data "vault_policy_document" "github_admin" {
-  rule {
-    path         = "sys/namespaces"
-    capabilities = ["list"]
-  }
-  rule {
-    path         = "sys/namespaces/*"
-    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-  }
-  # List existing policies
-  rule {
-    path         = "sys/policies"
-    capabilities = ["read", "list"]
-  }
-  # Create and manage ACL policies
-  rule {
-    path         = "sys/policies/*"
-    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-  }
-}
-
 resource "vault_policy" "tfc_admin" {
-  name   = "tfc-admin"
-  policy = data.vault_policy_document.github_admin.hcl
+  name = "tfc-admin"
+  #  policy = data.vault_policy_document.tfc_admin.hcl
+  policy = file("${path.module}/templates/tfc_admin_policy.hcl")
 }
 
 resource "vault_jwt_auth_backend" "tfc" {
@@ -49,7 +29,10 @@ resource "vault_jwt_auth_backend_role" "tfc_admin" {
   bound_claims_type = "glob"
   role_type         = "jwt"
   role_name         = var.vault_role
-  token_policies    = ["default", vault_policy.tfc_admin.name]
-  token_ttl         = 60 * 5
-  user_claim        = "terraform_full_workspace"
+  token_policies = [
+    "default",
+    vault_policy.tfc_admin.name,
+  ]
+  token_ttl  = 60 * 5
+  user_claim = "terraform_full_workspace"
 }

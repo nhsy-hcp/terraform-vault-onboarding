@@ -3,5 +3,5 @@ provider "okta" {
 }
 
 provider "vault" {
-  #  skip_child_token = true
+  address = var.vault_address
 }

@@ -20,11 +20,15 @@ data "tfe_project" "default" {
   organization = var.tfc_organization
 }
 
+data "tfe_agent_pool" "default" {
+  organization = var.tfc_organization
+  name         = "localhost"
+}
 resource "tfe_workspace" "default" {
   name         = var.tfc_workspace
   organization = var.tfc_organization
 
-  auto_apply          = false
+  auto_apply          = true
   description         = "Terraform Cloud and Vault onboarding demo"
   project_id          = data.tfe_project.default.id
   speculative_enabled = true
@@ -32,7 +36,7 @@ resource "tfe_workspace" "default" {
     "demo",
     "vault"
   ]
-  terraform_version = "1.7.0"
+  terraform_version = "~> 1.7.0"
   trigger_patterns  = ["terraform-cloud/**"]
 
   vcs_repo {
@@ -76,16 +80,24 @@ resource "tfe_variable" "tfc_vault_run_role" {
   variable_set_id = tfe_variable_set.default.id
 }
 
-resource "tfe_variable" "tfc_vault_namespace" {
-  key             = "TFC_VAULT_NAMESPACE"
-  value           = var.vault_namespace
-  category        = "env"
-  variable_set_id = tfe_variable_set.default.id
-}
-
 resource "tfe_variable" "tfc_vault_auth_path" {
   key             = "TFC_VAULT_AUTH_PATH"
   value           = var.vault_auth_path
   category        = "env"
   variable_set_id = tfe_variable_set.default.id
+}
+
+resource "tfe_variable" "tfc_okta_api_token" {
+  key             = "OKTA_API_TOKEN"
+  value           = var.okta_api_token
+  category        = "env"
+  sensitive       = true
+  variable_set_id = tfe_variable_set.default.id
+}
+
+resource "tfe_workspace_settings" "agent_pool" {
+  count          = var.enable_tfc_agent_pool ? 1 : 0
+  workspace_id   = tfe_workspace.default.id
+  agent_pool_id  = data.tfe_agent_pool.default.id
+  execution_mode = "agent"
 }
