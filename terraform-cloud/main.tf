@@ -32,3 +32,12 @@ module "app2" {
   quota_lease_count = 201
   quota_rate_limit  = 202
 }
+
+module "app3" {
+  source            = "./modules/namespace"
+  namespace         = "app3"
+  description       = "app3 namespace"
+  admin_group_name  = "vault-app3-admin"
+  quota_lease_count = 301
+  quota_rate_limit  = 302
+}
