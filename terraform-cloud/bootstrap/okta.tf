@@ -118,7 +118,7 @@ resource "okta_app_oauth" "default" {
   response_types = ["id_token", "code"]
 
   redirect_uris = [
-    format("%s/ui/vault/auth/${var.okta_auth_path}/oidc/callback", var.vault_address),
+    "${var.vault_address}/ui/vault/auth/${var.okta_auth_path}/oidc/callback",
     "http://localhost:8250/oidc/callback"
   ]
 

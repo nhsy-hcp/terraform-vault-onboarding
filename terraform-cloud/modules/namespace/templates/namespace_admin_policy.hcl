@@ -48,3 +48,8 @@ path "identity/*" {
 path "identity" {
     capabilities = ["list"]
 }
+
+# List identities
+path "secret/*" {
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
