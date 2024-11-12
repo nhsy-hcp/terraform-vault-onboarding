@@ -15,29 +15,29 @@ resource "vault_quota_rate_limit" "global" {
   rate     = 10000
 }
 
-module "app1" {
+module "dev" {
   source            = "./modules/namespace"
-  namespace         = "app1"
-  description       = "app1 namespace"
-  admin_group_name  = "vault-app1-admin"
+  namespace         = "dev"
+  description       = "dev namespace"
+  admin_group_name  = "vault-dev-admin"
   quota_lease_count = 101
   quota_rate_limit  = 102
 }
 
-module "app2" {
+module "tst" {
   source            = "./modules/namespace"
-  namespace         = "app2"
-  description       = "app2 namespace"
-  admin_group_name  = "vault-app2-admin"
+  namespace         = "tst"
+  description       = "tst namespace"
+  admin_group_name  = "vault-tst-admin"
   quota_lease_count = 201
   quota_rate_limit  = 202
 }
 
-module "app3" {
+module "prd" {
   source            = "./modules/namespace"
-  namespace         = "app3"
-  description       = "app3 namespace"
-  admin_group_name  = "vault-app3-admin"
+  namespace         = "prd"
+  description       = "prd namespace"
+  admin_group_name  = "vault-prd-admin"
   quota_lease_count = 301
   quota_rate_limit  = 302
 }
