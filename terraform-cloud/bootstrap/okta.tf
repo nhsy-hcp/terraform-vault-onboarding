@@ -4,9 +4,9 @@ locals {
   vault_user_member_ids  = [for user in okta_user.default : user.id]
 
   #TODO: Refactor to get the member ids for the group memberships
-  vault_app1_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-app1-admin")]
-  vault_app2_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-app2-admin")]
-  vault_app3_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-app3-admin")]
+  vault_dev_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-dev-admin")]
+  vault_tst_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-tst-admin")]
+  vault_prd_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-prd-admin")]
 
   okta_audiences = concat(
     tolist(okta_auth_server.default.audiences),
@@ -52,20 +52,19 @@ resource "okta_group_memberships" "vault_user" {
   users    = local.vault_user_member_ids
 }
 
-
-resource "okta_group_memberships" "vault_app1_admin" {
-  group_id = okta_group.namespace["vault-app1-admin"].id
-  users    = local.vault_app1_admin_member_ids
+resource "okta_group_memberships" "vault_dev_admin" {
+  group_id = okta_group.namespace["vault-dev-admin"].id
+  users    = local.vault_dev_admin_member_ids
 }
 
-resource "okta_group_memberships" "vault_app2_admin" {
-  group_id = okta_group.namespace["vault-app2-admin"].id
-  users    = local.vault_app2_admin_member_ids
+resource "okta_group_memberships" "vault_tst_admin" {
+  group_id = okta_group.namespace["vault-tst-admin"].id
+  users    = local.vault_tst_admin_member_ids
 }
 
-resource "okta_group_memberships" "vault_app3_admin" {
-  group_id = okta_group.namespace["vault-app3-admin"].id
-  users    = local.vault_app3_admin_member_ids
+resource "okta_group_memberships" "vault_prd_admin" {
+  group_id = okta_group.namespace["vault-prd-admin"].id
+  users    = local.vault_prd_admin_member_ids
 }
 
 resource "okta_auth_server" "default" {
@@ -142,20 +141,13 @@ resource "okta_app_oauth_api_scope" "default" {
   scopes = ["okta.groups.read", "okta.users.read.self"]
 }
 
-data "vault_policy_document" "okta_vault_admin" {
-  rule {
-    path         = "*"
-    capabilities = ["sudo", "read", "create", "update", "delete", "list", "patch"]
-  }
-}
-
 resource "vault_policy" "okta_vault_admin" {
-  name   = "okta-vault-admin"
-  policy = data.vault_policy_document.okta_vault_admin.hcl
+  name = "okta-vault-admin"
+  policy = file("./${path.module}/templates/okta_vault_admin_policy.hcl")
 }
 
 resource "vault_identity_group" "vault_user" {
-  name              = okta_group.mgmt["vault-user"].name
+  name              = "${okta_group.mgmt["vault-user"].name}-external"
   type              = "external"
   external_policies = true
 }
@@ -167,7 +159,7 @@ resource "vault_identity_group_alias" "vault_user" {
 }
 
 resource "vault_identity_group" "vault_admin" {
-  name              = okta_group.mgmt["vault-admin"].name
+  name              = "${okta_group.mgmt["vault-admin"].name}-external"
   type              = "external"
   external_policies = true
 }

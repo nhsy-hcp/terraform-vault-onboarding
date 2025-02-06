@@ -52,7 +52,12 @@ variable "vault_auth_path" {
 
 variable "vault_address" {
   type        = string
-  description = "Vault HTTPS endpoint"
+  description = "Vault API endpoint"
+}
+
+variable "vault_address_tfc_agent" {
+  type        = string
+  description = "Vault API endpoint for TFC agent"
 }
 
 variable "vault_role" {

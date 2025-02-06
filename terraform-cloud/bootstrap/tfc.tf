@@ -36,7 +36,7 @@ resource "tfe_workspace" "default" {
     "demo",
     "vault"
   ]
-  terraform_version = "~> 1.7.0"
+  terraform_version = "~> 1.10.0"
   trigger_patterns  = ["terraform-cloud/**"]
 
   vcs_repo {
@@ -68,7 +68,7 @@ resource "tfe_variable" "enable_vault_provider_auth" {
 
 resource "tfe_variable" "vault_address" {
   key             = "TFC_VAULT_ADDR"
-  value           = var.vault_address
+  value           = var.vault_address_tfc_agent
   category        = "env"
   variable_set_id = tfe_variable_set.default.id
 }
