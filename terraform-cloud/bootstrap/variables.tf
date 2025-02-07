@@ -23,7 +23,7 @@ variable "tfc_project" {
 variable "tfc_workspace" {
   type        = string
   description = "Name of the TFC worksapce."
-  default     = "terraform-vault-onboarding"
+  default     = "terraform-vault-onboarding-root-namespace"
 }
 
 variable "default_lease_ttl" {

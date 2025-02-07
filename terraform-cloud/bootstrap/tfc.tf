@@ -37,7 +37,7 @@ resource "tfe_workspace" "default" {
     "vault"
   ]
   terraform_version = "~> 1.10.0"
-  trigger_patterns  = ["terraform-cloud/**"]
+  trigger_patterns  = ["terraform-cloud/root-namespace/**"]
 
   vcs_repo {
     branch     = "main"
@@ -45,7 +45,7 @@ resource "tfe_workspace" "default" {
     #      oauth_token_id = tfe_oauth_client.default.oauth_token_id
     oauth_token_id = data.tfe_oauth_client.default.oauth_token_id
   }
-  working_directory = "terraform-cloud"
+  working_directory = "./terraform-cloud/root-namespace"
 }
 
 resource "tfe_variable_set" "default" {
@@ -88,11 +88,18 @@ resource "tfe_variable" "tfc_vault_auth_path" {
 }
 
 resource "tfe_variable" "tfc_okta_api_token" {
-  key             = "OKTA_API_TOKEN"
-  value           = var.okta_api_token
-  category        = "env"
-  sensitive       = true
-  variable_set_id = tfe_variable_set.default.id
+  key          = "OKTA_API_TOKEN"
+  value        = var.okta_api_token
+  category     = "env"
+  sensitive    = true
+  workspace_id = tfe_workspace.default.id
+}
+
+resource "tfe_variable" "tfc_okta_org_url" {
+  key          = "okta_org_url"
+  value        = var.okta_org_url
+  category     = "terraform"
+  workspace_id = tfe_workspace.default.id
 }
 
 resource "tfe_workspace_settings" "agent_pool" {
