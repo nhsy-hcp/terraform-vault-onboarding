@@ -12,7 +12,7 @@ resource "vault_quota_rate_limit" "global" {
   name     = "global"
   path     = ""
   interval = 30
-  rate     = 10000
+  rate     = 100000
 }
 
 module "dev" {

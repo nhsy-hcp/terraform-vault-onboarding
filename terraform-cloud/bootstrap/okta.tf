@@ -142,7 +142,7 @@ resource "okta_app_oauth_api_scope" "default" {
 }
 
 resource "vault_policy" "okta_vault_admin" {
-  name = "okta-vault-admin"
+  name   = "okta-vault-admin"
   policy = file("./${path.module}/templates/okta_vault_admin_policy.hcl")
 }
 
