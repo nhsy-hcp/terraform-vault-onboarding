@@ -95,9 +95,9 @@ resource "tfe_variable" "tfc_okta_api_token" {
   workspace_id = tfe_workspace.default.id
 }
 
-resource "tfe_variable" "tfc_okta_org_url" {
-  key          = "okta_org_url"
-  value        = var.okta_org_url
+resource "tfe_variable" "tfc_okta_org_name" {
+  key          = "okta_org_name"
+  value        = var.okta_org_name
   category     = "terraform"
   workspace_id = tfe_workspace.default.id
 }

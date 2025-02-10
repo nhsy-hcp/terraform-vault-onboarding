@@ -137,7 +137,7 @@ resource "okta_app_group_assignment" "default" {
 
 resource "okta_app_oauth_api_scope" "default" {
   app_id = okta_app_oauth.default.id
-  issuer = var.okta_org_url
+  issuer = "https://${var.okta_org_name}.${var.okta_base_url}"
   scopes = ["okta.groups.read", "okta.users.read.self"]
 }
 
@@ -182,7 +182,7 @@ resource "vault_jwt_auth_backend" "okta" {
   type               = "oidc"
   default_role       = "okta-group"
   bound_issuer       = okta_auth_server.default.issuer
-  oidc_discovery_url = var.okta_org_url
+  oidc_discovery_url = "https://${var.okta_org_name}.${var.okta_base_url}"
   oidc_client_id     = okta_app_oauth.default.client_id
   oidc_client_secret = okta_app_oauth.default.client_secret
 

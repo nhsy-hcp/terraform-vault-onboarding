@@ -66,10 +66,17 @@ variable "vault_role" {
   default     = "tfc-admin"
 }
 
-variable "okta_org_url" {
+variable "okta_org_name" {
   type        = string
-  description = "Okta organization URL"
+  description = "Okta organization name"
 }
+
+variable "okta_base_url" {
+  type        = string
+  description = "Okta base URL"
+  default     = "okta.com"
+}
+
 
 variable "okta_auth_path" {
   type    = string
