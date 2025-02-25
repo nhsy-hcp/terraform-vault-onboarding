@@ -41,3 +41,12 @@ module "prd" {
   quota_lease_count = 301
   quota_rate_limit  = 302
 }
+
+module "demo" {
+  source            = "./modules/namespace"
+  namespace         = "demo"
+  description       = "demo namespace"
+  admin_group_name  = "vault-dev-admin"
+  quota_lease_count = 401
+  quota_rate_limit  = 402
+}
