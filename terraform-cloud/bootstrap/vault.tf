@@ -4,11 +4,6 @@ resource "vault_policy" "tfc_admin" {
   policy = file("${path.module}/../templates/tfc_admin_policy.hcl")
 }
 
-resource "vault_policy" "okta_vault_admin" {
-  name   = "okta-vault-admin"
-  policy = file("./${path.module}/../templates/okta_vault_admin_policy.hcl")
-}
-
 resource "vault_jwt_auth_backend" "tfc" {
   type               = "jwt"
   path               = var.vault_auth_path

@@ -59,7 +59,7 @@ resource "tfe_variable" "enable_vault_provider_auth" {
   workspace_id    = tfe_workspace.default.id
 }
 
-resource "tfe_variable" "vault_address" {
+resource "tfe_variable" "tfc_vault_address" {
   key             = "TFC_VAULT_ADDR"
   value           = var.vault_address_tfc_agent
   category        = "env"
@@ -80,7 +80,7 @@ resource "tfe_variable" "tfc_vault_auth_path" {
   workspace_id    = tfe_workspace.default.id
 }
 
-resource "tfe_variable" "tfc_okta_api_token" {
+resource "tfe_variable" "okta_api_token" {
   key          = "OKTA_API_TOKEN"
   value        = var.okta_api_token
   category     = "env"
@@ -88,7 +88,7 @@ resource "tfe_variable" "tfc_okta_api_token" {
   workspace_id    = tfe_workspace.default.id
 }
 
-resource "tfe_variable" "tfc_okta_org_name" {
+resource "tfe_variable" "okta_org_name" {
   key          = "okta_org_name"
   value        = var.okta_org_name
   category     = "terraform"
@@ -105,6 +105,13 @@ resource "tfe_variable" "tfc_organization" {
 resource "tfe_variable" "tfc_project" {
   key          = "tfc_project"
   value        = var.tfc_project
+  category     = "terraform"
+  workspace_id    = tfe_workspace.default.id
+}
+
+resource "tfe_variable" "vault_auth_path" {
+  key          = "vault_auth_path"
+  value        = var.vault_auth_path
   category     = "terraform"
   workspace_id    = tfe_workspace.default.id
 }

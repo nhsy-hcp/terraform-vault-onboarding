@@ -68,7 +68,7 @@ variable "vault_auth_role" {
 
 variable "vault_policy" {
   type        = string
-  description = "Vault role name"
+  description = "Vault policy name"
 }
 
 variable "okta_org_name" {
