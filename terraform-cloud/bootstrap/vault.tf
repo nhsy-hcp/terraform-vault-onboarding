@@ -29,10 +29,12 @@ resource "vault_jwt_auth_backend_role" "tfc_admin" {
   bound_claims_type = "glob"
   role_type         = "jwt"
   role_name         = var.vault_role
+  token_type        = "service"
   token_policies = [
     "default",
     vault_policy.tfc_admin.name,
   ]
-  token_ttl  = 60 * 5
+  token_ttl  = 60
+  token_max_ttl = 60 * 5
   user_claim = "terraform_full_workspace"
 }
