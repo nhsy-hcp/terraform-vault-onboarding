@@ -6,7 +6,6 @@ variable "github_organization" {
 variable "github_repository" {
   type        = string
   description = "Name of the GitHub repository."
-  default     = "terraform-vault-onboarding"
 }
 
 variable "tfc_organization" {
@@ -17,19 +16,16 @@ variable "tfc_organization" {
 variable "tfc_project" {
   type        = string
   description = "Name of the TFC project."
-  default     = "default project"
 }
 
 variable "tfc_workspace" {
   type        = string
   description = "Name of the TFC workspace."
-  default     = "terraform-vault-onboarding-baseline-configuration"
 }
 
 variable "tfc_working_directory" {
   type        = string
   description = "Working directory for the TFC workspace."
-  default     = "terraform-cloud/baseline-configuration"
 }
 
 variable "default_lease_ttl" {
@@ -53,13 +49,12 @@ variable "token_type" {
 variable "vault_auth_path" {
   type        = string
   description = "Mount path where JWT Auth will be configured"
-  default     = "jwt/tfc"
 }
 
-variable "vault_address" {
-  type        = string
-  description = "Vault API endpoint"
-}
+# variable "vault_address" {
+#   type        = string
+#   description = "Vault API endpoint"
+# }
 
 variable "vault_address_tfc_agent" {
   type        = string
@@ -69,7 +64,11 @@ variable "vault_address_tfc_agent" {
 variable "vault_auth_role" {
   type        = string
   description = "Vault role name"
-  default     = "tfc-admin"
+}
+
+variable "vault_policy" {
+  type        = string
+  description = "Vault policy name"
 }
 
 variable "okta_org_name" {
@@ -84,40 +83,46 @@ variable "okta_base_url" {
 }
 
 
-variable "okta_auth_path" {
-  type    = string
-  default = "oidc"
-}
+# variable "okta_auth_path" {
+#   type    = string
+#   # default = "oidc"
+# }
 
-variable "okta_users" {
-  type = map(object({
-    first_name = string
-    last_name  = string
-    password   = string
-    groups     = list(string)
-  }))
-  default = {}
-}
+# variable "okta_users" {
+#   type = map(object({
+#     first_name = string
+#     last_name  = string
+#     password   = string
+#     groups     = list(string)
+#   }))
+#   default = {}
+# }
 
 variable "okta_api_token" {
   type        = string
   description = "Okta API token"
 }
 
-variable "okta_mgmt_groups" {
-  type = list(string)
-  default = [
-    "vault-admin",
-    "vault-user"
-  ]
-}
+# variable "okta_mgmt_groups" {
+#   type = list(string)
+#   default = [
+#     "vault-admin",
+#     "vault-user"
+#   ]
+# }
 
-variable "okta_namespace_groups" {
-  type    = list(string)
-  default = []
-}
+# variable "okta_namespace_groups" {
+#   type    = list(string)
+#   default = []
+# }
 
 variable "enable_tfc_agent_pool" {
   type    = bool
   default = false
+}
+
+variable "terraform_version" {
+  type        = string
+  description = "Version of Terraform to use"
+  default     = "~> 1.10.0"
 }

@@ -1,14 +1,14 @@
 #path "sys/namespaces/*" {
 #    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 #}
-## Create and manage ACL policies
-#path "sys/policies/acl/*" {
-#    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-#}
-## List ACL policies
-#path "sys/policies/acl" {
-#    capabilities = ["list"]
-#}
+# Create and manage ACL policies
+path "sys/policies/acl/*" {
+   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+# List ACL policies
+path "sys/policies/acl" {
+   capabilities = ["list"]
+}
 ## Create and manage quota policies
 #path "sys/quotas/*" {
 #    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
@@ -101,12 +101,29 @@ path "+/identity" {
     capabilities = ["list"]
 }
 
-# Read auth mounts
-path "sys/mounts/auth" {
-    capabilities = ["read"]
+# Create and manage auth mounts
+path "auth/oidc" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
+
+path "auth/oidc/*" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+path "sys/auth" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+path "sys/auth/*" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+path "sys/mounts/auth" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
 path "sys/mounts/auth/*" {
-    capabilities = ["read"]
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
 # Create and manage quota policies
