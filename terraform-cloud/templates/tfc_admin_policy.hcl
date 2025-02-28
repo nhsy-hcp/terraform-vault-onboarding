@@ -1,14 +1,14 @@
 #path "sys/namespaces/*" {
 #    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 #}
-## Create and manage ACL policies
-#path "sys/policies/acl/*" {
-#    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-#}
-## List ACL policies
-#path "sys/policies/acl" {
-#    capabilities = ["list"]
-#}
+# Create and manage ACL policies
+path "sys/policies/acl/*" {
+   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+# List ACL policies
+path "sys/policies/acl" {
+   capabilities = ["list"]
+}
 ## Create and manage quota policies
 #path "sys/quotas/*" {
 #    capabilities = ["create", "read", "update", "delete", "list", "sudo"]

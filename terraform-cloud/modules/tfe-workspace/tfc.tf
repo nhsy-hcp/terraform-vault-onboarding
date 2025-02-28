@@ -109,12 +109,12 @@ resource "tfe_variable" "tfc_project" {
   workspace_id    = tfe_workspace.default.id
 }
 
-resource "tfe_variable" "vault_auth_path" {
-  key          = "vault_auth_path"
-  value        = var.vault_auth_path
-  category     = "terraform"
-  workspace_id    = tfe_workspace.default.id
-}
+# resource "tfe_variable" "vault_auth_path" {
+#   key          = "vault_auth_path"
+#   value        = var.vault_auth_path
+#   category     = "terraform"
+#   workspace_id    = tfe_workspace.default.id
+# }
 
 resource "tfe_workspace_settings" "agent_pool" {
   count          = var.enable_tfc_agent_pool ? 1 : 0

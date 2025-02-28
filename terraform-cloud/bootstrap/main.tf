@@ -11,8 +11,8 @@ module "tfe_workspace" {
   tfc_project             = var.tfc_project
   tfc_workspace           = var.tfc_workspace
   tfc_working_directory   = var.tfc_working_directory
-  vault_address           = var.vault_address
-  vault_auth_path         = vault_jwt_auth_backend.tfc.path
-  vault_auth_role         = var.vault_auth_role
-  vault_policy            = vault_policy.tfc_admin.name
+  # vault_address           = var.vault_address
+  vault_auth_path = vault_jwt_auth_backend.tfc.path
+  vault_auth_role = var.vault_auth_role
+  vault_policy    = vault_policy.tfc_admin.name
 }

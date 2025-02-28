@@ -43,10 +43,10 @@ variable "token_type" {
   default     = "default-service"
 }
 
-variable "vault_auth_path" {
-  type        = string
-  description = "Mount path where JWT Auth will be configured"
-}
+# variable "vault_auth_path" {
+#   type        = string
+#   description = "Mount path where JWT Auth will be configured"
+# }
 
 # variable "vault_address" {
 #   type        = string
