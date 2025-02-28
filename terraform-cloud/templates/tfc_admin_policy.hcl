@@ -102,11 +102,11 @@ path "+/identity" {
 }
 
 # Create and manage auth mounts
-path "sys/mounts/auth" {
+path "sys/auth" {
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
-path "sys/mounts/auth/*" {
+path "sys/auth/*" {
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
