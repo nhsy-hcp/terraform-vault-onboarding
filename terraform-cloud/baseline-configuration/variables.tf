@@ -46,7 +46,6 @@ variable "token_type" {
 variable "vault_auth_path" {
   type        = string
   description = "Mount path where JWT Auth will be configured"
-  # default     = "jwt_tfc"
 }
 
 # variable "vault_address" {
