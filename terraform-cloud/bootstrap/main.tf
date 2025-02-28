@@ -14,4 +14,5 @@ module "tfe_workspace" {
   vault_address           = var.vault_address
   vault_auth_path         = vault_jwt_auth_backend.tfc.path
   vault_auth_role         = var.vault_auth_role
+  vault_policy            = vault_policy.tfc_admin.name
 }
