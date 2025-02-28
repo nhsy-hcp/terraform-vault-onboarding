@@ -22,8 +22,14 @@ variable "tfc_project" {
 
 variable "tfc_workspace" {
   type        = string
-  description = "Name of the TFC worksapce."
+  description = "Name of the TFC workspace."
   default     = "terraform-vault-onboarding-baseline-configuration"
+}
+
+variable "tfc_working_directory" {
+  type        = string
+  description = "Working directory for the TFC workspace."
+  default     = "terraform-cloud/baseline-configuration"
 }
 
 variable "default_lease_ttl" {
@@ -47,7 +53,7 @@ variable "token_type" {
 variable "vault_auth_path" {
   type        = string
   description = "Mount path where JWT Auth will be configured"
-  default     = "jwt_tfc"
+  default     = "jwt/tfc"
 }
 
 variable "vault_address" {
@@ -60,7 +66,7 @@ variable "vault_address_tfc_agent" {
   description = "Vault API endpoint for TFC agent"
 }
 
-variable "vault_role" {
+variable "vault_auth_role" {
   type        = string
   description = "Vault role name"
   default     = "tfc-admin"

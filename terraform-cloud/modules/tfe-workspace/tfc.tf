@@ -36,9 +36,10 @@ resource "tfe_workspace" "default" {
     "demo",
     "vault"
   ]
-  terraform_version = "~> 1.10.0"
+  terraform_version = var.terraform_version
+
   trigger_patterns = [
-    "terraform-cloud/baseline-configuration/**",
+    "${var.tfc_working_directory}/**",
     "terraform-cloud/modules/**"
   ]
 
@@ -48,46 +49,35 @@ resource "tfe_workspace" "default" {
     #      oauth_token_id = tfe_oauth_client.default.oauth_token_id
     oauth_token_id = data.tfe_oauth_client.default.oauth_token_id
   }
-  working_directory = "./terraform-cloud/baseline-configuration"
-}
-
-resource "tfe_variable_set" "default" {
-  name         = "Vault dynamic credentials"
-  description  = "JWT Vault"
-  organization = var.tfc_organization
-}
-
-resource "tfe_workspace_variable_set" "default" {
-  workspace_id    = tfe_workspace.default.id
-  variable_set_id = tfe_variable_set.default.id
+  working_directory = var.tfc_working_directory
 }
 
 resource "tfe_variable" "enable_vault_provider_auth" {
   key             = "TFC_VAULT_PROVIDER_AUTH"
   value           = "true"
   category        = "env"
-  variable_set_id = tfe_variable_set.default.id
+  workspace_id    = tfe_workspace.default.id
 }
 
 resource "tfe_variable" "vault_address" {
   key             = "TFC_VAULT_ADDR"
   value           = var.vault_address_tfc_agent
   category        = "env"
-  variable_set_id = tfe_variable_set.default.id
+  workspace_id    = tfe_workspace.default.id
 }
 
 resource "tfe_variable" "tfc_vault_run_role" {
   key             = "TFC_VAULT_RUN_ROLE"
-  value           = var.vault_role
+  value           = var.vault_auth_role
   category        = "env"
-  variable_set_id = tfe_variable_set.default.id
+  workspace_id    = tfe_workspace.default.id
 }
 
 resource "tfe_variable" "tfc_vault_auth_path" {
   key             = "TFC_VAULT_AUTH_PATH"
   value           = var.vault_auth_path
   category        = "env"
-  variable_set_id = tfe_variable_set.default.id
+  workspace_id    = tfe_workspace.default.id
 }
 
 resource "tfe_variable" "tfc_okta_api_token" {
@@ -95,14 +85,28 @@ resource "tfe_variable" "tfc_okta_api_token" {
   value        = var.okta_api_token
   category     = "env"
   sensitive    = true
-  workspace_id = tfe_workspace.default.id
+  workspace_id    = tfe_workspace.default.id
 }
 
 resource "tfe_variable" "tfc_okta_org_name" {
   key          = "okta_org_name"
   value        = var.okta_org_name
   category     = "terraform"
-  workspace_id = tfe_workspace.default.id
+  workspace_id    = tfe_workspace.default.id
+}
+
+resource "tfe_variable" "tfc_organization" {
+  key          = "tfc_organization"
+  value        = var.tfc_project
+  category     = "terraform"
+  workspace_id    = tfe_workspace.default.id
+}
+
+resource "tfe_variable" "tfc_project" {
+  key          = "tfc_project"
+  value        = var.tfc_project
+  category     = "terraform"
+  workspace_id    = tfe_workspace.default.id
 }
 
 resource "tfe_workspace_settings" "agent_pool" {
