@@ -102,6 +102,14 @@ path "+/identity" {
 }
 
 # Create and manage auth mounts
+path "auth/oidc" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+path "auth/oidc/*" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
 path "sys/auth" {
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
