@@ -1,13 +1,3 @@
-#module "namespaces" {
-#  source            = "./modules/namespace"
-#  for_each          = var.namespaces
-#  namespace         = each.key
-#  description       = each.value.description
-#  admin_group_name  = lookup(each.value, "admin_group_name")
-#  quota_rate_limit  = lookup(each.value, "quota_rate_limit")
-#  quota_lease_count = lookup(each.value, "quota_lease_count")
-#}
-
 resource "vault_quota_rate_limit" "global" {
   name     = "global"
   path     = ""
@@ -15,38 +5,9 @@ resource "vault_quota_rate_limit" "global" {
   rate     = 300000
 }
 
-module "dev" {
-  source            = "./modules/namespace"
-  namespace         = "dev"
-  description       = "dev namespace"
-  admin_group_name  = "vault-dev-admin"
-  quota_lease_count = 101
-  quota_rate_limit  = 102
-}
-
-module "tst" {
-  source            = "./modules/namespace"
-  namespace         = "tst"
-  description       = "tst namespace"
-  admin_group_name  = "vault-tst-admin"
-  quota_lease_count = 201
-  quota_rate_limit  = 202
-}
-
-module "prd" {
-  source            = "./modules/namespace"
-  namespace         = "prd"
-  description       = "prd namespace"
-  admin_group_name  = "vault-prd-admin"
-  quota_lease_count = 301
-  quota_rate_limit  = 302
-}
-
-module "demo" {
-  source            = "./modules/namespace"
-  namespace         = "demo"
-  description       = "demo namespace"
-  admin_group_name  = "vault-dev-admin"
-  quota_lease_count = 401
-  quota_rate_limit  = 402
-}
+# resource "vault_audit" "file" {
+#   options = {
+#     file_path = "/var/logs/vault_audit.log"
+#   }
+#   type = "file"
+# }
