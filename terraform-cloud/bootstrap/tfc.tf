@@ -37,7 +37,10 @@ resource "tfe_workspace" "default" {
     "vault"
   ]
   terraform_version = "~> 1.10.0"
-  trigger_patterns  = ["terraform-cloud/root-namespace/**"]
+  trigger_patterns = [
+    "terraform-cloud/baseline-configuration/**",
+    "terraform-cloud/modules/**"
+  ]
 
   vcs_repo {
     branch     = "main"
@@ -45,7 +48,7 @@ resource "tfe_workspace" "default" {
     #      oauth_token_id = tfe_oauth_client.default.oauth_token_id
     oauth_token_id = data.tfe_oauth_client.default.oauth_token_id
   }
-  working_directory = "./terraform-cloud/root-namespace"
+  working_directory = "./terraform-cloud/baseline-configuration"
 }
 
 resource "tfe_variable_set" "default" {
