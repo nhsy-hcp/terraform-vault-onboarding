@@ -29,5 +29,3 @@ module "tst_workspace" {
   vault_auth_role = "tfc-admin-namespace-tst"
   vault_policy    = var.vault_policy
 }
-
-
