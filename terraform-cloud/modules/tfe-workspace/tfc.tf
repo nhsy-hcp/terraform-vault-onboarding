@@ -53,31 +53,31 @@ resource "tfe_workspace" "default" {
 }
 
 resource "tfe_variable" "enable_vault_provider_auth" {
-  key             = "TFC_VAULT_PROVIDER_AUTH"
-  value           = "true"
-  category        = "env"
-  workspace_id    = tfe_workspace.default.id
+  key          = "TFC_VAULT_PROVIDER_AUTH"
+  value        = "true"
+  category     = "env"
+  workspace_id = tfe_workspace.default.id
 }
 
 resource "tfe_variable" "tfc_vault_address" {
-  key             = "TFC_VAULT_ADDR"
-  value           = var.vault_address_tfc_agent
-  category        = "env"
-  workspace_id    = tfe_workspace.default.id
+  key          = "TFC_VAULT_ADDR"
+  value        = var.vault_address
+  category     = "env"
+  workspace_id = tfe_workspace.default.id
 }
 
 resource "tfe_variable" "tfc_vault_run_role" {
-  key             = "TFC_VAULT_RUN_ROLE"
-  value           = var.vault_auth_role
-  category        = "env"
-  workspace_id    = tfe_workspace.default.id
+  key          = "TFC_VAULT_RUN_ROLE"
+  value        = var.vault_auth_role
+  category     = "env"
+  workspace_id = tfe_workspace.default.id
 }
 
 resource "tfe_variable" "tfc_vault_auth_path" {
-  key             = "TFC_VAULT_AUTH_PATH"
-  value           = var.vault_auth_path
-  category        = "env"
-  workspace_id    = tfe_workspace.default.id
+  key          = "TFC_VAULT_AUTH_PATH"
+  value        = var.vault_auth_path
+  category     = "env"
+  workspace_id = tfe_workspace.default.id
 }
 
 resource "tfe_variable" "okta_api_token" {
@@ -85,28 +85,28 @@ resource "tfe_variable" "okta_api_token" {
   value        = var.okta_api_token
   category     = "env"
   sensitive    = true
-  workspace_id    = tfe_workspace.default.id
+  workspace_id = tfe_workspace.default.id
 }
 
 resource "tfe_variable" "okta_org_name" {
   key          = "okta_org_name"
   value        = var.okta_org_name
   category     = "terraform"
-  workspace_id    = tfe_workspace.default.id
+  workspace_id = tfe_workspace.default.id
 }
 
 resource "tfe_variable" "tfc_organization" {
   key          = "tfc_organization"
-  value        = var.tfc_project
+  value        = var.tfc_organization
   category     = "terraform"
-  workspace_id    = tfe_workspace.default.id
+  workspace_id = tfe_workspace.default.id
 }
 
 resource "tfe_variable" "tfc_project" {
   key          = "tfc_project"
   value        = var.tfc_project
   category     = "terraform"
-  workspace_id    = tfe_workspace.default.id
+  workspace_id = tfe_workspace.default.id
 }
 
 # resource "tfe_variable" "vault_auth_path" {

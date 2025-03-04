@@ -20,16 +20,16 @@ variable "tfc_project" {
   default     = "default project"
 }
 
-variable "tfc_workspace" {
+variable "tfc_workspace_prefix" {
   type        = string
   description = "Name of the TFC workspace."
-  default     = "terraform-vault-onboarding-baseline-configuration"
+  default     = "terraform-vault-onboarding"
 }
 
-variable "tfc_working_directory" {
+variable "tfc_working_directory_prefix" {
   type        = string
   description = "Working directory for the TFC workspace."
-  default     = "terraform-cloud/baseline-configuration"
+  default     = "terraform-cloud"
 }
 
 variable "default_lease_ttl" {

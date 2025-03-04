@@ -28,17 +28,17 @@ variable "tfc_working_directory" {
   description = "Working directory for the TFC workspace."
 }
 
-variable "default_lease_ttl" {
-  type        = string
-  description = "Default lease TTL for Vault tokens"
-  default     = "10m"
-}
-
-variable "max_lease_ttl" {
-  type        = string
-  description = "Maximum lease TTL for Vault tokens"
-  default     = "30m"
-}
+# variable "default_lease_ttl" {
+#   type        = string
+#   description = "Default lease TTL for Vault tokens"
+#   default     = "10m"
+# }
+#
+# variable "max_lease_ttl" {
+#   type        = string
+#   description = "Maximum lease TTL for Vault tokens"
+#   default     = "30m"
+# }
 
 variable "token_type" {
   type        = string
@@ -51,15 +51,15 @@ variable "vault_auth_path" {
   description = "Mount path where JWT Auth will be configured"
 }
 
-# variable "vault_address" {
-#   type        = string
-#   description = "Vault API endpoint"
-# }
-
-variable "vault_address_tfc_agent" {
+variable "vault_address" {
   type        = string
-  description = "Vault API endpoint for TFC agent"
+  description = "Vault API endpoint"
 }
+
+# variable "vault_address_tfc_agent" {
+#   type        = string
+#   description = "Vault API endpoint for TFC agent"
+# }
 
 variable "vault_auth_role" {
   type        = string
