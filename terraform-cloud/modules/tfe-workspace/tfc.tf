@@ -98,20 +98,6 @@ resource "tfe_variable" "okta_api_token" {
   workspace_id = tfe_workspace.default.id
 }
 
-# resource "tfe_variable" "okta_org_name" {
-#   key          = "okta_org_name"
-#   value        = var.okta_org_name
-#   category     = "terraform"
-#   workspace_id = tfe_workspace.default.id
-# }
-#
-# resource "tfe_variable" "okta_base_url" {
-#   key          = "okta_base_url"
-#   value        = var.okta_base_url
-#   category     = "terraform"
-#   workspace_id = tfe_workspace.default.id
-# }
-
 resource "tfe_variable" "default" {
   for_each     = var.tfc_terraform_variables
   key          = each.key
@@ -120,27 +106,6 @@ resource "tfe_variable" "default" {
   category     = "terraform"
   workspace_id = tfe_workspace.default.id
 }
-
-# resource "tfe_variable" "tfc_organization" {
-#   key          = "tfc_organization"
-#   value        = var.tfc_organization
-#   category     = "terraform"
-#   workspace_id = tfe_workspace.default.id
-# }
-#
-# resource "tfe_variable" "tfc_project" {
-#   key          = "tfc_project"
-#   value        = var.tfc_project
-#   category     = "terraform"
-#   workspace_id = tfe_workspace.default.id
-# }
-
-# resource "tfe_variable" "vault_auth_path" {
-#   key          = "vault_auth_path"
-#   value        = var.vault_auth_path
-#   category     = "terraform"
-#   workspace_id    = tfe_workspace.default.id
-# }
 
 resource "tfe_workspace_settings" "agent_pool" {
   count          = var.enable_tfc_agent_pool ? 1 : 0

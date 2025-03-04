@@ -3,20 +3,38 @@
 version: '3'
 
 tasks:
-  prepare:
+  lint:
     cmds:
       - terraform fmt -recursive
 
   bootstrap:
-    deps: ["prepare"]
+    deps: ["lint"]
     dir: ./bootstrap
+    dotenv: [".env"]
     cmds:
+      - terraform init
       - terraform validate
       - terraform apply
 
-  plan:
-    deps: ["prepare"]
-    dir: ./root-namespace
+  bootstrap-destroy:
+    deps: ["lint"]
+    dir: ./bootstrap
+    dotenv: [".env"]
+    cmds:
+      - terraform validate
+      - terraform destroy
+
+  bootstrap-plan:
+    deps: ["lint"]
+    dir: ./bootstrap
+    dotenv: [".env"]
     cmds:
       - terraform init
       - terraform plan
+
+  bootstrap-refresh:
+    deps: ["lint"]
+    dir: ./bootstrap
+    dotenv: [".env"]
+    cmds:
+      - terraform plan -refresh

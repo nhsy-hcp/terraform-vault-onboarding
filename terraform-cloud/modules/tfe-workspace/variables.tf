@@ -28,17 +28,17 @@ variable "tfc_working_directory" {
   description = "Working directory for the TFC workspace."
 }
 
-# variable "default_lease_ttl" {
-#   type        = string
-#   description = "Default lease TTL for Vault tokens"
-#   default     = "10m"
-# }
-#
-# variable "max_lease_ttl" {
-#   type        = string
-#   description = "Maximum lease TTL for Vault tokens"
-#   default     = "30m"
-# }
+variable "token_ttl" {
+  type        = string
+  description = "Default lease TTL for Vault tokens"
+  default     = 300 # 5 minutes
+}
+
+variable "token_max_ttl" {
+  type        = string
+  description = "Maximum lease TTL for Vault tokens"
+  default     = 600 # 10 minutes
+}
 
 variable "token_type" {
   type        = string

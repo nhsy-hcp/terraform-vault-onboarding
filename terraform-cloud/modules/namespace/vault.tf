@@ -42,7 +42,7 @@ resource "vault_identity_group_alias" "namespace_admin_external" {
 resource "vault_policy" "namespace_admin" {
   namespace = vault_namespace.default.path
   name      = "namespace-admin"
-  policy    = file("${path.module}/templates/namespace_admin_policy.hcl")
+  policy    = file("${path.module}/../../policies/namespace_admin_policy.hcl")
 }
 
 resource "vault_identity_group" "namespace_admin_internal" {
