@@ -79,7 +79,7 @@ variable "okta_base_url" {
 
 variable "okta_api_token" {
   type        = string
-  sensitive    = true
+  sensitive   = true
   description = "Okta API token"
   default     = null
 }
@@ -96,7 +96,7 @@ variable "terraform_version" {
 }
 
 variable "tfc_terraform_variables" {
-  type        = map(object({
+  type = map(object({
     value     = string
     sensitive = optional(bool, false)
   }))
