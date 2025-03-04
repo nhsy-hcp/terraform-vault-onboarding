@@ -3,6 +3,7 @@
 #   #  policy = data.vault_policy_document.tfc_admin.hcl
 #   policy = file("${path.module}/../templates/tfc_admin_policy.hcl")
 # }
+
 data "okta_auth_server" "default" {
   name = "vault"
 }

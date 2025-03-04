@@ -32,6 +32,11 @@ variable "tfc_working_directory_prefix" {
   default     = "terraform-cloud"
 }
 
+variable "tfc_token" {
+  type        = string
+  description = "Terraform Cloud API token"
+}
+
 variable "default_lease_ttl" {
   type        = string
   description = "Default lease TTL for Vault tokens"
@@ -66,7 +71,7 @@ variable "vault_address_tfc_agent" {
   description = "Vault API endpoint for TFC agent"
 }
 
-variable "vault_auth_role" {
+variable "vault_auth_role_prefix" {
   type        = string
   description = "Vault role name"
   default     = "tfc-admin"
@@ -82,7 +87,6 @@ variable "okta_base_url" {
   description = "Okta base URL"
   default     = "okta.com"
 }
-
 
 variable "okta_auth_path" {
   type    = string
@@ -101,6 +105,7 @@ variable "okta_users" {
 
 variable "okta_api_token" {
   type        = string
+  sensitive   = true
   description = "Okta API token"
 }
 
@@ -119,5 +124,5 @@ variable "okta_namespace_groups" {
 
 variable "enable_tfc_agent_pool" {
   type    = bool
-  default = false
+  default = true
 }

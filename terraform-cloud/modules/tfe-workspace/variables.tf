@@ -56,11 +56,6 @@ variable "vault_address" {
   description = "Vault API endpoint"
 }
 
-# variable "vault_address_tfc_agent" {
-#   type        = string
-#   description = "Vault API endpoint for TFC agent"
-# }
-
 variable "vault_auth_role" {
   type        = string
   description = "Vault role name"
@@ -82,47 +77,35 @@ variable "okta_base_url" {
   default     = "okta.com"
 }
 
-
-# variable "okta_auth_path" {
-#   type    = string
-#   # default = "oidc"
-# }
-
-# variable "okta_users" {
-#   type = map(object({
-#     first_name = string
-#     last_name  = string
-#     password   = string
-#     groups     = list(string)
-#   }))
-#   default = {}
-# }
-
 variable "okta_api_token" {
   type        = string
+  sensitive    = true
   description = "Okta API token"
+  default     = null
 }
-
-# variable "okta_mgmt_groups" {
-#   type = list(string)
-#   default = [
-#     "vault-admin",
-#     "vault-user"
-#   ]
-# }
-
-# variable "okta_namespace_groups" {
-#   type    = list(string)
-#   default = []
-# }
 
 variable "enable_tfc_agent_pool" {
   type    = bool
-  default = false
+  default = true
 }
 
 variable "terraform_version" {
   type        = string
   description = "Version of Terraform to use"
   default     = "~> 1.10.0"
+}
+
+variable "tfc_terraform_variables" {
+  type        = map(object({
+    value     = string
+    sensitive = optional(bool, false)
+  }))
+  description = "Map of additional Terraform variables"
+  default     = {}
+}
+
+variable "tfc_token" {
+  type        = string
+  description = "TFC API token"
+  default     = null
 }

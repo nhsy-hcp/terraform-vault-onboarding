@@ -8,22 +8,22 @@
 #   description = "Name of the GitHub repository."
 # }
 
-variable "tfc_organization" {
-  type        = string
-  description = "Name of the TFC organization."
-}
-
-variable "tfc_project" {
-  type        = string
-  description = "Name of the TFC project."
-  # default     = "default project"
-}
-
-variable "tfc_workspace" {
-  type        = string
-  description = "Name of the TFC worksapce."
-  default     = "terraform-vault-onboarding-baseline-configuration"
-}
+# variable "tfc_organization" {
+#   type        = string
+#   description = "Name of the TFC organization."
+# }
+#
+# variable "tfc_project" {
+#   type        = string
+#   description = "Name of the TFC project."
+#   # default     = "default project"
+# }
+#
+# variable "tfc_workspace" {
+#   type        = string
+#   description = "Name of the TFC worksapce."
+#   default     = "terraform-vault-onboarding-baseline-configuration"
+# }
 
 variable "default_lease_ttl" {
   type        = string
@@ -58,11 +58,11 @@ variable "token_type" {
 #   description = "Vault API endpoint for TFC agent"
 # }
 
-variable "vault_role" {
-  type        = string
-  description = "Vault role name"
-  default     = "tfc-admin"
-}
+# variable "vault_role_prefix" {
+#   type        = string
+#   description = "Vault role name"
+#   default     = "tfc-admin"
+# }
 
 variable "okta_org_name" {
   type        = string
@@ -74,7 +74,6 @@ variable "okta_base_url" {
   description = "Okta base URL"
   default     = "okta.com"
 }
-
 
 variable "okta_auth_path" {
   type    = string

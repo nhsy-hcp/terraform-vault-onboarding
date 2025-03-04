@@ -15,7 +15,7 @@ resource "vault_jwt_auth_backend_role" "tfc_admin" {
     "default",
     var.vault_policy,
   ]
-  token_ttl     = 180
+  token_ttl     = 300
   token_max_ttl = 3600
   user_claim    = "terraform_full_workspace"
 }
