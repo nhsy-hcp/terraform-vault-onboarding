@@ -1,13 +1,3 @@
-#module "namespaces" {
-#  source            = "./modules/namespace"
-#  for_each          = var.namespaces
-#  namespace         = each.key
-#  description       = each.value.description
-#  admin_group_name  = lookup(each.value, "admin_group_name")
-#  quota_rate_limit  = lookup(each.value, "quota_rate_limit")
-#  quota_lease_count = lookup(each.value, "quota_lease_count")
-#}
-
 module "dev_namespace" {
   source            = "./../modules/namespace"
   namespace         = "dev"
@@ -39,15 +29,3 @@ module "dev_workspace" {
   vault_auth_role       = "tfc-admin-namespace-dev"
   vault_policy          = var.vault_policy
 }
-
-
-
-# module "tst" {
-#   source            = "./../modules/namespace"
-#   namespace         = "tst"
-#   description       = "tst namespace"
-#   admin_group_name  = "vault-tst-admin"
-#   quota_lease_count = 201
-#   quota_rate_limit  = 202
-# }
-
