@@ -8,7 +8,7 @@ module "dev_namespace" {
 }
 
 module "dev_workspace" {
-  source = "./../modules/tfe-workspace"
+  source = "./../modules/workspace"
 
   enable_tfc_agent_pool = var.enable_tfc_agent_pool
   github_organization   = var.github_organization

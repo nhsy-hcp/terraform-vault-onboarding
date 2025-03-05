@@ -25,7 +25,7 @@ data "okta_group" "namespace_admin" {
   name = var.admin_group_name
 }
 data "vault_auth_backend" "okta" {
-  path = "oidc"
+  path = var.okta_auth_path
 }
 
 resource "vault_identity_group" "namespace_admin_external" {

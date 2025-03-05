@@ -19,9 +19,9 @@ No providers.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_dev_namespace"></a> [dev\_namespace](#module\_dev\_namespace) | ./../modules/namespace | n/a |
-| <a name="module_dev_workspace"></a> [dev\_workspace](#module\_dev\_workspace) | ./../modules/tfe-workspace | n/a |
+| <a name="module_dev_workspace"></a> [dev\_workspace](#module\_dev\_workspace) | ./../modules/workspace | n/a |
 | <a name="module_tst_namespace"></a> [tst\_namespace](#module\_tst\_namespace) | ./../modules/namespace | n/a |
-| <a name="module_tst_workspace"></a> [tst\_workspace](#module\_tst\_workspace) | ./../modules/tfe-workspace | n/a |
+| <a name="module_tst_workspace"></a> [tst\_workspace](#module\_tst\_workspace) | ./../modules/workspace | n/a |
 
 ## Resources
 
@@ -35,6 +35,7 @@ No resources.
 | <a name="input_github_organization"></a> [github\_organization](#input\_github\_organization) | Name of the GitHub organization. | `string` | n/a | yes |
 | <a name="input_github_repository"></a> [github\_repository](#input\_github\_repository) | Name of the GitHub repository. | `string` | n/a | yes |
 | <a name="input_okta_api_token"></a> [okta\_api\_token](#input\_okta\_api\_token) | Okta API token | `string` | n/a | yes |
+| <a name="input_okta_auth_path"></a> [okta\_auth\_path](#input\_okta\_auth\_path) | n/a | `string` | `"oidc"` | no |
 | <a name="input_okta_base_url"></a> [okta\_base\_url](#input\_okta\_base\_url) | Okta base URL | `string` | `"okta.com"` | no |
 | <a name="input_okta_org_name"></a> [okta\_org\_name](#input\_okta\_org\_name) | Okta organization name | `string` | n/a | yes |
 | <a name="input_tfc_organization"></a> [tfc\_organization](#input\_tfc\_organization) | Name of the TFC organization. | `string` | n/a | yes |

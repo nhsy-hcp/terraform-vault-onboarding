@@ -41,6 +41,7 @@ No modules.
 | <a name="input_admin_group_name"></a> [admin\_group\_name](#input\_admin\_group\_name) | n/a | `string` | n/a | yes |
 | <a name="input_description"></a> [description](#input\_description) | n/a | `string` | n/a | yes |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | n/a | `string` | n/a | yes |
+| <a name="input_okta_auth_path"></a> [okta\_auth\_path](#input\_okta\_auth\_path) | n/a | `string` | `"oidc"` | no |
 | <a name="input_quota_lease_count"></a> [quota\_lease\_count](#input\_quota\_lease\_count) | n/a | `string` | `100` | no |
 | <a name="input_quota_rate_limit"></a> [quota\_rate\_limit](#input\_quota\_rate\_limit) | n/a | `string` | `100` | no |
 

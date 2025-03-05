@@ -13,7 +13,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_okta"></a> [okta](#provider\_okta) | 4.13.1 |
+| <a name="provider_okta"></a> [okta](#provider\_okta) | 4.14.0 |
 | <a name="provider_vault"></a> [vault](#provider\_vault) | 4.6.0 |
 
 ## Modules

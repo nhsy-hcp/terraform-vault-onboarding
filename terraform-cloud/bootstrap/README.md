@@ -14,15 +14,15 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_okta"></a> [okta](#provider\_okta) | 4.8.0 |
-| <a name="provider_vault"></a> [vault](#provider\_vault) | 4.1.0 |
+| <a name="provider_okta"></a> [okta](#provider\_okta) | 4.14.0 |
+| <a name="provider_vault"></a> [vault](#provider\_vault) | 4.6.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_namespace-vending"></a> [namespace-vending](#module\_namespace-vending) | ./../modules/tfe-workspace | n/a |
-| <a name="module_namespace_root"></a> [namespace\_root](#module\_namespace\_root) | ./../modules/tfe-workspace | n/a |
+| <a name="module_namespace-vending"></a> [namespace-vending](#module\_namespace-vending) | ./../modules/workspace | n/a |
+| <a name="module_namespace_root"></a> [namespace\_root](#module\_namespace\_root) | ./../modules/workspace | n/a |
 
 ## Resources
 

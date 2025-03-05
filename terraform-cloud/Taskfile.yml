@@ -7,6 +7,12 @@ tasks:
     cmds:
       - terraform fmt -recursive
 
+  init:
+    cmds:
+      - terraform -chdir=bootstrap init -upgrade
+      - terraform -chdir=namespace-vending init -upgrade
+      - terraform -chdir=namespace-root init -upgrade
+
   bootstrap:
     deps: ["lint"]
     dir: ./bootstrap
@@ -38,3 +44,27 @@ tasks:
     dotenv: [".env"]
     cmds:
       - terraform plan -refresh
+
+  namespace-vending:
+    deps: ["lint"]
+    dir: ./namespace-vending
+    cmds:
+      - terraform init
+      - terraform validate
+      - terraform plan
+
+  namespace-root:
+    deps: ["lint"]
+    dir: ./namespace-root
+    cmds:
+      - terraform init
+      - terraform validate
+      - terraform plan
+
+  namespace-dev:
+    deps: ["lint"]
+    dir: ./namespace-dev
+    cmds:
+      - terraform init
+      - terraform validate
+      - terraform plan

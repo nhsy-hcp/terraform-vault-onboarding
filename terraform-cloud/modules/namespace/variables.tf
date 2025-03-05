@@ -19,3 +19,8 @@ variable "quota_rate_limit" {
   type    = string
   default = 100
 }
+
+variable "okta_auth_path" {
+  type    = string
+  default = "oidc"
+}
