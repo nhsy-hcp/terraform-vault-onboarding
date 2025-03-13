@@ -61,14 +61,10 @@ variable "vault_auth_path" {
   description = "Mount path where JWT Auth will be configured"
 }
 
-# variable "vault_auth_role" {
-#   type        = string
-#   description = "Vault role name"
-# }
-
-variable "vault_policy" {
+variable "vault_auth_role" {
   type        = string
-  description = "Vault policy name"
+  description = "Vault role name"
+  default     = "tfc-namespace-admin"
 }
 
 variable "enable_tfc_agent_pool" {

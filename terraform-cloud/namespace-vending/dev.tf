@@ -26,6 +26,6 @@ module "dev_workspace" {
   }
   vault_address   = var.vault_address
   vault_auth_path = var.vault_auth_path
-  vault_auth_role = "tfc-admin-namespace-dev"
-  vault_policy    = var.vault_policy
+  vault_auth_role = var.vault_auth_role #"tfc-admin-namespace-dev"
+  vault_namespace = module.dev_namespace.namespace
 }

@@ -110,6 +110,14 @@ path "auth/jwt/*" {
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
+path "+/auth/jwt" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+path "+/auth/jwt/*" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
 # Create and manage auth oidc mounts
 path "auth/oidc" {
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
@@ -127,11 +135,27 @@ path "sys/auth/*" {
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
+path "+/sys/auth" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+path "+/sys/auth/*" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
 path "sys/mounts/auth" {
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
 path "sys/mounts/auth/*" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+path "+/sys/mounts/auth" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+path "+/sys/mounts/auth/*" {
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 

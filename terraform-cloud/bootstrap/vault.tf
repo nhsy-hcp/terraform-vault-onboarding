@@ -1,5 +1,5 @@
 resource "vault_policy" "tfc_admin" {
-  name = "tfc-admin"
+  name = var.vault_policy
   #  policy = data.vault_policy_document.tfc_admin.hcl
   policy = file("${path.module}/../policies/tfc_admin_policy.hcl")
 }

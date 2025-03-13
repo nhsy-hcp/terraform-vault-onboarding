@@ -77,6 +77,12 @@ variable "vault_auth_role_prefix" {
   default     = "tfc-admin"
 }
 
+variable "vault_policy" {
+  type        = string
+  description = "Vault policy name"
+  default     = "tfc-admin"
+}
+
 variable "okta_org_name" {
   type        = string
   description = "Okta organization name"

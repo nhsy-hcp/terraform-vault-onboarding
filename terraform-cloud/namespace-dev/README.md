@@ -19,7 +19,7 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [vault_identity_group.test](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/identity_group) | resource |
+| [vault_identity_group.dev12345](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/identity_group) | resource |
 
 ## Inputs
 

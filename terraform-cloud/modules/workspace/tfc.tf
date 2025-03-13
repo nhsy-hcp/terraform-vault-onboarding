@@ -66,6 +66,14 @@ resource "tfe_variable" "tfc_vault_address" {
   workspace_id = tfe_workspace.default.id
 }
 
+resource "tfe_variable" "tfc_vault_namespace" {
+  count        = var.vault_namespace != null ? 1 : 0
+  key          = "TFC_VAULT_NAMESPACE"
+  value        = var.vault_namespace
+  category     = "env"
+  workspace_id = tfe_workspace.default.id
+}
+
 resource "tfe_variable" "tfc_vault_run_role" {
   key          = "TFC_VAULT_RUN_ROLE"
   value        = var.vault_auth_role

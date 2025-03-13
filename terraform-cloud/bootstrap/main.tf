@@ -15,10 +15,10 @@ module "namespace_root" {
     "okta_base_url"  = { value = var.okta_base_url }
     "okta_org_name"  = { value = var.okta_org_name }
   }
-  vault_address   = var.vault_address_tfc_agent
-  vault_auth_path = vault_jwt_auth_backend.tfc.path
-  vault_auth_role = "${var.vault_auth_role_prefix}-namespace-root"
-  vault_policy    = vault_policy.tfc_admin.name
+  vault_address     = var.vault_address_tfc_agent
+  vault_auth_path   = vault_jwt_auth_backend.tfc.path
+  vault_auth_role   = "${var.vault_auth_role_prefix}-namespace-root"
+  vault_policy_name = vault_policy.tfc_admin.name
 }
 
 module "namespace-vending" {
@@ -44,10 +44,9 @@ module "namespace-vending" {
     "tfc_project"         = { value = var.tfc_project }
     "vault_address"       = { value = var.vault_address_tfc_agent }
     "vault_auth_path"     = { value = vault_jwt_auth_backend.tfc.path }
-    "vault_policy"        = { value = vault_policy.tfc_admin.name }
   }
-  vault_address   = var.vault_address_tfc_agent
-  vault_auth_path = vault_jwt_auth_backend.tfc.path
-  vault_auth_role = "${var.vault_auth_role_prefix}-namespace-vending"
-  vault_policy    = vault_policy.tfc_admin.name
+  vault_address     = var.vault_address_tfc_agent
+  vault_auth_path   = vault_jwt_auth_backend.tfc.path
+  vault_auth_role   = "${var.vault_auth_role_prefix}-namespace-vending"
+  vault_policy_name = vault_policy.tfc_admin.name
 }
