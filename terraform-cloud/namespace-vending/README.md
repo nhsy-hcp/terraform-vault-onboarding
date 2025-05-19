@@ -18,10 +18,8 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_dev_namespace"></a> [dev\_namespace](#module\_dev\_namespace) | ./../modules/namespace | n/a |
-| <a name="module_dev_workspace"></a> [dev\_workspace](#module\_dev\_workspace) | ./../modules/workspace | n/a |
-| <a name="module_tst_namespace"></a> [tst\_namespace](#module\_tst\_namespace) | ./../modules/namespace | n/a |
-| <a name="module_tst_workspace"></a> [tst\_workspace](#module\_tst\_workspace) | ./../modules/workspace | n/a |
+| <a name="module_bu01_namespace"></a> [bu01\_namespace](#module\_bu01\_namespace) | ./../modules/namespace | n/a |
+| <a name="module_bu01_workspace"></a> [bu01\_workspace](#module\_bu01\_workspace) | ./../modules/workspace | n/a |
 
 ## Resources
 
