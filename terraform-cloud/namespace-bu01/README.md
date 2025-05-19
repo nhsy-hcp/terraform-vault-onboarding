@@ -1,5 +1,3 @@
-# namespace-dev
-
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -9,7 +7,7 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_vault"></a> [vault](#provider\_vault) | 4.6.0 |
+| <a name="provider_vault"></a> [vault](#provider\_vault) | 4.8.0 |
 
 ## Modules
 
