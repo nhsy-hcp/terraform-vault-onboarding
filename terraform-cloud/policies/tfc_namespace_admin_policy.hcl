@@ -64,6 +64,12 @@ path "sys/quotas/*" {
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
-path "sys/mounts/secrets" {
+# Create secrets mounts
+path "sys/mounts/*" {
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+# Remount auth and secrets mounts
+path "sys/reomunt" {
+    capabilities = ["update", "sudo"]
 }

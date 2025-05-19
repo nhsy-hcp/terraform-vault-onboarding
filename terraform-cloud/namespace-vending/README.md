@@ -31,7 +31,8 @@
 
 | Name | Type |
 |------|------|
-| [vault_policy_document.bu01_team_reader](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/data-sources/policy_document) | data source |
+| [vault_policy_document.team_contributor](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/data-sources/policy_document) | data source |
+| [vault_policy_document.team_viewer](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/data-sources/policy_document) | data source |
 
 ## Inputs
 
