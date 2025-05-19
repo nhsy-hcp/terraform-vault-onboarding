@@ -105,7 +105,7 @@ variable "enable_tfc_agent_pool" {
 variable "terraform_version" {
   type        = string
   description = "Version of Terraform to use"
-  default     = "~> 1.11.0"
+  default     = ">= 1.11.0"
 }
 
 variable "tfc_terraform_variables" {
