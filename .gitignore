@@ -5,9 +5,11 @@
 
 # Local dev files
 .config
+.env
 .idea
 .kube
 .ssh
+env.sh
 
 # Terraform state
 **/terraform.tfstate.d/*
@@ -19,6 +21,7 @@
 
 # Terrafaor local tfvars
 terraform.tfvars
+backend.tf
 
 scripts/env.sh
 scripts/local-env.sh

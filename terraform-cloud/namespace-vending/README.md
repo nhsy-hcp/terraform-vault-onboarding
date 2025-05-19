@@ -12,7 +12,9 @@
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_vault"></a> [vault](#provider\_vault) | 4.6.0 |
 
 ## Modules
 
@@ -20,10 +22,16 @@ No providers.
 |------|--------|---------|
 | <a name="module_bu01_namespace"></a> [bu01\_namespace](#module\_bu01\_namespace) | ./../modules/namespace | n/a |
 | <a name="module_bu01_workspace"></a> [bu01\_workspace](#module\_bu01\_workspace) | ./../modules/workspace | n/a |
+| <a name="module_bu02_namespace"></a> [bu02\_namespace](#module\_bu02\_namespace) | ./../modules/namespace | n/a |
+| <a name="module_bu02_workspace"></a> [bu02\_workspace](#module\_bu02\_workspace) | ./../modules/workspace | n/a |
+| <a name="module_bu03_namespace"></a> [bu03\_namespace](#module\_bu03\_namespace) | ./../modules/namespace | n/a |
+| <a name="module_bu03_workspace"></a> [bu03\_workspace](#module\_bu03\_workspace) | ./../modules/workspace | n/a |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [vault_policy_document.bu01_team_reader](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/data-sources/policy_document) | data source |
 
 ## Inputs
 

@@ -1,3 +1,23 @@
+data "vault_policy_document" "bu01_team_reader" {
+  for_each = toset(["team1", "team2"])
+  rule {
+    path         = "secrets/data/${each.value}/*"
+    capabilities = ["read", "list"]
+  }
+  rule {
+    path         = "secrets/metadata/${each.value}/*"
+    capabilities = ["read", "list"]
+  }
+  rule {
+    path         = "secrets/metadata/"
+    capabilities = ["list"]
+  }
+  rule {
+    path         = "sys/mounts"
+    capabilities = ["read"]
+  }
+}
+
 module "bu01_namespace" {
   source            = "./../modules/namespace"
   namespace         = "bu01"
@@ -5,6 +25,16 @@ module "bu01_namespace" {
   admin_group_name  = "vault-bu01-admin"
   quota_lease_count = 101
   quota_rate_limit  = 102
+  rbac_delegation = {
+    "bu01-team1-reader" = {
+      group_name = "vault-bu01-team1-reader"
+      policy     = data.vault_policy_document.bu01_team_reader["team1"].hcl
+    },
+    "bu01-team2-reader" = {
+      group_name = "vault-bu01-team2-reader"
+      policy     = data.vault_policy_document.bu01_team_reader["team2"].hcl
+    }
+  }
 }
 
 module "bu01_workspace" {
@@ -26,6 +56,8 @@ module "bu01_workspace" {
   }
   vault_address   = var.vault_address
   vault_auth_path = var.vault_auth_path
-  vault_auth_role = var.vault_auth_role #"tfc-admin-namespace-dev"
+  vault_auth_role = var.vault_auth_role
   vault_namespace = module.bu01_namespace.namespace
+
+  depends_on = [module.bu01_namespace]
 }

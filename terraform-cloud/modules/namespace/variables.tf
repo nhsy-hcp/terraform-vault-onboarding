@@ -24,3 +24,11 @@ variable "okta_auth_path" {
   type    = string
   default = "oidc"
 }
+
+variable "rbac_delegation" {
+  type = map(object({
+    group_name = string,
+    policy     = string,
+  }))
+  default = {}
+}
