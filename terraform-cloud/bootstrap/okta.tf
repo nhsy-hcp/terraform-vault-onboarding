@@ -3,14 +3,19 @@ locals {
   vault_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-admin")]
   vault_user_member_ids  = [for user in okta_user.default : user.id]
 
-  #TODO: Refactor to get the member ids for the group memberships
-  vault_dev_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-dev-admin")]
-  vault_tst_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-tst-admin")]
-  vault_prd_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-prd-admin")]
+  vault_namespace_member_ids = {
+    for group in var.okta_namespace_groups :
+    group => [
+      for user, details in var.okta_users :
+      okta_user.default[user].id if contains(details.groups, group)
+    ]
+  }
+}
 
-  # Fetch okta group ids
-  #  okta_group_ids = [for group in okta_group.default : group.id]
-
+resource "okta_group_memberships" "vault_namespaces" {
+  for_each = local.vault_namespace_member_ids
+  group_id = okta_group.namespace[each.key].id
+  users    = each.value
 }
 
 # Create okta mgmt groups
@@ -45,21 +50,6 @@ resource "okta_group_memberships" "vault_admin" {
 resource "okta_group_memberships" "vault_user" {
   group_id = okta_group.mgmt["vault-user"].id
   users    = local.vault_user_member_ids
-}
-
-resource "okta_group_memberships" "vault_dev_admin" {
-  group_id = okta_group.namespace["vault-dev-admin"].id
-  users    = local.vault_dev_admin_member_ids
-}
-
-resource "okta_group_memberships" "vault_tst_admin" {
-  group_id = okta_group.namespace["vault-tst-admin"].id
-  users    = local.vault_tst_admin_member_ids
-}
-
-resource "okta_group_memberships" "vault_prd_admin" {
-  group_id = okta_group.namespace["vault-prd-admin"].id
-  users    = local.vault_prd_admin_member_ids
 }
 
 resource "okta_auth_server" "default" {

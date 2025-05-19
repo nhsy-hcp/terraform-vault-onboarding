@@ -38,9 +38,7 @@
 | [okta_group.mgmt](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/group) | resource |
 | [okta_group.namespace](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/group) | resource |
 | [okta_group_memberships.vault_admin](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/group_memberships) | resource |
-| [okta_group_memberships.vault_dev_admin](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/group_memberships) | resource |
-| [okta_group_memberships.vault_prd_admin](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/group_memberships) | resource |
-| [okta_group_memberships.vault_tst_admin](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/group_memberships) | resource |
+| [okta_group_memberships.vault_namespaces](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/group_memberships) | resource |
 | [okta_group_memberships.vault_user](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/group_memberships) | resource |
 | [okta_user.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/user) | resource |
 | [vault_jwt_auth_backend.tfc](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/jwt_auth_backend) | resource |
