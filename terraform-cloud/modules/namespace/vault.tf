@@ -95,3 +95,11 @@ resource "vault_policy" "rbac" {
 #   member_group_ids = [vault_identity_group.rbac_external[each.key].id]
 #   policies         = [vault_policy.rbac[each.key].name]
 # }
+
+resource "vault_identity_group" "rbac_internal" {
+  for_each         = { for p in local.rbac_policies : p.name => p }
+  namespace        = vault_namespace.default.path
+  name             = data.okta_group.rbac[each.value.group].name
+  member_group_ids = [vault_identity_group.rbac_external[each.value.group].id]
+  policies         = [vault_policy.rbac[each.value.name].name]
+}
