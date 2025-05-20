@@ -70,6 +70,10 @@ path "sys/mounts/*" {
 }
 
 # Remount auth and secrets mounts
-path "sys/reomunt" {
-    capabilities = ["update", "sudo"]
+path "sys/remount" {
+  capabilities = ["update", "sudo"]
+}
+
+path "sys/remount/*" {
+  capabilities = ["read", "list"]
 }
