@@ -9,20 +9,20 @@ module "bu01_namespace" {
     "bu01-team1-reader" = {
       group_name = "vault-bu01-team1-viewer"
       policies = {
-        kv_shared    = data.vault_policy_document.shared_team_viewer["team1"].hcl,
-        kv_dedicated = data.vault_policy_document.dedicated_team_viewer["team1"].hcl
+        kv-shared    = data.vault_policy_document.shared_team_viewer["team1"].hcl,
+        kv-dedicated = data.vault_policy_document.dedicated_team_viewer["team1"].hcl
     } },
     "bu01-team2-reader" = {
       group_name = "vault-bu01-team2-viewer"
       policies = {
-        kv_shared    = data.vault_policy_document.shared_team_viewer["team1"].hcl,
-        kv_dedicated = data.vault_policy_document.dedicated_team_viewer["team1"].hcl,
+        kv-shared    = data.vault_policy_document.shared_team_viewer["team1"].hcl,
+        kv-dedicated = data.vault_policy_document.dedicated_team_viewer["team1"].hcl,
     } },
     "bu01-team1-contributor" = {
       group_name = "vault-bu01-team1-contributor"
       policies = {
-        kv_shared    = data.vault_policy_document.shared_team_contributor["team1"].hcl,
-        kv_dedicated = data.vault_policy_document.dedicated_team_contributor["team1"].hcl,
+        kv-shared    = data.vault_policy_document.shared_team_contributor["team1"].hcl,
+        kv-dedicated = data.vault_policy_document.dedicated_team_contributor["team1"].hcl,
       }
     }
   }

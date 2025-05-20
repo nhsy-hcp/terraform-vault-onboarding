@@ -84,10 +84,9 @@ resource "vault_policy" "rbac" {
   for_each = { for p in local.rbac_policies : p.name => p }
 
   namespace = vault_namespace.default.path
-  name      = each.value.name
+  name      = replace(each.value.name, "_", "-")
   policy    = each.value.policy
 }
-
 
 # resource "vault_identity_group" "rbac_internal" {
 #   for_each         = var.rbac_delegation
