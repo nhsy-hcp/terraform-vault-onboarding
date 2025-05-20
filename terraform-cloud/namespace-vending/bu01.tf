@@ -17,9 +17,17 @@ module "bu01_namespace" {
       policies = {
         kv-shared    = data.vault_policy_document.shared_team_viewer["team2"].hcl,
         kv-dedicated = data.vault_policy_document.dedicated_team_viewer["team2"].hcl,
-    } },
+      }
+    },
     "bu01-team1-contributor" = {
       group_name = "vault-bu01-team1-contributor"
+      policies = {
+        kv-shared    = data.vault_policy_document.shared_team_contributor["team1"].hcl,
+        kv-dedicated = data.vault_policy_document.dedicated_team_contributor["team1"].hcl,
+      }
+    },
+    "vault-bu01-team1-admin" = {
+      group_name = "vault-bu01-team1-admin"
       policies = {
         kv-shared    = data.vault_policy_document.shared_team_contributor["team1"].hcl,
         kv-dedicated = data.vault_policy_document.dedicated_team_contributor["team1"].hcl,
