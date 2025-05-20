@@ -1,4 +1,4 @@
-data "vault_policy_document" "team_viewer" {
+data "vault_policy_document" "shared_team_viewer" {
   for_each = toset(["team1", "team2", "team2"])
   rule {
     path         = "shared/data/${each.value}/*"
@@ -19,7 +19,7 @@ data "vault_policy_document" "team_viewer" {
 }
 
 
-data "vault_policy_document" "team_contributor" {
+data "vault_policy_document" "shared_team_contributor" {
   for_each = toset(["team1", "team2", "team2"])
   rule {
     path         = "shared/data/${each.value}/*"
@@ -31,6 +31,47 @@ data "vault_policy_document" "team_contributor" {
   }
   rule {
     path         = "shared/metadata/"
+    capabilities = ["list"]
+  }
+  rule {
+    path         = "sys/mounts"
+    capabilities = ["read"]
+  }
+}
+
+data "vault_policy_document" "dedicated_team_viewer" {
+  for_each = toset(["team1", "team2", "team2"])
+  rule {
+    path         = "${each.value}/data/*"
+    capabilities = ["read", "list"]
+  }
+  rule {
+    path         = "${each.value}/metadata/*"
+    capabilities = ["read", "list"]
+  }
+  rule {
+    path         = "${each.value}/metadata/"
+    capabilities = ["list"]
+  }
+  rule {
+    path         = "sys/mounts"
+    capabilities = ["read"]
+  }
+}
+
+
+data "vault_policy_document" "dedicated_team_contributor" {
+  for_each = toset(["team1", "team2", "team2"])
+  rule {
+    path         = "${each.value}/data/*"
+    capabilities = ["create", "update", "read", "list"]
+  }
+  rule {
+    path         = "${each.value}/metadata/*"
+    capabilities = ["read", "list"]
+  }
+  rule {
+    path         = "${each.value}/metadata/"
     capabilities = ["list"]
   }
   rule {

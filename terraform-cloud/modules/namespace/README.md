@@ -49,7 +49,7 @@ No modules.
 | <a name="input_okta_auth_path"></a> [okta\_auth\_path](#input\_okta\_auth\_path) | n/a | `string` | `"oidc"` | no |
 | <a name="input_quota_lease_count"></a> [quota\_lease\_count](#input\_quota\_lease\_count) | n/a | `string` | `100` | no |
 | <a name="input_quota_rate_limit"></a> [quota\_rate\_limit](#input\_quota\_rate\_limit) | n/a | `string` | `100` | no |
-| <a name="input_rbac_delegation"></a> [rbac\_delegation](#input\_rbac\_delegation) | n/a | <pre>map(object({<br/>    group_name = string,<br/>    policy     = string,<br/>  }))</pre> | `{}` | no |
+| <a name="input_rbac_delegation"></a> [rbac\_delegation](#input\_rbac\_delegation) | n/a | <pre>map(object({<br/>    group_name = string,<br/>    policies   = map(string),<br/>  }))</pre> | `{}` | no |
 
 ## Outputs
 

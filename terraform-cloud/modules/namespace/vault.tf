@@ -73,17 +73,36 @@ resource "vault_identity_group_alias" "rbac_external" {
   canonical_id   = vault_identity_group.rbac_external[each.key].id
 }
 
+# resource "vault_policy" "rbac" {
+#   for_each  = var.rbac_delegation
+#   namespace = vault_namespace.default.path
+#   name      = each.key
+#   policy    = each.value.policy
+# }
+
 resource "vault_policy" "rbac" {
-  for_each  = var.rbac_delegation
+  for_each = { for p in local.rbac_policies : p.name => p }
+
   namespace = vault_namespace.default.path
-  name      = each.key
+  name      = replace(each.value.name, "_", "-")
   policy    = each.value.policy
 }
+
+# resource "vault_identity_group" "rbac_internal" {
+#   for_each         = var.rbac_delegation
+#   namespace        = vault_namespace.default.path
+#   name             = data.okta_group.rbac[each.key].name
+#   member_group_ids = [vault_identity_group.rbac_external[each.key].id]
+#   policies         = [vault_policy.rbac[each.key].name]
+# }
 
 resource "vault_identity_group" "rbac_internal" {
   for_each         = var.rbac_delegation
   namespace        = vault_namespace.default.path
   name             = data.okta_group.rbac[each.key].name
   member_group_ids = [vault_identity_group.rbac_external[each.key].id]
-  policies         = [vault_policy.rbac[each.key].name]
+  policies = [
+    for policy_key in keys(each.value.policies) :
+    vault_policy.rbac["${each.key}-${policy_key}"].name
+  ]
 }
