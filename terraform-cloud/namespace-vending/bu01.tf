@@ -15,8 +15,8 @@ module "bu01_namespace" {
     "bu01-team2-reader" = {
       group_name = "vault-bu01-team2-viewer"
       policies = {
-        kv-shared    = data.vault_policy_document.shared_team_viewer["team1"].hcl,
-        kv-dedicated = data.vault_policy_document.dedicated_team_viewer["team1"].hcl,
+        kv-shared    = data.vault_policy_document.shared_team_viewer["team2"].hcl,
+        kv-dedicated = data.vault_policy_document.dedicated_team_viewer["team2"].hcl,
     } },
     "bu01-team1-contributor" = {
       group_name = "vault-bu01-team1-contributor"
