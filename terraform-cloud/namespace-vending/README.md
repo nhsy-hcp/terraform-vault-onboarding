@@ -31,8 +31,10 @@
 
 | Name | Type |
 |------|------|
-| [vault_policy_document.team_contributor](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/data-sources/policy_document) | data source |
-| [vault_policy_document.team_viewer](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/data-sources/policy_document) | data source |
+| [vault_policy_document.dedicated_team_contributor](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/data-sources/policy_document) | data source |
+| [vault_policy_document.dedicated_team_viewer](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/data-sources/policy_document) | data source |
+| [vault_policy_document.shared_team_contributor](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/data-sources/policy_document) | data source |
+| [vault_policy_document.shared_team_viewer](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/data-sources/policy_document) | data source |
 
 ## Inputs
 

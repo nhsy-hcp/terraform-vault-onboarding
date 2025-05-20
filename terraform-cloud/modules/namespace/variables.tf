@@ -28,7 +28,7 @@ variable "okta_auth_path" {
 variable "rbac_delegation" {
   type = map(object({
     group_name = string,
-    policy     = string,
+    policies   = map(string),
   }))
   default = {}
 }
