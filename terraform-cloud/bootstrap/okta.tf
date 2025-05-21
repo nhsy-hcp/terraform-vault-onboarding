@@ -1,7 +1,15 @@
 locals {
   # Fetch okta user ids for each group
-  vault_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-admin")]
-  vault_user_member_ids  = [for user in okta_user.default : user.id]
+  # vault_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-admin")]
+  # vault_user_member_ids  = [for user in okta_user.default : user.id]
+
+  vault_admin_member_ids = [
+    for user, details in var.okta_users : okta_user.default[user].id if contains(details.groups, "vault-admin")
+  ]
+
+  vault_user_member_ids = [
+    for user, details in var.okta_users : okta_user.default[user].id
+  ]
 
   vault_namespace_member_ids = {
     for group in var.okta_namespace_groups :
