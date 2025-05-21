@@ -3,7 +3,7 @@ terraform {
     organization = "nhsy-hcp-org"
     workspaces {
       name    = "terraform-vault-onboarding-namespace-vending"
-      project = "demo"
+      project = "vault-onboarding"
     }
   }
 }
