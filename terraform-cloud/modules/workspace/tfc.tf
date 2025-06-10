@@ -1,18 +1,5 @@
-#resource "tfe_oauth_client" "default" {
-#  name             = "GitHub-OAuth"
-#  api_url          = "https://api.github.com"
-#  http_url         = "https://github.com"
-#  service_provider = "github"
-#  organization     = var.tfc_organization_name
-#  oauth_token      = var.github_oauth_token
-#}
-
-## Connect TFC org to Github OAuth Apps
-## https://developer.hashicorp.com/terraform/cloud-docs/vcs/github
-data "tfe_oauth_client" "default" {
-  organization     = var.tfc_organization
-  service_provider = "github"
-  name             = "GitHub-OAuth"
+data "tfe_github_app_installation" "default" {
+  name = var.github_organization
 }
 
 data "tfe_project" "default" {
@@ -45,10 +32,9 @@ resource "tfe_workspace" "default" {
   ]
 
   vcs_repo {
-    branch     = "main"
-    identifier = format("%s/%s", var.github_organization, var.github_repository)
-    #      oauth_token_id = tfe_oauth_client.default.oauth_token_id
-    oauth_token_id = data.tfe_oauth_client.default.oauth_token_id
+    branch                     = "main"
+    identifier                 = format("%s/%s", var.github_organization, var.github_repository)
+    github_app_installation_id = data.tfe_github_app_installation.default.id
   }
   working_directory = var.tfc_working_directory
 }
