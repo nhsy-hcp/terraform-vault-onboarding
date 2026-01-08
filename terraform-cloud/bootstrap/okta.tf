@@ -113,13 +113,6 @@ resource "okta_app_oauth" "default" {
     format("%s/ui/vault/auth/${var.okta_auth_path}/oidc/callback", var.vault_address),
     "http://localhost:8250/oidc/callback"
   ]
-
-  groups_claim {
-    filter_type = "STARTS_WITH"
-    name        = "groups"
-    type        = "FILTER"
-    value       = "vault-"
-  }
 }
 
 # Assign the vault app to the vault-user group
