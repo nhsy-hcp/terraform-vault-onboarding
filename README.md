@@ -99,6 +99,46 @@ Edit `./bootstrap/terraform.tfvars` and configure the following variables:
 
 **Important:** Update all sensitive values (tokens, passwords) before applying the bootstrap configuration.
 
+### Local HCP Terraform Agent Setup
+
+To enable HCP Terraform workspaces to communicate with your local Vault instance, you need to run an agent in the same Docker network as Vault.
+
+**Prerequisites:**
+- Docker or Podman installed and running
+- HCP Terraform organization with an agent pool configured
+- Vault running in a Docker container
+
+**Setup Steps:**
+
+1. **Create an Agent Pool in HCP Terraform**:
+   - Navigate to your HCP Terraform organization settings
+   - Go to "Agents" section
+   - Create a new agent pool and note the agent token
+
+2. **Run the HCP Terraform agent container**:
+   ```bash
+   docker run -d \
+     --name tfc-agent \
+     --network vault-network \
+     -e TFC_AGENT_TOKEN="your-agent-token" \
+     -e TFC_AGENT_NAME="local-agent" \
+     hashicorp/tfc-agent:latest
+   ```
+
+3. **Verify connectivity**:
+   - The agent should appear as "idle" in your HCP Terraform agent pool
+   - The agent can resolve the Vault container using the hostname `vault`
+   - This corresponds to the `vault_address_tfc_agent` variable value: `http://vault:8200`
+
+**Network Configuration:**
+- Vault container must be accessible via hostname `vault` on port `8200`
+- Both Vault and the HCP Terraform agent must be on the same Docker network
+- The `vault_address_tfc_agent` variable in `terraform.tfvars` should use the container hostname
+
+**Troubleshooting:**
+- Verify network connectivity: `docker exec tfc-agent ping vault`
+- Check agent logs: `docker logs tfc-agent`
+- Ensure Vault is listening on `0.0.0.0:8200` inside the container, not just `127.0.0.1:8200`
 
 ## Usage
 
@@ -143,7 +183,7 @@ Creates a Vault namespace with:
 ### workspace
 
 Creates a HCP Terraform workspace integrated with Vault:
-- TFC workspace resource
+- HCP Terraform workspace resource
 - Vault JWT auth backend role
 - Workspace variables for Vault authentication
 - Agent pool configuration (optional)
