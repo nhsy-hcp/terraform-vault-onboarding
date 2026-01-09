@@ -23,9 +23,9 @@ env.sh
 terraform.tfvars
 backend.tf
 
-scripts/env.sh
-scripts/local-env.sh
+scripts/
+tests/
 
 .claude/*
-plans/*
+plans/
 CLAUDE.md
