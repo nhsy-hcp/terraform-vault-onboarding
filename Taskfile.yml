@@ -13,6 +13,13 @@ tasks:
       - terraform -chdir=namespace-vending init -upgrade
       - terraform -chdir=namespace-root init -upgrade
 
+  validate:
+    deps: ["lint", "init"]
+    cmds:
+      - terraform -chdir=bootstrap validate
+      - terraform -chdir=namespace-vending validate
+      - terraform -chdir=namespace-root validate
+
   bootstrap:
     deps: ["lint"]
     dir: ./bootstrap
@@ -44,19 +51,3 @@ tasks:
     dotenv: [".env"]
     cmds:
       - terraform plan -refresh
-
-  namespace-vending:
-    deps: ["lint"]
-    dir: ./namespace-vending
-    cmds:
-      - terraform init
-      - terraform validate
-      - terraform plan
-
-  namespace-root:
-    deps: ["lint"]
-    dir: ./namespace-root
-    cmds:
-      - terraform init
-      - terraform validate
-      - terraform plan
