@@ -27,8 +27,8 @@ resource "tfe_workspace" "default" {
 
   trigger_patterns = [
     "${var.tfc_working_directory}/**",
-    "terraform-cloud/modules/**/*",
-    "terraform-cloud/policies/**"
+    "modules/**/*",
+    "policies/**"
   ]
 
   vcs_repo {

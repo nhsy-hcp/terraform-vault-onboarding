@@ -48,7 +48,7 @@ variable "tfc_workspace_prefix" {
 variable "tfc_working_directory_prefix" {
   type        = string
   description = "Working directory for the TFC workspace."
-  default     = "terraform-cloud"
+  default     = "."
 }
 
 variable "vault_address" {

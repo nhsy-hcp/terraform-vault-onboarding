@@ -21,8 +21,8 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_namespace-vending"></a> [namespace-vending](#module\_namespace-vending) | ./../modules/workspace | n/a |
-| <a name="module_namespace_root"></a> [namespace\_root](#module\_namespace\_root) | ./../modules/workspace | n/a |
+| <a name="module_namespace-vending"></a> [namespace-vending](#module\_namespace-vending) | ./modules/workspace | n/a |
+| <a name="module_namespace_root"></a> [namespace\_root](#module\_namespace\_root) | ./modules/workspace | n/a |
 
 ## Resources
 
@@ -63,7 +63,7 @@
 | <a name="input_tfc_organization"></a> [tfc\_organization](#input\_tfc\_organization) | Name of the TFC organization. | `string` | n/a | yes |
 | <a name="input_tfc_project"></a> [tfc\_project](#input\_tfc\_project) | Name of the TFC project. | `string` | `"default project"` | no |
 | <a name="input_tfc_token"></a> [tfc\_token](#input\_tfc\_token) | Terraform Cloud API token | `string` | n/a | yes |
-| <a name="input_tfc_working_directory_prefix"></a> [tfc\_working\_directory\_prefix](#input\_tfc\_working\_directory\_prefix) | Working directory for the TFC workspace. | `string` | `"terraform-cloud"` | no |
+| <a name="input_tfc_working_directory_prefix"></a> [tfc\_working\_directory\_prefix](#input\_tfc\_working\_directory\_prefix) | Working directory for the TFC workspace. | `string` | `"."` | no |
 | <a name="input_tfc_workspace_prefix"></a> [tfc\_workspace\_prefix](#input\_tfc\_workspace\_prefix) | Name of the TFC workspace. | `string` | `"terraform-vault-onboarding"` | no |
 | <a name="input_token_type"></a> [token\_type](#input\_token\_type) | Token type for Vault tokens | `string` | `"default-service"` | no |
 | <a name="input_vault_address"></a> [vault\_address](#input\_vault\_address) | Vault API endpoint | `string` | n/a | yes |

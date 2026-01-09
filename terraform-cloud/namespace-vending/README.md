@@ -20,12 +20,12 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_bu01_namespace"></a> [bu01\_namespace](#module\_bu01\_namespace) | ./../modules/namespace | n/a |
-| <a name="module_bu01_workspace"></a> [bu01\_workspace](#module\_bu01\_workspace) | ./../modules/workspace | n/a |
-| <a name="module_bu02_namespace"></a> [bu02\_namespace](#module\_bu02\_namespace) | ./../modules/namespace | n/a |
-| <a name="module_bu02_workspace"></a> [bu02\_workspace](#module\_bu02\_workspace) | ./../modules/workspace | n/a |
-| <a name="module_bu03_namespace"></a> [bu03\_namespace](#module\_bu03\_namespace) | ./../modules/namespace | n/a |
-| <a name="module_bu03_workspace"></a> [bu03\_workspace](#module\_bu03\_workspace) | ./../modules/workspace | n/a |
+| <a name="module_bu01_namespace"></a> [bu01\_namespace](#module\_bu01\_namespace) | ./modules/namespace | n/a |
+| <a name="module_bu01_workspace"></a> [bu01\_workspace](#module\_bu01\_workspace) | ./modules/workspace | n/a |
+| <a name="module_bu02_namespace"></a> [bu02\_namespace](#module\_bu02\_namespace) | ./modules/namespace | n/a |
+| <a name="module_bu02_workspace"></a> [bu02\_workspace](#module\_bu02\_workspace) | ./modules/workspace | n/a |
+| <a name="module_bu03_namespace"></a> [bu03\_namespace](#module\_bu03\_namespace) | ./modules/namespace | n/a |
+| <a name="module_bu03_workspace"></a> [bu03\_workspace](#module\_bu03\_workspace) | ./modules/workspace | n/a |
 
 ## Resources
 
@@ -49,7 +49,7 @@
 | <a name="input_okta_org_name"></a> [okta\_org\_name](#input\_okta\_org\_name) | Okta organization name | `string` | n/a | yes |
 | <a name="input_tfc_organization"></a> [tfc\_organization](#input\_tfc\_organization) | Name of the TFC organization. | `string` | n/a | yes |
 | <a name="input_tfc_project"></a> [tfc\_project](#input\_tfc\_project) | Name of the TFC project. | `string` | n/a | yes |
-| <a name="input_tfc_working_directory_prefix"></a> [tfc\_working\_directory\_prefix](#input\_tfc\_working\_directory\_prefix) | Working directory for the TFC workspace. | `string` | `"terraform-cloud"` | no |
+| <a name="input_tfc_working_directory_prefix"></a> [tfc\_working\_directory\_prefix](#input\_tfc\_working\_directory\_prefix) | Working directory for the TFC workspace. | `string` | `"."` | no |
 | <a name="input_tfc_workspace_prefix"></a> [tfc\_workspace\_prefix](#input\_tfc\_workspace\_prefix) | Name of the TFC workspace. | `string` | `"terraform-vault-onboarding"` | no |
 | <a name="input_vault_address"></a> [vault\_address](#input\_vault\_address) | Vault API endpoint | `string` | n/a | yes |
 | <a name="input_vault_auth_path"></a> [vault\_auth\_path](#input\_vault\_auth\_path) | Mount path where JWT Auth will be configured | `string` | n/a | yes |
