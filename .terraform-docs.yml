@@ -4,7 +4,6 @@
 formatter: "markdown table"
 recursive:
   enable: true
-#  path: terraform-cloud
 
 sort:
   by: required
