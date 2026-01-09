@@ -18,37 +18,37 @@ This solution provides automated provisioning and management of HashiCorp Vault 
 ### High-Level Component Diagram
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────┐
 │                         HCP Terraform                          │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
 │  │  Bootstrap   │  │ Namespace    │  │  BU Workspace│          │
 │  │  Workspace   │  │  Vending     │  │  (bu01)      │          │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘          │
-│         │                  │                  │                  │
-│         │ JWT Auth         │ JWT Auth         │ JWT Auth         │
-└─────────┼──────────────────┼──────────────────┼──────────────────┘
+│         │                  │                  │                │
+│         │ JWT Auth         │ JWT Auth         │ JWT Auth       │
+└─────────┼──────────────────┼──────────────────┼────────────────┘
           │                  │                  │
           ▼                  ▼                  ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      HashiCorp Vault                             │
+┌────────────────────────────────────────────────────────────────┐
+│                      HashiCorp Vault                           │
 │  ┌──────────────────────────────────────────────────────────┐  │
-│  │  Root Namespace                                           │  │
-│  │  - JWT Auth Backend (HCP Terraform)                                │  │
+│  │  Root Namespace                                          │  │
+│  │  - JWT Auth Backend (HCP Terraform)                      │  │
 │  │  - OIDC Auth Backend (Okta)                              │  │
 │  │  - Admin Policies                                        │  │
 │  └────────────────────┬─────────────────────────────────────┘  │
-│                       │                                          │
-│         ┌─────────────┴─────────────┬──────────────┐            │
-│         ▼                           ▼              ▼            │
-│  ┌──────────────┐          ┌──────────────┐  ┌──────────────┐ │
-│  │ Namespace:   │          │ Namespace:   │  │ Namespace:   │ │
-│  │   bu01       │          │   bu02       │  │   bu03       │ │
-│  │              │          │              │  │              │ │
-│  │ - KV Store   │          │ - KV Store   │  │ - KV Store   │ │
-│  │ - Policies   │          │ - Policies   │  │ - Policies   │ │
-│  │ - Groups     │          │ - Groups     │  │ - Groups     │ │
-│  └──────────────┘          └──────────────┘  └──────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
+│                       │                                        │
+│         ┌─────────────┴─────────────┬──────────────┐           │
+│         ▼                           ▼              ▼           │
+│  ┌──────────────┐          ┌──────────────┐  ┌──────────────┐  │
+│  │ Namespace:   │          │ Namespace:   │  │ Namespace:   │  │
+│  │   bu01       │          │   bu02       │  │   bu03       │  │
+│  │              │          │              │  │              │  │
+│  │ - KV Store   │          │ - KV Store   │  │ - KV Store   │  │
+│  │ - Policies   │          │ - Policies   │  │ - Policies   │  │
+│  │ - Groups     │          │ - Groups     │  │ - Groups     │  │
+│  └──────────────┘          └──────────────┘  └──────────────┘  │
+└────────────────────────────────────────────────────────────────┘
           ▲
           │ OIDC Auth
           │
@@ -216,10 +216,10 @@ Business Unit Namespaces (bu01, bu02, bu03)
 **Flow:**
 
 ```
-┌─────────────────┐
-│ HCP Terraform Workspace   │
-│ (Terraform Run) │
-└────────┬────────┘
+┌─────────────────────────┐
+│ HCP Terraform Workspace │
+│ (Terraform Run)         │
+└────────┬────────────────┘
          │ 1. Request Vault token
          │    (with JWT from HCP Terraform)
          ▼
@@ -232,11 +232,11 @@ Business Unit Namespaces (bu01, bu02, bu03)
          │ 2. Vault token
          │    (scoped to policies)
          ▼
-┌─────────────────┐
-│ HCP Terraform Workspace   │
-│ Uses token to   │
-│ manage Vault    │
-└─────────────────┘
+┌──────────────────────────┐
+│ HCP Terraform Workspace  │
+│ Uses token to            │
+│ manage Vault             │
+└──────────────────────────┘
 ```
 
 **Configuration:**
