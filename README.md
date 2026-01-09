@@ -26,7 +26,7 @@ terraform-vault-onboarding/
 
 ## Prerequisites
 
-- Terraform >= 1.5.0
+- Terraform >= 1.12.0
 - HashiCorp Vault server
 - HCP Terraform organization and API token
 - Okta organization and API token (for OIDC authentication)
