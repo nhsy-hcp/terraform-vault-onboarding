@@ -1,5 +1,7 @@
 # HCP Terraform Vault Integration
 
+> **Disclaimer:** This project is provided for demonstration and learning purposes only. It is not intended for production use without proper security review, hardening, and customization for your specific environment.
+
 This directory contains Terraform configurations for integrating HashiCorp Vault with HCP Terraform. It provides automated namespace provisioning, workspace management, and authentication setup for multi-tenant Vault environments.
 
 ## Directory Structure
@@ -22,7 +24,7 @@ terraform-vault-onboarding/
 └── Taskfile.yml            # Task automation configuration
 ```
 
-> **📖 Architecture & Design:** See [Solution Design Documentation](./docs/solution-design.md) for detailed architecture, authentication flows, and design decisions.
+> **Architecture & Design:** See [Solution Design Documentation](./docs/solution-design.md) for detailed architecture, authentication flows, and design decisions.
 
 ## Prerequisites
 
@@ -41,59 +43,92 @@ The configurations should be applied in the following order:
 3. **Namespace Vending**: Creates child namespaces for business units with standardized configurations
 4. **Business Unit Namespaces**: Individual BU namespaces can be customized independently
 
-## Required Environment Variables
+## Bootstrap Demo Setup
+
+The bootstrap phase creates demo resources in OKTA for testing and demonstration purposes. These resources include:
+
+- **Demo Users**: Configurable test users with credentials (defined in `okta_users` variable)
+- **Management Groups**:
+  - `vault-admin` - Administrative access to Vault
+  - `vault-user` - Standard user access to Vault
+- **Business Unit Groups**: Namespace-specific groups for each business unit:
+  - `vault-bu01-admin` - Business Unit 1 administrators
+  - `vault-bu02-admin` - Business Unit 2 administrators
+  - `vault-bu03-admin` - Business Unit 3 administrators
+- **Group Memberships**: Automatic assignment of users to their designated groups
+- **OKTA OAuth Application**: Vault OIDC integration application
+- **OKTA Authorization Server**: Configured for Vault authentication with appropriate claims
+
+**Note:** These resources are created for demonstration and testing purposes only. You can customize the demo users, groups, and memberships by editing the `okta_users`, `okta_mgmt_groups`, and `okta_namespace_groups` variables in your `bootstrap/terraform.tfvars` file.
+
+## Pre-requisites Setup
+
+### Environment Variables
+
+These environment variables must be set before running the Bootstrap:
 
 | Variable | Description |
 |----------|-------------|
 | `VAULT_ADDR` | Vault server address |
 | `VAULT_TOKEN` | Vault authentication token |
-| `VAULT_NAMESPACE` | Vault namespace (optional) |
-| `TFE_TOKEN` | HCP Terraform API token |
-| `OKTA_API_TOKEN` | Okta API token |
+
+### Terraform Variables
+
+Copy the example terraform variables file and update it with your values:
+
+```bash
+cp ./bootstrap/terraform.tfvars.example ./bootstrap/terraform.tfvars
+```
+
+Edit `./bootstrap/terraform.tfvars` and configure the following variables:
+
+| Variable | Description | Example | Required |
+|----------|-------------|---------|----------|
+| `github_organization` | GitHub organization name | `"example-org"` | Yes |
+| `github_repository` | Repository name | `"terraform-vault-onboarding"` | Yes |
+| `tfc_organization` | Terraform Cloud organization name | `"example-tfc-org"` | Yes |
+| `tfc_project` | TFC project name | `"vault-onboarding"` | Yes |
+| `tfc_token` | TFC API token (sensitive) | `"your-tfc-api-token"` | Yes |
+| `vault_address` | Vault server address for local access | `"http://127.0.0.1:8200"` | Yes |
+| `vault_address_tfc_agent` | Vault server address for TFC agent | `"http://vault:8200"` | Yes |
+| `okta_org_name` | OKTA organization name | `"your-okta-org-name"` | Yes |
+| `okta_api_token` | OKTA API token (sensitive) | `"your-okta-api-token"` | Yes |
+| `okta_mgmt_groups` | Management groups to create in OKTA | `["vault-admin", "vault-user"]` | Yes |
+| `okta_namespace_groups` | Namespace-specific groups to create | `["vault-bu01-admin", ...]` | Yes |
+| `okta_users` | Demo users to create with group memberships | See example file | Yes |
+
+**Important:** Update all sensitive values (tokens, passwords) before applying the bootstrap configuration.
+
 
 ## Usage
 
 ### Using Taskfile
 
-Initialize all configurations:
+The following Taskfile commands are available for working with this project:
 
+**Plan bootstrap configuration:**
 ```bash
-task init
+task bootstrap-plan
 ```
+Reviews the changes that will be applied to bootstrap the infrastructure, including HCP Terraform projects, workspaces, and OKTA demo resources.
 
-Run bootstrap configuration:
-
+**Apply bootstrap configuration:**
 ```bash
-task bootstrap
+task bootstrap-apply
 ```
+Applies the bootstrap configuration to create the initial infrastructure setup.
 
-Plan namespace vending changes:
-
+**Validate all configurations:**
 ```bash
-task namespace-vending
+task validate
 ```
+Validates the Terraform syntax and configuration across all modules (bootstrap, namespace-vending, namespace-root).
 
-Format all Terraform files:
-
+**Format all Terraform files:**
 ```bash
 task lint
 ```
-
-### Manual Terraform Commands
-
-```bash
-# Bootstrap
-cd bootstrap
-terraform init
-terraform plan
-terraform apply
-
-# Namespace Vending
-cd namespace-vending
-terraform init
-terraform plan
-terraform apply
-```
+Formats all Terraform files in the repository according to standard conventions.
 
 ## Modules
 
@@ -132,10 +167,9 @@ OIDC authentication is configured in the root namespace. Users authenticate via 
 1. Create a namespace definition in `namespace-vending/bu{XX}.tf`
 2. Create a dedicated directory `namespace-bu{XX}/`
 3. Add the required files:
-   - `backend.tf`
-   - `providers.tf`
-   - `variables.tf`
-   - `main.tf`
+  - `main.tf`
+  - `providers.tf`
+  - `variables.tf`
 4. Apply namespace-vending first, then the business unit configuration
 
 ## Policies
@@ -149,8 +183,16 @@ Vault policy HCL files are stored in the `policies/` directory:
 | `namespace_admin_policy.hcl` | Namespace administrator permissions |
 | `okta_vault_admin_policy.hcl` | Okta-authenticated admin permissions |
 
+## Notes
+
+- Do not use a self-signed certificate for Vault TLS or an OIDC workflow will error on login.
+
 ## Additional Resources
 
 - [Vault Provider Documentation](https://registry.terraform.io/providers/hashicorp/vault/latest/docs)
 - [TFE Provider Documentation](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs)
 - [Okta Provider Documentation](https://registry.terraform.io/providers/okta/okta/latest/docs)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
