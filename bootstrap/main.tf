@@ -1,5 +1,5 @@
 module "namespace_root" {
-  source                = "./modules/workspace"
+  source                = "../modules/workspace"
   enable_tfc_agent_pool = var.enable_tfc_agent_pool
   github_organization   = var.github_organization
   github_repository     = var.github_repository
@@ -22,7 +22,7 @@ module "namespace_root" {
 }
 
 module "namespace-vending" {
-  source                = "./modules/workspace"
+  source                = "../modules/workspace"
   enable_tfc_agent_pool = var.enable_tfc_agent_pool
   github_organization   = var.github_organization
   github_repository     = var.github_repository

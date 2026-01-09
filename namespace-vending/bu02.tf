@@ -1,5 +1,5 @@
 module "bu02_namespace" {
-  source            = "./modules/namespace"
+  source            = "../modules/namespace"
   namespace         = "bu02"
   description       = "bu02 namespace"
   admin_group_name  = "vault-bu02-admin"
@@ -8,7 +8,7 @@ module "bu02_namespace" {
 }
 
 module "bu02_workspace" {
-  source = "./modules/workspace"
+  source = "../modules/workspace"
 
   enable_tfc_agent_pool = var.enable_tfc_agent_pool
   github_organization   = var.github_organization
