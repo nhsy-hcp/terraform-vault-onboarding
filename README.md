@@ -1,12 +1,12 @@
-# Terraform Cloud Vault Integration
+# HCP Terraform Vault Integration
 
-This directory contains Terraform configurations for integrating HashiCorp Vault with Terraform Cloud. It provides automated namespace provisioning, workspace management, and authentication setup for multi-tenant Vault environments.
+This directory contains Terraform configurations for integrating HashiCorp Vault with HCP Terraform. It provides automated namespace provisioning, workspace management, and authentication setup for multi-tenant Vault environments.
 
 ## Directory Structure
 
 ```
-terraform-cloud/
-├── bootstrap/              # Initial TFC project and workspace setup
+terraform-vault-onboarding/
+├── bootstrap/              # Initial HCP Terraform project and workspace setup
 ├── namespace-root/         # Root namespace configuration
 ├── namespace-vending/      # Automated namespace provisioning
 ├── namespace-bu01/         # Business Unit 1 namespace
@@ -14,18 +14,21 @@ terraform-cloud/
 ├── namespace-bu03/         # Business Unit 3 namespace
 ├── modules/
 │   ├── namespace/          # Vault namespace creation module
-│   ├── workspace/          # TFC workspace + Vault integration module
+│   ├── workspace/          # HCP Terraform workspace + Vault integration module
 │   └── kv-engine/          # KV secrets engine module
 ├── policies/               # Vault policy HCL files
 ├── scripts/                # Utility scripts for operations
+├── docs/                   # Documentation
 └── Taskfile.yml            # Task automation configuration
 ```
+
+> **📖 Architecture & Design:** See [Solution Design Documentation](./docs/solution-design.md) for detailed architecture, authentication flows, and design decisions.
 
 ## Prerequisites
 
 - Terraform >= 1.5.0
 - HashiCorp Vault server
-- Terraform Cloud organization and API token
+- HCP Terraform organization and API token
 - Okta organization and API token (for OIDC authentication)
 - [Task](https://taskfile.dev/) (optional, for automation)
 
@@ -33,7 +36,7 @@ terraform-cloud/
 
 The configurations should be applied in the following order:
 
-1. **Bootstrap**: Sets up initial Terraform Cloud projects, workspaces, and Vault JWT authentication
+1. **Bootstrap**: Sets up initial HCP Terraform projects, workspaces, and Vault JWT authentication
 2. **Namespace Root**: Configures the root Vault namespace with OIDC authentication and identity groups
 3. **Namespace Vending**: Creates child namespaces for business units with standardized configurations
 4. **Business Unit Namespaces**: Individual BU namespaces can be customized independently
@@ -45,7 +48,7 @@ The configurations should be applied in the following order:
 | `VAULT_ADDR` | Vault server address |
 | `VAULT_TOKEN` | Vault authentication token |
 | `VAULT_NAMESPACE` | Vault namespace (optional) |
-| `TFE_TOKEN` | Terraform Cloud API token |
+| `TFE_TOKEN` | HCP Terraform API token |
 | `OKTA_API_TOKEN` | Okta API token |
 
 ## Usage
@@ -104,7 +107,7 @@ Creates a Vault namespace with:
 
 ### workspace
 
-Creates a Terraform Cloud workspace integrated with Vault:
+Creates a HCP Terraform workspace integrated with Vault:
 - TFC workspace resource
 - Vault JWT auth backend role
 - Workspace variables for Vault authentication
@@ -116,7 +119,7 @@ Manages KV v2 secrets engines within a namespace.
 
 ## Authentication
 
-### Terraform Cloud to Vault
+### HCP Terraform to Vault
 
 Uses JWT authentication with OIDC. Workspaces are configured with bound claims to receive Vault tokens scoped to their assigned namespace and policies.
 
