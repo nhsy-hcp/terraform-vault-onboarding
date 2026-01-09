@@ -5,7 +5,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.5.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.12.0 |
 | <a name="requirement_okta"></a> [okta](#requirement\_okta) | ~> 4.0 |
 | <a name="requirement_tfe"></a> [tfe](#requirement\_tfe) | ~> 0.0 |
 | <a name="requirement_vault"></a> [vault](#requirement\_vault) | ~> 4.0 |
@@ -21,8 +21,8 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_namespace-vending"></a> [namespace-vending](#module\_namespace-vending) | ./modules/workspace | n/a |
-| <a name="module_namespace_root"></a> [namespace\_root](#module\_namespace\_root) | ./modules/workspace | n/a |
+| <a name="module_namespace-vending"></a> [namespace-vending](#module\_namespace-vending) | ../modules/workspace | n/a |
+| <a name="module_namespace_root"></a> [namespace\_root](#module\_namespace\_root) | ../modules/workspace | n/a |
 
 ## Resources
 

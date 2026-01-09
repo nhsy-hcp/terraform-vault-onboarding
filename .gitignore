@@ -25,3 +25,7 @@ backend.tf
 
 scripts/env.sh
 scripts/local-env.sh
+
+.claude/*
+plans/*
+CLAUDE.md
