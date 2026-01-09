@@ -6,16 +6,16 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.12.0 |
-| <a name="requirement_okta"></a> [okta](#requirement\_okta) | ~> 4.0 |
-| <a name="requirement_tfe"></a> [tfe](#requirement\_tfe) | ~> 0.0 |
-| <a name="requirement_vault"></a> [vault](#requirement\_vault) | ~> 4.0 |
+| <a name="requirement_okta"></a> [okta](#requirement\_okta) | ~> 6.5 |
+| <a name="requirement_tfe"></a> [tfe](#requirement\_tfe) | ~> 0.72 |
+| <a name="requirement_vault"></a> [vault](#requirement\_vault) | ~> 5.6 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_okta"></a> [okta](#provider\_okta) | 4.14.0 |
-| <a name="provider_vault"></a> [vault](#provider\_vault) | 4.6.0 |
+| <a name="provider_okta"></a> [okta](#provider\_okta) | 6.5.3 |
+| <a name="provider_vault"></a> [vault](#provider\_vault) | 5.6.0 |
 
 ## Modules
 

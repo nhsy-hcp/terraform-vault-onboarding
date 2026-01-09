@@ -3,15 +3,15 @@ terraform {
   required_providers {
     okta = {
       source  = "okta/okta"
-      version = "~> 4.0"
+      version = "~> 6.5"
     }
     tfe = {
       source  = "hashicorp/tfe"
-      version = "~> 0.0"
+      version = "~> 0.72"
     }
     vault = {
       source  = "hashicorp/vault"
-      version = "~> 4.0"
+      version = "~> 5.6"
     }
   }
 }
