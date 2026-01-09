@@ -71,12 +71,12 @@ resource "okta_auth_server" "default" {
 resource "okta_auth_server_claim" "default" {
   auth_server_id          = okta_auth_server.default.id
   name                    = "groups"
+  always_include_in_token = true
+  claim_type              = "IDENTITY"
+  group_filter_type       = "STARTS_WITH"
+  scopes                  = ["profile"]
   value                   = "vault-"
   value_type              = "GROUPS"
-  group_filter_type       = "STARTS_WITH"
-  claim_type              = "IDENTITY"
-  scopes                  = ["profile"]
-  always_include_in_token = true
 }
 
 resource "okta_auth_server_policy" "default" {
@@ -104,9 +104,10 @@ resource "okta_auth_server_policy_rule" "default" {
 }
 
 resource "okta_app_oauth" "default" {
-  label          = "HashiCorp Vault OIDC"
-  type           = "web"
-  grant_types    = ["authorization_code", "implicit", "refresh_token"]
+  label       = "HashiCorp Vault OIDC"
+  type        = "web"
+  grant_types = ["authorization_code", "implicit", "refresh_token"]
+
   response_types = ["id_token", "code"]
 
   redirect_uris = [

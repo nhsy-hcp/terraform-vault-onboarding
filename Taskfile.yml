@@ -20,14 +20,14 @@ tasks:
       - terraform -chdir=namespace-vending validate
       - terraform -chdir=namespace-root validate
 
-  bootstrap:
+  bootstrap-apply:
     deps: ["lint"]
     dir: ./bootstrap
     dotenv: [".env"]
     cmds:
       - terraform init
       - terraform validate
-      - terraform apply
+      - terraform apply -auto-approve
 
   bootstrap-destroy:
     deps: ["lint"]
