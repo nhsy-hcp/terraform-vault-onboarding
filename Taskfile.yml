@@ -24,6 +24,9 @@ tasks:
     deps: ["lint"]
     dir: ./bootstrap
     dotenv: [".env"]
+    preconditions:
+      - sh: test -f terraform.tfvars
+        msg: "terraform.tfvars not found. Copy terraform.tfvars.example to terraform.tfvars and configure your values."
     cmds:
       - terraform init
       - terraform validate
@@ -41,6 +44,9 @@ tasks:
     deps: ["lint"]
     dir: ./bootstrap
     dotenv: [".env"]
+    preconditions:
+      - sh: test -f terraform.tfvars
+        msg: "terraform.tfvars not found. Copy terraform.tfvars.example to terraform.tfvars and configure your values."
     cmds:
       - terraform init
       - terraform plan

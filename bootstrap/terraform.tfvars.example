@@ -1,0 +1,40 @@
+# Example terraform.tfvars for bootstrap
+# Fill in your actual values as appropriate
+
+github_organization     = "example-org"
+github_repository       = "terraform-vault-onboarding"
+tfc_organization        = "example-tfc-org"
+tfc_project             = "vault-onboarding"
+tfc_token               = "your-tfc-api-token"
+
+vault_address           = "https://127.0.0.1:8200"
+vault_address_tfc_agent = "http://vault:8200"
+
+okta_org_name           = "your-okta-org-name"
+okta_api_token          = "your-okta-api-token"
+
+okta_mgmt_groups = [
+  "vault-admin",
+  "vault-user",
+]
+
+okta_namespace_groups = [
+  "vault-bu01-admin",
+  "vault-bu02-admin",
+  "vault-bu03-admin",
+]
+
+okta_users = {
+  "vaultadmin@example.com" = {
+    first_name = "Vault"
+    last_name  = "Admin"
+    password   = "ChangeMe123!"
+    groups     = ["vault-admin"]
+  },
+  "testuser-bu1-team1-viewer@example.com" = {
+    first_name = "testuser"
+    last_name  = "bu1-team1-viewer"
+    password   = "ChangeMe123!"
+    groups     = ["vault-bu01-team1-viewer"]
+  }
+}
