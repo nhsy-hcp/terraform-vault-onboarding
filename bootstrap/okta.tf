@@ -111,7 +111,7 @@ resource "okta_app_oauth" "default" {
   response_types = ["id_token", "code"]
 
   redirect_uris = [
-    format("%s/ui/vault/auth/${var.okta_auth_path}/oidc/callback", var.vault_address),
+    format("%s/ui/vault/auth/${var.okta_auth_path}/oidc/callback", hcp_vault_cluster.vault.vault_public_endpoint_url),
     "http://localhost:8250/oidc/callback"
   ]
 }

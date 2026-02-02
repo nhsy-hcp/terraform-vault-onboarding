@@ -5,16 +5,20 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.12.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.14.0 |
+| <a name="requirement_hcp"></a> [hcp](#requirement\_hcp) | ~> 0.111 |
 | <a name="requirement_okta"></a> [okta](#requirement\_okta) | ~> 6.5 |
-| <a name="requirement_tfe"></a> [tfe](#requirement\_tfe) | ~> 0.72 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.8 |
+| <a name="requirement_tfe"></a> [tfe](#requirement\_tfe) | ~> 0.73 |
 | <a name="requirement_vault"></a> [vault](#requirement\_vault) | ~> 5.6 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_okta"></a> [okta](#provider\_okta) | 6.5.3 |
+| <a name="provider_hcp"></a> [hcp](#provider\_hcp) | 0.111.0 |
+| <a name="provider_okta"></a> [okta](#provider\_okta) | 6.5.5 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.8.1 |
 | <a name="provider_vault"></a> [vault](#provider\_vault) | 5.6.0 |
 
 ## Modules
@@ -28,6 +32,9 @@
 
 | Name | Type |
 |------|------|
+| [hcp_hvn.vault](https://registry.terraform.io/providers/hashicorp/hcp/latest/docs/resources/hvn) | resource |
+| [hcp_vault_cluster.vault](https://registry.terraform.io/providers/hashicorp/hcp/latest/docs/resources/vault_cluster) | resource |
+| [hcp_vault_cluster_admin_token.vault](https://registry.terraform.io/providers/hashicorp/hcp/latest/docs/resources/vault_cluster_admin_token) | resource |
 | [okta_app_group_assignment.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/app_group_assignment) | resource |
 | [okta_app_oauth.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/app_oauth) | resource |
 | [okta_app_oauth_api_scope.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/app_oauth_api_scope) | resource |
@@ -41,6 +48,7 @@
 | [okta_group_memberships.vault_namespaces](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/group_memberships) | resource |
 | [okta_group_memberships.vault_user](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/group_memberships) | resource |
 | [okta_user.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/user) | resource |
+| [random_id.hcp](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
 | [vault_jwt_auth_backend.tfc](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/jwt_auth_backend) | resource |
 | [vault_policy.tfc_admin](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/policy) | resource |
 
@@ -49,9 +57,16 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_default_lease_ttl"></a> [default\_lease\_ttl](#input\_default\_lease\_ttl) | Default lease TTL for Vault tokens | `string` | `"10m"` | no |
-| <a name="input_enable_tfc_agent_pool"></a> [enable\_tfc\_agent\_pool](#input\_enable\_tfc\_agent\_pool) | n/a | `bool` | `true` | no |
+| <a name="input_enable_tfc_agent_pool"></a> [enable\_tfc\_agent\_pool](#input\_enable\_tfc\_agent\_pool) | n/a | `bool` | `false` | no |
 | <a name="input_github_organization"></a> [github\_organization](#input\_github\_organization) | Name of the GitHub organization. | `string` | n/a | yes |
 | <a name="input_github_repository"></a> [github\_repository](#input\_github\_repository) | Name of the GitHub repository. | `string` | `"terraform-vault-onboarding"` | no |
+| <a name="input_hcp_hvn_cidr_block"></a> [hcp\_hvn\_cidr\_block](#input\_hcp\_hvn\_cidr\_block) | n/a | `string` | `"172.25.64.0/20"` | no |
+| <a name="input_hcp_hvn_id"></a> [hcp\_hvn\_id](#input\_hcp\_hvn\_id) | n/a | `string` | `"vault-hvn"` | no |
+| <a name="input_hcp_hvn_region"></a> [hcp\_hvn\_region](#input\_hcp\_hvn\_region) | n/a | `string` | `"eu-west-1"` | no |
+| <a name="input_hcp_project_id"></a> [hcp\_project\_id](#input\_hcp\_project\_id) | HCP Project ID | `string` | n/a | yes |
+| <a name="input_hcp_vault_cluster_id"></a> [hcp\_vault\_cluster\_id](#input\_hcp\_vault\_cluster\_id) | n/a | `string` | `"vault-cluster"` | no |
+| <a name="input_hcp_vault_public_endpoint"></a> [hcp\_vault\_public\_endpoint](#input\_hcp\_vault\_public\_endpoint) | n/a | `bool` | `true` | no |
+| <a name="input_hcp_vault_tier"></a> [hcp\_vault\_tier](#input\_hcp\_vault\_tier) | n/a | `string` | `"dev"` | no |
 | <a name="input_max_lease_ttl"></a> [max\_lease\_ttl](#input\_max\_lease\_ttl) | Maximum lease TTL for Vault tokens | `string` | `"30m"` | no |
 | <a name="input_okta_api_token"></a> [okta\_api\_token](#input\_okta\_api\_token) | Okta API token | `string` | n/a | yes |
 | <a name="input_okta_auth_path"></a> [okta\_auth\_path](#input\_okta\_auth\_path) | n/a | `string` | `"oidc"` | no |
@@ -66,13 +81,20 @@
 | <a name="input_tfc_working_directory_prefix"></a> [tfc\_working\_directory\_prefix](#input\_tfc\_working\_directory\_prefix) | Working directory for the TFC workspace. | `string` | `"."` | no |
 | <a name="input_tfc_workspace_prefix"></a> [tfc\_workspace\_prefix](#input\_tfc\_workspace\_prefix) | Name of the TFC workspace. | `string` | `"terraform-vault-onboarding"` | no |
 | <a name="input_token_type"></a> [token\_type](#input\_token\_type) | Token type for Vault tokens | `string` | `"default-service"` | no |
-| <a name="input_vault_address"></a> [vault\_address](#input\_vault\_address) | Vault API endpoint | `string` | n/a | yes |
-| <a name="input_vault_address_tfc_agent"></a> [vault\_address\_tfc\_agent](#input\_vault\_address\_tfc\_agent) | Vault API endpoint for TFC agent | `string` | n/a | yes |
 | <a name="input_vault_auth_path"></a> [vault\_auth\_path](#input\_vault\_auth\_path) | Mount path where JWT Auth will be configured | `string` | `"jwt/tfc"` | no |
 | <a name="input_vault_auth_role_prefix"></a> [vault\_auth\_role\_prefix](#input\_vault\_auth\_role\_prefix) | Vault role name | `string` | `"tfc-admin"` | no |
 | <a name="input_vault_policy"></a> [vault\_policy](#input\_vault\_policy) | Vault policy name | `string` | `"tfc-admin"` | no |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_hcp_admin_token"></a> [hcp\_admin\_token](#output\_hcp\_admin\_token) | n/a |
+| <a name="output_hcp_cluster_id"></a> [hcp\_cluster\_id](#output\_hcp\_cluster\_id) | n/a |
+| <a name="output_hcp_hvn_id"></a> [hcp\_hvn\_id](#output\_hcp\_hvn\_id) | n/a |
+| <a name="output_hcp_private_endpoint"></a> [hcp\_private\_endpoint](#output\_hcp\_private\_endpoint) | n/a |
+| <a name="output_hcp_public_endpoint"></a> [hcp\_public\_endpoint](#output\_hcp\_public\_endpoint) | n/a |
+| <a name="output_namespace"></a> [namespace](#output\_namespace) | n/a |
+| <a name="output_state"></a> [state](#output\_state) | n/a |
+| <a name="output_vault_version"></a> [vault\_version](#output\_vault\_version) | n/a |
 <!-- END_TF_DOCS -->

@@ -8,6 +8,7 @@ data "tfe_project" "default" {
 }
 
 data "tfe_agent_pool" "default" {
+  count        = var.enable_tfc_agent_pool ? 1 : 0
   organization = var.tfc_organization
   name         = "localhost"
 }
@@ -105,6 +106,6 @@ resource "tfe_variable" "default" {
 resource "tfe_workspace_settings" "agent_pool" {
   count          = var.enable_tfc_agent_pool ? 1 : 0
   workspace_id   = tfe_workspace.default.id
-  agent_pool_id  = data.tfe_agent_pool.default.id
+  agent_pool_id  = data.tfe_agent_pool.default[0].id
   execution_mode = "agent"
 }

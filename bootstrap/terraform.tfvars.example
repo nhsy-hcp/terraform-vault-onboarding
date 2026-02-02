@@ -7,9 +7,6 @@ tfc_organization        = "example-tfc-org"
 tfc_project             = "vault-onboarding"
 tfc_token               = "your-tfc-api-token"
 
-vault_address           = "http://127.0.0.1:8200"
-vault_address_tfc_agent = "http://vault:8200"
-
 okta_org_name           = "your-okta-org-name"
 okta_api_token          = "your-okta-api-token"
 
