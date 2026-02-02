@@ -1,7 +1,6 @@
 ### Terraform template
 # Local .terraform directories
 **/.terraform/*
-**/.terraform.lock.hcl
 
 # Local dev files
 .config
