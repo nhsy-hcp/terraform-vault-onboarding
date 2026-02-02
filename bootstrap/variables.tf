@@ -61,16 +61,6 @@ variable "vault_auth_path" {
   default     = "jwt/tfc"
 }
 
-variable "vault_address" {
-  type        = string
-  description = "Vault API endpoint"
-}
-
-variable "vault_address_tfc_agent" {
-  type        = string
-  description = "Vault API endpoint for TFC agent"
-}
-
 variable "vault_auth_role_prefix" {
   type        = string
   description = "Vault role name"
@@ -129,6 +119,43 @@ variable "okta_namespace_groups" {
 }
 
 variable "enable_tfc_agent_pool" {
+  type    = bool
+  default = false
+}
+
+
+## HCP Vault Variables
+variable "hcp_project_id" {
+  type        = string
+  description = "HCP Project ID"
+}
+
+variable "hcp_hvn_id" {
+  type    = string
+  default = "vault-hvn"
+}
+
+variable "hcp_hvn_cidr_block" {
+  type    = string
+  default = "172.25.64.0/20"
+}
+
+variable "hcp_hvn_region" {
+  type    = string
+  default = "eu-west-1"
+}
+
+variable "hcp_vault_cluster_id" {
+  type    = string
+  default = "vault-cluster"
+}
+
+variable "hcp_vault_tier" {
+  type    = string
+  default = "dev"
+}
+
+variable "hcp_vault_public_endpoint" {
   type    = bool
   default = true
 }

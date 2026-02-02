@@ -2,7 +2,7 @@
 # Install with: pre-commit install
 
 repos:
-  # Terraform formatting and validation
+  # General hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -11,6 +11,20 @@ repos:
       - id: check-yaml
       - id: check-added-large-files
       - id: check-merge-conflict
+      - id: detect-private-key
+
+  # YAML linting
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.38.0
+    hooks:
+      - id: yamllint
+        args: [-d, "{rules: {line-length: disable}}"]
+
+  # Secret detection
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.0
+    hooks:
+      - id: gitleaks
 
   # Terraform specific hooks
   - repo: https://github.com/antonbabenko/pre-commit-terraform
@@ -18,8 +32,7 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
-#        args:
-#          - --tf-init-args=-upgrade
+      - id: terraform_tflint
       - id: terraform_docs
         args:
           - --hook-config=--path-to-file=README.md

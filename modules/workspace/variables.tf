@@ -79,17 +79,6 @@ variable "vault_token_type" {
   default     = "service"
 }
 
-variable "okta_org_name" {
-  type        = string
-  description = "Okta organization name"
-}
-
-variable "okta_base_url" {
-  type        = string
-  description = "Okta base URL"
-  default     = "okta.com"
-}
-
 variable "okta_api_token" {
   type        = string
   sensitive   = true
@@ -99,7 +88,7 @@ variable "okta_api_token" {
 
 variable "enable_tfc_agent_pool" {
   type    = bool
-  default = true
+  default = false
 }
 
 variable "terraform_version" {

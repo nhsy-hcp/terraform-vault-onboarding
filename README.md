@@ -28,8 +28,9 @@ terraform-vault-onboarding/
 
 ## Prerequisites
 
-- Terraform >= 1.12.0
-- HashiCorp Vault server
+- Terraform >= 1.14.0
+- HCP Account (HashiCorp Cloud Platform)
+- HashiCorp Vault (HCP Vault Cluster)
 - HCP Terraform organization and API token
 - Okta organization and API token (for OIDC authentication)
 - [Task](https://taskfile.dev/) (optional, for automation)
@@ -38,40 +39,19 @@ terraform-vault-onboarding/
 
 The configurations should be applied in the following order:
 
-1. **Bootstrap**: Sets up initial HCP Terraform projects, workspaces, and Vault JWT authentication
-2. **Namespace Root**: Configures the root Vault namespace with OIDC authentication and identity groups
-3. **Namespace Vending**: Creates child namespaces for business units with standardized configurations
-4. **Business Unit Namespaces**: Individual BU namespaces can be customized independently
+1. **Bootstrap**: Sets up the HCP HVN and Vault Cluster, initial HCP Terraform projects, workspaces, and Vault JWT authentication.
+2. **Namespace Root**: Configures the root Vault namespace with OIDC authentication and identity groups.
+3. **Namespace Vending**: Creates child namespaces for business units with standardized configurations.
+4. **Business Unit Namespaces**: Individual BU namespaces can be customized independently.
 
 ## Bootstrap Demo Setup
 
-The bootstrap phase creates demo resources in OKTA for testing and demonstration purposes. These resources include:
+The bootstrap phase creates demo resources in OKTA for testing and demonstration purposes. It also handles the infrastructure setup on HCP:
 
-- **Demo Users**: Configurable test users with credentials (defined in `okta_users` variable)
-- **Management Groups**:
-  - `vault-admin` - Administrative access to Vault
-  - `vault-user` - Standard user access to Vault
-- **Business Unit Groups**: Namespace-specific groups for each business unit:
-  - `vault-bu01-admin` - Business Unit 1 administrators
-  - `vault-bu02-admin` - Business Unit 2 administrators
-  - `vault-bu03-admin` - Business Unit 3 administrators
-- **Group Memberships**: Automatic assignment of users to their designated groups
-- **OKTA OAuth Application**: Vault OIDC integration application
-- **OKTA Authorization Server**: Configured for Vault authentication with appropriate claims
-
-**Note:** These resources are created for demonstration and testing purposes only. You can customize the demo users, groups, and memberships by editing the `okta_users`, `okta_mgmt_groups`, and `okta_namespace_groups` variables in your `bootstrap/terraform.tfvars` file.
-
-## Pre-requisites Setup
-
-### Environment Variables
-
-These environment variables must be set before running the Bootstrap:
-
-| Variable | Description |
-|----------|-------------|
-| `VAULT_ADDR` | Vault server address |
-| `VAULT_TOKEN` | Vault authentication token |
-
+- **HCP Networking**: Creates a HashiCorp Virtual Network (HVN).
+- **HCP Vault**: Provisions a Vault cluster with randomized IDs for uniqueness.
+- **Demo Users**: Configurable test users with credentials (defined in `okta_users` variable).
+...
 ### Terraform Variables
 
 Copy the example terraform variables file and update it with your values:
@@ -89,104 +69,30 @@ Edit `./bootstrap/terraform.tfvars` and configure the following variables:
 | `tfc_organization` | Terraform Cloud organization name | `"example-tfc-org"` | Yes |
 | `tfc_project` | TFC project name | `"vault-onboarding"` | Yes |
 | `tfc_token` | TFC API token (sensitive) | `"your-tfc-api-token"` | Yes |
-| `vault_address` | Vault server address for local access | `"http://127.0.0.1:8200"` | Yes |
-| `vault_address_tfc_agent` | Vault server address for TFC agent | `"http://vault:8200"` | Yes |
+| `hcp_project_id` | HCP Project ID | `"your-hcp-project-uuid"` | Yes |
 | `okta_org_name` | OKTA organization name | `"your-okta-org-name"` | Yes |
 | `okta_api_token` | OKTA API token (sensitive) | `"your-okta-api-token"` | Yes |
-| `okta_mgmt_groups` | Management groups to create in OKTA | `["vault-admin", "vault-user"]` | Yes |
-| `okta_namespace_groups` | Namespace-specific groups to create | `["vault-bu01-admin", ...]` | Yes |
-| `okta_users` | Demo users to create with group memberships | See example file | Yes |
+| `hcp_hvn_id` | HCP HVN identifier | `"vault-hvn"` | No (Default) |
+| `hcp_vault_cluster_id` | HCP Vault cluster identifier | `"vault-cluster"` | No (Default) |
+| `hcp_hvn_region` | AWS region for HCP HVN | `"eu-west-1"` | No (Default) |
 
-**Important:** Update all sensitive values (tokens, passwords) before applying the bootstrap configuration.
+**Note:** All HCP resource IDs are automatically suffixed with a random hex string to ensure global uniqueness.
 
-### Local HCP Terraform Agent Setup
+### HCP Terraform Agent Setup (Optional)
 
-To enable HCP Terraform workspaces to communicate with your local Vault instance, you need to run an agent in the same Docker network as Vault.
+TFC Agent pools are supported but disabled by default (`enable_tfc_agent_pool = false`). If your Vault cluster is set to a private endpoint, you will need to run agents within a network that can reach the HCP HVN (e.g., via VPC Peering or Transit Gateway).
 
-**Prerequisites:**
-- Docker or Podman installed and running
-- HCP Terraform organization with an agent pool configured
-- Vault running in a Docker container
-
-**Setup Steps:**
-
-1. **Create an Agent Pool in HCP Terraform**:
-   - Navigate to your HCP Terraform organization settings
-   - Go to "Agents" section
-   - Create a new agent pool and note the agent token
-
-2. **Run the HCP Terraform agent container**:
-   ```bash
-   docker run -d \
-     --name tfc-agent \
-     --network vault-network \
-     -e TFC_AGENT_TOKEN="your-agent-token" \
-     -e TFC_AGENT_NAME="local-agent" \
-     hashicorp/tfc-agent:latest
-   ```
-
-3. **Verify connectivity**:
-   - The agent should appear as "idle" in your HCP Terraform agent pool
-   - The agent can resolve the Vault container using the hostname `vault`
-   - This corresponds to the `vault_address_tfc_agent` variable value: `http://vault:8200`
-
-**Network Configuration:**
-- Vault container must be accessible via hostname `vault` on port `8200`
-- Both Vault and the HCP Terraform agent must be on the same Docker network
-- The `vault_address_tfc_agent` variable in `terraform.tfvars` should use the container hostname
-
-**Troubleshooting:**
-- Verify network connectivity: `docker exec tfc-agent ping vault`
-- Check agent logs: `docker logs tfc-agent`
-- Ensure Vault is listening on `0.0.0.0:8200` inside the container, not just `127.0.0.1:8200`
+**Note:** The previous `vault_address_tfc_agent` variable is obsolete as HCP Vault provides a consistent public or private endpoint URL.
 
 ## Usage
-
-### Using Taskfile
-
-The following Taskfile commands are available for working with this project:
-
-**Plan bootstrap configuration:**
-```bash
-task bootstrap-plan
-```
-Reviews the changes that will be applied to bootstrap the infrastructure, including HCP Terraform projects, workspaces, and OKTA demo resources.
-
-**Apply bootstrap configuration:**
-```bash
-task bootstrap-apply
-```
-Applies the bootstrap configuration to create the initial infrastructure setup.
-
-**Validate all configurations:**
-```bash
-task validate
-```
-Validates the Terraform syntax and configuration across all modules (bootstrap, namespace-vending, namespace-root).
-
-**Format all Terraform files:**
-```bash
-task lint
-```
-Formats all Terraform files in the repository according to standard conventions.
-
-## Modules
-
-### namespace
-
-Creates a Vault namespace with:
-- Namespace resource
-- Admin and RBAC identity groups
-- Quota rate limits and lease counts
-- Namespace-specific policies
-
+...
 ### workspace
 
 Creates a HCP Terraform workspace integrated with Vault:
 - HCP Terraform workspace resource
 - Vault JWT auth backend role
 - Workspace variables for Vault authentication
-- Agent pool configuration (optional)
+- Agent pool configuration (Optional, disabled by default)
 
 ### kv-engine
 

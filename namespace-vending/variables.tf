@@ -14,11 +14,6 @@ variable "okta_base_url" {
   default     = "okta.com"
 }
 
-variable "okta_auth_path" {
-  type    = string
-  default = "oidc"
-}
-
 variable "github_organization" {
   type        = string
   description = "Name of the GitHub organization."
@@ -69,5 +64,5 @@ variable "vault_auth_role" {
 
 variable "enable_tfc_agent_pool" {
   type    = bool
-  default = true
+  default = false
 }

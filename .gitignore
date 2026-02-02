@@ -29,3 +29,5 @@ tests/
 .claude/*
 plans/
 CLAUDE.md
+
+tmp/
