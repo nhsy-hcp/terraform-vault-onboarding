@@ -57,3 +57,12 @@ tasks:
     dotenv: [".env"]
     cmds:
       - terraform plan -refresh
+
+  vault:vars:
+    aliases: [vars]
+    dir: ./bootstrap
+    cmds:
+      - echo "export VAULT_ADDR=$(terraform output -raw hcp_public_endpoint)"
+      - echo "export VAULT_TOKEN=$(terraform output -raw hcp_admin_token)"
+      - echo "export VAULT_NAMESPACE=admin"
+    silent: true
