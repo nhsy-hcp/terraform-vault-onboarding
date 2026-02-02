@@ -2,67 +2,99 @@
 
 version: '3'
 
+vars:
+  TF_DIRS: [bootstrap, namespace-vending, namespace-root]
+
 tasks:
   lint:
+    desc: Run all pre-commit hooks
     cmds:
       - pre-commit run --all-files
 
   init:
+    desc: Initialize Terraform (no backend) for all primary directories
     cmds:
-      - terraform -chdir=bootstrap init -upgrade
-      - terraform -chdir=namespace-vending init -upgrade
-      - terraform -chdir=namespace-root init -upgrade
+      - for: { var: TF_DIRS }
+        cmd: terraform -chdir={{.ITEM}} init -upgrade -backend=false
 
   validate:
-    deps: ["lint", "init"]
+    desc: Initialize and validate all Terraform configurations
+    deps: [lint, init]
     cmds:
-      - terraform -chdir=bootstrap validate
-      - terraform -chdir=namespace-vending validate
-      - terraform -chdir=namespace-root validate
+      - for: { var: TF_DIRS }
+        cmd: terraform -chdir={{.ITEM}} validate
+
+  # Shared Environment for Vault tasks
+  _vault_env: &vault_env
+    VAULT_ADDR:
+      sh: ./scripts/env.sh addr
+    VAULT_TOKEN:
+      sh: ./scripts/env.sh token
+    VAULT_NAMESPACE: admin
+
+  vault:vars:
+    desc: Output Vault environment variables for shell export
+    aliases: [vars]
+    env: *vault_env
+    cmds:
+      - echo "export VAULT_ADDR=$VAULT_ADDR"
+      - echo "export VAULT_TOKEN=$VAULT_TOKEN"
+      - echo "export VAULT_NAMESPACE=$VAULT_NAMESPACE"
+    silent: true
+
+  update-env:
+    desc: Update .env file from Terraform outputs
+    env: *vault_env
+    cmds:
+      - ./scripts/update_env.sh
+    silent: true
 
   bootstrap-apply:
-    deps: ["lint"]
+    desc: Apply bootstrap infrastructure (requires local .tfvars)
+    deps: [lint]
     dir: ./bootstrap
-    dotenv: [".env"]
+    dotenv: [.env]
     preconditions:
-      - sh: test -f terraform.tfvars
+      - &tfvars_precondition
+        sh: test -f terraform.tfvars
         msg: "terraform.tfvars not found. Copy terraform.tfvars.example to terraform.tfvars and configure your values."
     cmds:
       - terraform init
       - terraform validate
       - terraform apply -auto-approve
+      - task: update-env
 
   bootstrap-destroy:
-    deps: ["lint"]
+    desc: Destroy bootstrap infrastructure
+    deps: [lint]
     dir: ./bootstrap
-    dotenv: [".env"]
+    dotenv: [.env]
     cmds:
       - terraform validate
       - terraform destroy
 
-  bootstrap-plan:
-    deps: ["lint"]
+  bootstrap-destroy-vault:
+    desc: Destroy only the HCP Vault cluster
+    deps: [init]
     dir: ./bootstrap
-    dotenv: [".env"]
+    cmds:
+      - terraform destroy -target=hcp_vault_cluster.vault
+
+  bootstrap-plan:
+    desc: Plan bootstrap infrastructure changes
+    deps: [lint]
+    dir: ./bootstrap
+    dotenv: [.env]
     preconditions:
-      - sh: test -f terraform.tfvars
-        msg: "terraform.tfvars not found. Copy terraform.tfvars.example to terraform.tfvars and configure your values."
+      - *tfvars_precondition
     cmds:
       - terraform init
       - terraform plan
 
   bootstrap-refresh:
-    deps: ["lint"]
+    desc: Refresh bootstrap state without making changes
+    deps: [lint]
     dir: ./bootstrap
-    dotenv: [".env"]
+    dotenv: [.env]
     cmds:
-      - terraform plan -refresh
-
-  vault:vars:
-    aliases: [vars]
-    dir: ./bootstrap
-    cmds:
-      - echo "export VAULT_ADDR=$(terraform output -raw hcp_public_endpoint)"
-      - echo "export VAULT_TOKEN=$(terraform output -raw hcp_admin_token)"
-      - echo "export VAULT_NAMESPACE=admin"
-    silent: true
+      - terraform plan -refresh-only

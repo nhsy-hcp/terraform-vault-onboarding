@@ -86,6 +86,18 @@ variable "okta_api_token" {
   default     = null
 }
 
+variable "okta_org_name" {
+  type        = string
+  description = "Okta organization name"
+  default     = null
+}
+
+variable "okta_base_url" {
+  type        = string
+  description = "Okta base URL"
+  default     = "okta.com"
+}
+
 variable "enable_tfc_agent_pool" {
   type    = bool
   default = false

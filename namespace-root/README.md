@@ -5,7 +5,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.12.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.14.0 |
 | <a name="requirement_okta"></a> [okta](#requirement\_okta) | ~> 6.5 |
 | <a name="requirement_vault"></a> [vault](#requirement\_vault) | ~> 5.6 |
 
@@ -13,7 +13,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_okta"></a> [okta](#provider\_okta) | 6.5.3 |
+| <a name="provider_okta"></a> [okta](#provider\_okta) | 6.5.5 |
 | <a name="provider_vault"></a> [vault](#provider\_vault) | 5.6.0 |
 
 ## Modules
@@ -32,7 +32,6 @@ No modules.
 | [vault_jwt_auth_backend.okta](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/jwt_auth_backend) | resource |
 | [vault_jwt_auth_backend_role.okta_group](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/jwt_auth_backend_role) | resource |
 | [vault_policy.okta_vault_admin](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/policy) | resource |
-| [vault_quota_rate_limit.global](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/quota_rate_limit) | resource |
 | [okta_app_oauth.default](https://registry.terraform.io/providers/okta/okta/latest/docs/data-sources/app_oauth) | data source |
 | [okta_auth_server.default](https://registry.terraform.io/providers/okta/okta/latest/docs/data-sources/auth_server) | data source |
 | [okta_group.mgmt](https://registry.terraform.io/providers/okta/okta/latest/docs/data-sources/group) | data source |

@@ -18,16 +18,17 @@ env.sh
 
 # Terraform plan
 *.plan
+*.bak
 
 # Terrafaor local tfvars
 terraform.tfvars
 backend.tf
 
-scripts/
 tests/
 
 .claude/*
 plans/
 CLAUDE.md
+GEMINI.md
 
 tmp/

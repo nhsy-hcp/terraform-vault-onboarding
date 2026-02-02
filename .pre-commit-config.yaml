@@ -13,6 +13,12 @@ repos:
       - id: check-merge-conflict
       - id: detect-private-key
 
+  # Shell script linting
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.10.0
+    hooks:
+      - id: shellcheck
+
   # YAML linting
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.38.0
@@ -32,7 +38,10 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
+        exclude: ^modules/
       - id: terraform_tflint
+        args:
+          - --args=--init
       - id: terraform_docs
         args:
           - --hook-config=--path-to-file=README.md

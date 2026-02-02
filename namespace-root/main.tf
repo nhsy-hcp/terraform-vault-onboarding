@@ -5,12 +5,12 @@ locals {
   )
 }
 
-resource "vault_quota_rate_limit" "global" {
-  name     = "global"
-  path     = ""
-  interval = 30
-  rate     = 300000
-}
+# resource "vault_quota_rate_limit" "global" {
+#   name     = "global"
+#   path     = ""
+#   interval = 30
+#   rate     = 300000
+# }
 
 # resource "vault_audit" "file" {
 #   options = {
