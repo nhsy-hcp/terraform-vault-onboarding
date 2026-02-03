@@ -1,8 +1,9 @@
 module "bu01_namespace" {
-  source           = "../modules/namespace"
-  namespace        = "bu01"
-  description      = "bu01 namespace"
-  admin_group_name = "vault-bu01-admin"
+  source                     = "../modules/namespace"
+  namespace                  = "bu01"
+  description                = "bu01 namespace"
+  admin_group_name           = "vault-bu01-admin"
+  additional_admin_group_ids = [data.vault_identity_group.global_admin.group_id]
   rbac_delegation = {
     "bu01-team1-reader" = {
       group_name = "vault-bu01-team1-viewer"

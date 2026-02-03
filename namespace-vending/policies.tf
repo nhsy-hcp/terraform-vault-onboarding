@@ -1,3 +1,7 @@
+data "vault_identity_group" "global_admin" {
+  group_name = "vault-admin-external"
+}
+
 data "vault_policy_document" "shared_team_viewer" {
   for_each = toset(["team1", "team2", "team2"])
   rule {

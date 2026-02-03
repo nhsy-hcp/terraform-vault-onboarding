@@ -50,5 +50,8 @@ No modules.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_vault_admin_group_id"></a> [vault\_admin\_group\_id](#output\_vault\_admin\_group\_id) | The ID of the global vault-admin external identity group. |
+| <a name="output_vault_user_group_id"></a> [vault\_user\_group\_id](#output\_vault\_user\_group\_id) | The ID of the global vault-user external identity group. |
 <!-- END_TF_DOCS -->

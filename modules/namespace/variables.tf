@@ -10,6 +10,12 @@ variable "admin_group_name" {
   type = string
 }
 
+variable "additional_admin_group_ids" {
+  type        = list(string)
+  description = "List of additional group IDs to grant admin access to this namespace (e.g. global admins)"
+  default     = []
+}
+
 variable "enable_quotas" {
   type        = bool
   description = "Enable Vault quota resources for the namespace"

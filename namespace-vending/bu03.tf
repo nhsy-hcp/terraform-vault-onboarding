@@ -1,8 +1,9 @@
 module "bu03_namespace" {
-  source           = "../modules/namespace"
-  namespace        = "bu03"
-  description      = "bu03 namespace"
-  admin_group_name = "vault-bu03-admin"
+  source                     = "../modules/namespace"
+  namespace                  = "bu03"
+  description                = "bu03 namespace"
+  admin_group_name           = "vault-bu03-admin"
+  additional_admin_group_ids = [data.vault_identity_group.global_admin.group_id]
 }
 
 module "bu03_workspace" {

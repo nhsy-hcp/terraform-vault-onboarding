@@ -50,7 +50,7 @@ resource "vault_policy" "namespace_admin" {
 resource "vault_identity_group" "namespace_admin_internal" {
   namespace        = vault_namespace.default.path
   name             = data.okta_group.namespace_admin.name
-  member_group_ids = [vault_identity_group.namespace_admin_external.id]
+  member_group_ids = concat([vault_identity_group.namespace_admin_external.id], var.additional_admin_group_ids)
   policies         = [vault_policy.namespace_admin.name]
 }
 
