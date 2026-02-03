@@ -5,9 +5,8 @@ provider "okta" {
 }
 
 provider "vault" {
-  address   = hcp_vault_cluster.vault.vault_public_endpoint_url
-  token     = hcp_vault_cluster_admin_token.vault.token
-  namespace = "admin"
+  address = hcp_vault_cluster.vault.vault_public_endpoint_url
+  token   = hcp_vault_cluster_admin_token.vault.token
 }
 
 provider "hcp" {

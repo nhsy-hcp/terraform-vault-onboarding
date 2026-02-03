@@ -1,6 +1,7 @@
 ### Terraform template
 # Local .terraform directories
 **/.terraform/*
+**/.terraform.lock.hcl
 
 # Local dev files
 .config
@@ -8,7 +9,6 @@
 .idea
 .kube
 .ssh
-env.sh
 
 # Terraform state
 **/terraform.tfstate.d/*

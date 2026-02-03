@@ -63,8 +63,26 @@ variable "vault_auth_role" {
 
 variable "vault_namespace" {
   type        = string
-  description = "Vault namespace"
+  description = "Vault namespace where resources (JWT backend, roles) will be created. If null, uses the provider's default namespace."
   default     = null
+}
+
+variable "tfc_vault_namespace" {
+  type        = string
+  description = "Vault namespace to configure in TFC (TFC_VAULT_NAMESPACE). If null, defaults to vault_namespace."
+  default     = null
+}
+
+variable "vault_auth_method" {
+  type        = string
+  description = "Vault auth method for TFC"
+  default     = "jwt"
+}
+
+variable "vault_workload_identity_audience" {
+  type        = string
+  description = "Vault workload identity audience"
+  default     = "vault.workload.identity"
 }
 
 variable "vault_policy_name" {
@@ -109,12 +127,13 @@ variable "terraform_version" {
   default     = ">= 1.11.0"
 }
 
-variable "tfc_terraform_variables" {
+variable "tfc_variables" {
   type = map(object({
     value     = string
+    category  = optional(string, "terraform")
     sensitive = optional(bool, false)
   }))
-  description = "Map of additional Terraform variables"
+  description = "Map of additional TFC variables"
   default     = {}
 }
 

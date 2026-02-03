@@ -55,9 +55,9 @@ resource "tfe_variable" "tfc_vault_address" {
 }
 
 resource "tfe_variable" "tfc_vault_namespace" {
-  count        = var.vault_namespace != null ? 1 : 0
+  count        = var.vault_namespace != null || var.tfc_vault_namespace != null ? 1 : 0
   key          = "TFC_VAULT_NAMESPACE"
-  value        = var.vault_namespace
+  value        = var.tfc_vault_namespace != null ? var.tfc_vault_namespace : var.vault_namespace
   category     = "env"
   workspace_id = tfe_workspace.default.id
 }
@@ -72,6 +72,20 @@ resource "tfe_variable" "tfc_vault_run_role" {
 resource "tfe_variable" "tfc_vault_auth_path" {
   key          = "TFC_VAULT_AUTH_PATH"
   value        = var.vault_auth_path
+  category     = "env"
+  workspace_id = tfe_workspace.default.id
+}
+
+resource "tfe_variable" "tfc_vault_auth_method" {
+  key          = "TFC_VAULT_AUTH_METHOD"
+  value        = var.vault_auth_method
+  category     = "env"
+  workspace_id = tfe_workspace.default.id
+}
+
+resource "tfe_variable" "tfc_vault_workload_identity_audience" {
+  key          = "TFC_VAULT_WORKLOAD_IDENTITY_AUDIENCE"
+  value        = var.vault_workload_identity_audience
   category     = "env"
   workspace_id = tfe_workspace.default.id
 }
@@ -111,11 +125,11 @@ resource "tfe_variable" "okta_base_url" {
 }
 
 resource "tfe_variable" "default" {
-  for_each     = var.tfc_terraform_variables
+  for_each     = var.tfc_variables
   key          = each.key
   value        = each.value.value
   sensitive    = each.value.sensitive
-  category     = "terraform"
+  category     = each.value.category
   workspace_id = tfe_workspace.default.id
 }
 

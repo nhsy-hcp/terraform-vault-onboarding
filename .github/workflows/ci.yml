@@ -11,7 +11,6 @@ concurrency:
 
 permissions:
   contents: read
-  pull-requests: read
 
 jobs:
   validate:
@@ -25,55 +24,28 @@ jobs:
         with:
           terraform_version: "1.14.0"
 
-      - name: Setup Task
-        uses: arduino/setup-task@v2
-        with:
-          version: 3.x
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
       - name: Setup tflint
         uses: terraform-linters/setup-tflint@v4
         with:
           tflint_version: v0.50.3
 
-      - name: Install Dependencies
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: TFLint
+        if: ${{ !env.ACT }}
         run: |
-          pip install pre-commit
+          tflint --init
+          tflint --recursive
 
-          # Install terraform-docs
-          curl -Lo ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v0.19.0/terraform-docs-v0.19.0-linux-amd64.tar.gz
-          tar -xzf ./terraform-docs.tar.gz
-          chmod +x ./terraform-docs
-          sudo mv ./terraform-docs /usr/local/bin/
-
-      - name: Clean Local Terraform Directories
-        run: find . -name ".terraform" -type d -exec rm -rf {} + || true
-
-      - name: Cache pre-commit
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pre-commit
-          key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
-          restore-keys: |
-            pre-commit-${{ runner.os }}-
-
-      - name: Cache Terraform Providers
-        uses: actions/cache@v4
-        with:
-          path: ~/.terraform.d/plugin-cache
-          key: terraform-providers-${{ runner.os }}-${{ hashFiles('**/.terraform.lock.hcl') }}
-          restore-keys: |
-            terraform-providers-${{ runner.os }}-
-
-      - name: Set Terraform Provider Cache Env
+      - name: Terraform Operations
         run: |
-          echo "TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache" >> $GITHUB_ENV
-          mkdir -p ~/.terraform.d/plugin-cache
-
-      - name: Run Validation
-        run: task validate
+          for dir in bootstrap namespace-*; do
+            if [ -d "$dir" ]; then
+              echo "---------------------------------------------------------"
+              echo "Processing directory: $dir"
+              echo "---------------------------------------------------------"
+              terraform -chdir=$dir init -backend=false
+              terraform -chdir=$dir validate
+            fi
+          done

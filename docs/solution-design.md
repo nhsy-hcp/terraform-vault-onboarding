@@ -528,6 +528,26 @@ Step 4: Business Unit Namespaces (parallel)
 - Okta configuration external to this solution
 - Re-apply bootstrap to recreate JWT auth
 
+## CI/CD & Local Development
+
+### Automated Validation
+
+The project employs a GitHub Actions workflow for continuous integration, focusing on code quality and infrastructure validation:
+
+- **Linting**: `tflint` is used recursively to identify provider-specific issues and best practice violations.
+- **Formatting**: `terraform fmt -check` ensures all configurations adhere to standard HCL formatting.
+- **Validation**: Every root configuration (`bootstrap/` and `namespace-*/`) undergoes `terraform validate` during the CI process.
+
+### Local Development Workflow
+
+To ensure high-quality contributions and minimize CI failures, developers can utilize the following tools:
+
+1. **Local CI (act)**: The `task test-ci` command uses `act` to run the full GitHub Actions suite in a local Docker container, providing immediate feedback on changes.
+2. **Task Automation**: `Taskfile.yml` provides simplified commands for common operations:
+   - `task lint`: Runs pre-commit hooks.
+   - `task validate`: Initializes and validates all Terraform directories.
+   - `task init`: Upgrades and initializes all Terraform directories without a backend.
+
 ## Design Decisions
 
 ### Why HCP Terraform for State Management

@@ -1,4 +1,4 @@
-# HCP Terraform Vault Integration
+# Terraform Vault Onboarding
 
 > **Disclaimer:** This project is provided for demonstration and learning purposes only. It is not intended for production use without proper security review, hardening, and customization for your specific environment.
 
@@ -132,6 +132,24 @@ Vault policy HCL files are stored in the `policies/` directory:
 ## Notes
 
 - Do not use a self-signed certificate for Vault TLS or an OIDC workflow will error on login.
+
+## Development
+
+### Local Testing (CI Simulation)
+
+You can run the GitHub Actions CI workflow locally using [act](https://github.com/nektos/act). This requires Docker to be installed and running.
+
+```bash
+task test-ci
+```
+
+### Linting & Formatting
+
+The project uses `pre-commit` and `tflint` for code quality.
+
+- **Pre-commit**: Runs automatically on commit if installed (`pre-commit install`). Can be run manually via `task lint`.
+- **Formatting**: Enforced via `terraform fmt`.
+- **Linting**: Uses `tflint` with recursive checks across all modules.
 
 ## Additional Resources
 
