@@ -42,6 +42,7 @@
 | [okta_auth_server_claim.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/auth_server_claim) | resource |
 | [okta_auth_server_policy.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/auth_server_policy) | resource |
 | [okta_auth_server_policy_rule.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/auth_server_policy_rule) | resource |
+| [okta_auth_server_scope.groups](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/auth_server_scope) | resource |
 | [okta_group.mgmt](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/group) | resource |
 | [okta_group.namespace](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/group) | resource |
 | [okta_group_memberships.vault_admin](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/group_memberships) | resource |
