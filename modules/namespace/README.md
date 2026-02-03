@@ -43,6 +43,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_additional_admin_group_ids"></a> [additional\_admin\_group\_ids](#input\_additional\_admin\_group\_ids) | List of additional group IDs to grant admin access to this namespace (e.g. global admins) | `list(string)` | `[]` | no |
 | <a name="input_admin_group_name"></a> [admin\_group\_name](#input\_admin\_group\_name) | n/a | `string` | n/a | yes |
 | <a name="input_description"></a> [description](#input\_description) | n/a | `string` | n/a | yes |
 | <a name="input_enable_quotas"></a> [enable\_quotas](#input\_enable\_quotas) | Enable Vault quota resources for the namespace | `bool` | `false` | no |
