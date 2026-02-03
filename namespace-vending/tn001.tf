@@ -1,9 +1,9 @@
 module "tn001_namespace" {
-  source                     = "../modules/namespace"
-  namespace                  = "tn001"
-  description                = "tn001 namespace"
-  admin_group_name           = "vault-tn001-admin"
-  additional_admin_group_ids = [data.vault_identity_group.global_admin.group_id]
+  source           = "../modules/namespace"
+  namespace        = "tn001"
+  description      = "tn001 namespace"
+  admin_group_name = "vault-tn001-admin"
+  # additional_admin_group_ids = [data.vault_identity_group.global_admin.group_id]
   rbac_delegation = {
     "tn001-team1-reader" = {
       group_name = "vault-tn001-team1-viewer"
