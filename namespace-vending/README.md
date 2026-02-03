@@ -20,12 +20,12 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_bu01_namespace"></a> [bu01\_namespace](#module\_bu01\_namespace) | ../modules/namespace | n/a |
-| <a name="module_bu01_workspace"></a> [bu01\_workspace](#module\_bu01\_workspace) | ../modules/workspace | n/a |
-| <a name="module_bu02_namespace"></a> [bu02\_namespace](#module\_bu02\_namespace) | ../modules/namespace | n/a |
-| <a name="module_bu02_workspace"></a> [bu02\_workspace](#module\_bu02\_workspace) | ../modules/workspace | n/a |
-| <a name="module_bu03_namespace"></a> [bu03\_namespace](#module\_bu03\_namespace) | ../modules/namespace | n/a |
-| <a name="module_bu03_workspace"></a> [bu03\_workspace](#module\_bu03\_workspace) | ../modules/workspace | n/a |
+| <a name="module_tn001_namespace"></a> [tn001\_namespace](#module\_tn001\_namespace) | ../modules/namespace | n/a |
+| <a name="module_tn001_workspace"></a> [tn001\_workspace](#module\_tn001\_workspace) | ../modules/workspace | n/a |
+| <a name="module_tn002_namespace"></a> [tn002\_namespace](#module\_tn002\_namespace) | ../modules/namespace | n/a |
+| <a name="module_tn002_workspace"></a> [tn002\_workspace](#module\_tn002\_workspace) | ../modules/workspace | n/a |
+| <a name="module_tn003_namespace"></a> [tn003\_namespace](#module\_tn003\_namespace) | ../modules/namespace | n/a |
+| <a name="module_tn003_workspace"></a> [tn003\_workspace](#module\_tn003\_workspace) | ../modules/workspace | n/a |
 
 ## Resources
 

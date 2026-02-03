@@ -11,9 +11,9 @@ terraform-vault-onboarding/
 ├── bootstrap/              # Initial HCP Terraform project and workspace setup
 ├── namespace-root/         # Root namespace configuration
 ├── namespace-vending/      # Automated namespace provisioning
-├── namespace-bu01/         # Business Unit 1 namespace
-├── namespace-bu02/         # Business Unit 2 namespace
-├── namespace-bu03/         # Business Unit 3 namespace
+├── namespace-tn001/         # Tenant 1 namespace
+├── namespace-tn002/         # Tenant 2 namespace
+├── namespace-tn003/         # Tenant 3 namespace
 ├── modules/
 │   ├── namespace/          # HCP Vault namespace creation module
 │   ├── workspace/          # HCP Terraform workspace + HCP Vault integration module
@@ -41,8 +41,8 @@ The configurations should be applied in the following order:
 
 1. **Bootstrap**: Sets up the HCP HVN and HCP Vault Cluster, initial HCP Terraform projects, workspaces, and HCP Vault JWT authentication.
 2. **Namespace Root**: Configures the root HCP Vault namespace with OIDC authentication and identity groups.
-3. **Namespace Vending**: Creates child namespaces for business units with standardized configurations.
-4. **Business Unit Namespaces**: Individual BU namespaces can be customized independently.
+3. **Namespace Vending**: Creates child namespaces for tenants with standardized configurations.
+4. **Tenant Namespaces**: Individual BU namespaces can be customized independently.
 
 ## Bootstrap Demo Setup
 
@@ -94,7 +94,7 @@ Creates a HCP Vault namespace with OIDC identity mapping and optional quotas.
 module "engineering_namespace" {
   source           = "./modules/namespace"
   namespace        = "engineering"
-  description      = "Engineering Business Unit"
+  description      = "Engineering Tenant"
   admin_group_name = "okta-eng-admins"
 
   enable_quotas     = true
@@ -142,15 +142,15 @@ Uses JWT authentication with OIDC. Workspaces are configured with bound claims t
 
 OIDC authentication is configured in the root HCP Vault namespace. Users authenticate via Okta and receive tokens based on their group membership.
 
-## Adding a New Business Unit
+## Adding a New Tenant
 
-1. Create a namespace definition in `namespace-vending/bu{XX}.tf`
-2. Create a dedicated directory `namespace-bu{XX}/`
+1. Create a namespace definition in `namespace-vending/tn{XXX}.tf`
+2. Create a dedicated directory `namespace-tn{XXX}/`
 3. Add the required files:
   - `main.tf`
   - `providers.tf`
   - `variables.tf`
-4. Apply namespace-vending first, then the business unit configuration
+4. Apply namespace-vending first, then the tenant configuration
 
 ## Policies
 
