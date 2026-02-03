@@ -7,6 +7,7 @@ resource "vault_namespace" "default" {
 }
 
 resource "vault_quota_rate_limit" "namespace" {
+  count    = var.enable_quotas ? 1 : 0
   name     = vault_namespace.default.path
   path     = "${var.namespace}/"
   interval = 30
@@ -14,6 +15,7 @@ resource "vault_quota_rate_limit" "namespace" {
 }
 
 resource "vault_quota_lease_count" "namespace" {
+  count      = var.enable_quotas ? 1 : 0
   name       = vault_namespace.default.path
   path       = "${var.namespace}/"
   max_leases = var.quota_lease_count
@@ -73,13 +75,6 @@ resource "vault_identity_group_alias" "rbac_external" {
   canonical_id   = vault_identity_group.rbac_external[each.key].id
 }
 
-# resource "vault_policy" "rbac" {
-#   for_each  = var.rbac_delegation
-#   namespace = vault_namespace.default.path
-#   name      = each.key
-#   policy    = each.value.policy
-# }
-
 resource "vault_policy" "rbac" {
   for_each = { for p in local.rbac_policies : p.name => p }
 
@@ -87,14 +82,6 @@ resource "vault_policy" "rbac" {
   name      = each.value.name
   policy    = each.value.policy
 }
-
-# resource "vault_identity_group" "rbac_internal" {
-#   for_each         = var.rbac_delegation
-#   namespace        = vault_namespace.default.path
-#   name             = data.okta_group.rbac[each.key].name
-#   member_group_ids = [vault_identity_group.rbac_external[each.key].id]
-#   policies         = [vault_policy.rbac[each.key].name]
-# }
 
 resource "vault_identity_group" "rbac_internal" {
   for_each         = var.rbac_delegation
