@@ -40,8 +40,8 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_default_lease_ttl"></a> [default\_lease\_ttl](#input\_default\_lease\_ttl) | Default lease TTL for Vault tokens | `string` | `"10m"` | no |
-| <a name="input_max_lease_ttl"></a> [max\_lease\_ttl](#input\_max\_lease\_ttl) | Maximum lease TTL for Vault tokens | `string` | `"30m"` | no |
+| <a name="input_default_lease_ttl"></a> [default\_lease\_ttl](#input\_default\_lease\_ttl) | Default lease TTL for Vault tokens | `string` | `"8h"` | no |
+| <a name="input_max_lease_ttl"></a> [max\_lease\_ttl](#input\_max\_lease\_ttl) | Maximum lease TTL for Vault tokens | `string` | `"24h"` | no |
 | <a name="input_okta_auth_path"></a> [okta\_auth\_path](#input\_okta\_auth\_path) | n/a | `string` | `"oidc"` | no |
 | <a name="input_okta_base_url"></a> [okta\_base\_url](#input\_okta\_base\_url) | Okta base URL | `string` | `"okta.com"` | no |
 | <a name="input_okta_mgmt_groups"></a> [okta\_mgmt\_groups](#input\_okta\_mgmt\_groups) | n/a | `list(string)` | <pre>[<br/>  "vault-admin",<br/>  "vault-user"<br/>]</pre> | no |
