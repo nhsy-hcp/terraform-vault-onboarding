@@ -426,8 +426,8 @@ Application → HCP Terraform Workspace → HCP Vault (JWT) → Namespace KV Sto
 - Automatically renewed during runs
 
 **Okta User Tokens:**
-- TTL configurable (default 30 minutes)
-- Renewable up to max TTL (default 1 hour)
+- TTL configurable (8 hours)
+- Renewable up to max TTL (24 hours)
 - Revoked on Okta session termination
 - MFA enforced at Okta layer
 
@@ -537,11 +537,6 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 - Workspace-based isolation
 - Native HCP Vault integration
 
-**Alternatives Considered:**
-- S3 backend: Requires additional locking infrastructure (DynamoDB)
-- Local state: Not suitable for team collaboration
-- Git-based state: Security risk, no locking
-
 ### Namespace-Based Multi-Tenancy
 
 **Decision:** Use HCP Vault namespaces to isolate tenants
@@ -552,11 +547,6 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 - Quota enforcement per namespace
 - Simplified access control
 - Native HCP Vault feature (Enterprise)
-
-**Alternatives Considered:**
-- Path-based isolation: Weaker boundaries, complex policies
-- Separate HCP Vault clusters: Higher operational overhead
-- Shared namespace with strict policies: Risk of policy errors
 
 ### Module Decomposition
 
@@ -573,21 +563,6 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 - **workspace:** Creates HCP Terraform workspace with HCP Vault auth
 - **kv-engine:** Mounts KV secrets engine
 
-### GitHub App Integration
-
-**Decision:** Use GitHub App for VCS integration with HCP Terraform
-
-**Rationale:**
-- Fine-grained repository access
-- Better security than personal access tokens
-- Organization-level installation
-- Automatic webhook management
-
-**Implementation:**
-- GitHub App data source in workspace module
-- VCS repo block configures branch and identifier
-- Trigger patterns define what changes invoke runs
-
 ## Scalability & Maintenance
 
 ### Adding New Tenants
@@ -603,16 +578,6 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 
 **Estimated Time:** 15-20 minutes per BU
 
-### Module Versioning Strategy
-
-**Current Approach:** Local path-based modules
-
-**Considerations for Future:**
-- Git-based module sources with version tags
-- Private Terraform registry for module hosting
-- Semantic versioning for breaking changes
-- Module changelog documentation
-
 ### Policy Lifecycle Management
 
 **Policy Updates:**
@@ -620,54 +585,6 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 2. Update Terraform resource referencing policy
 3. Run `terraform plan` to preview changes
 4. Apply changes to update HCP Vault policy
-
-**Policy Testing:**
-- Use `vault policy fmt` to validate syntax
-- Test policies in non-production namespace first
-- Document policy changes in Git commit messages
-
-### Monitoring & Observability
-
-**Recommended Integrations:**
-- HCP Vault audit logs → SIEM (Splunk, ELK)
-- HCP Terraform run notifications → Slack/PagerDuty
-- HCP Vault telemetry → Prometheus/Grafana
-- Okta event hooks → Security monitoring
-
-**Key Metrics:**
-- HCP Vault token creation rate
-- Failed authentication attempts
-- HCP Terraform workspace run success rate
-- Namespace quota utilization
-
-## Future Enhancements
-
-### Potential Improvements
-
-1. **Dynamic Secret Engines**
-   - Add database secret engine modules
-   - AWS/Azure dynamic credential generation
-   - SSH certificate authority
-
-2. **Advanced RBAC**
-   - Entity aliases for service accounts
-   - Group-based policy inheritance
-   - Time-based access controls
-
-3. **Multi-Region Support**
-   - HCP Vault replication configuration
-   - Region-aware workspace provisioning
-   - Disaster recovery automation
-
-4. **Enhanced Observability**
-   - Custom HCP Vault metrics exporters
-   - HCP Terraform run analytics dashboards
-   - Policy compliance reporting
-
-5. **Self-Service Portal**
-   - Web UI for namespace requests
-   - Automated approval workflows
-   - Secret lifecycle management
 
 ## References
 

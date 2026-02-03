@@ -9,6 +9,7 @@ tfc_token               = "your-tfc-api-token"
 
 okta_org_name           = "your-okta-org-name"
 okta_api_token          = "your-okta-api-token"
+hcp_project_id          = "your-hcp-project-uuid"
 
 okta_mgmt_groups = [
   "vault-admin",

@@ -40,7 +40,7 @@ terraform-vault-onboarding/
 The configurations should be applied in the following order:
 
 1. **Bootstrap**: Sets up the HCP HVN and HCP Vault Cluster, initial HCP Terraform projects, workspaces, and HCP Vault JWT authentication.
-2. **Namespace Root**: Configures the root HCP Vault namespace with OIDC authentication and identity groups.
+2. **Namespace Root**: Configures the HCP Vault (admin) namespace with OIDC authentication and identity groups.
 3. **Namespace Vending**: Creates child namespaces for tenants with standardized configurations.
 4. **Tenant Namespaces**: Individual BU namespaces can be customized independently.
 
@@ -78,57 +78,44 @@ Edit `./bootstrap/terraform.tfvars` and configure the following variables:
 
 **Note:** All HCP resource IDs are automatically suffixed with a random hex string to ensure global uniqueness.
 
-### HCP Terraform Agent Setup (Optional)
-
-HCP Terraform Agent pools are supported but disabled by default (`enable_tfc_agent_pool = false`). If your HCP Vault cluster is set to a private endpoint, you will need to run agents within a network that can reach the HCP HVN (e.g., via VPC Peering or Transit Gateway).
-
-**Note:** The previous `vault_address_tfc_agent` variable is obsolete as HCP Vault provides a consistent public or private endpoint URL.
-
 ## Usage
 
-### namespace
+The project uses a vending pattern where namespaces and workspaces are centrally managed, while tenants configure their own resources (like KV engines) within their assigned namespace.
 
-Creates a HCP Vault namespace with OIDC identity mapping and optional quotas.
+### Namespace Vending
+
+Defined in `namespace-vending/tn001.tf`, this creates the Vault namespace and the corresponding TFC workspace.
 
 ```hcl
-module "engineering_namespace" {
-  source           = "./modules/namespace"
-  namespace        = "engineering"
-  description      = "Engineering Tenant"
-  admin_group_name = "okta-eng-admins"
+module "tn001_namespace" {
+  source           = "../modules/namespace"
+  namespace        = "tn001"
+  description      = "Tenant 1 namespace"
+  admin_group_name = "vault-tn001-admin"
+}
 
-  enable_quotas     = true
-  quota_rate_limit  = 500
+module "tn001_workspace" {
+  source = "../modules/workspace"
+
+  tfc_organization      = var.tfc_organization
+  tfc_project           = var.tfc_project
+  tfc_workspace         = "vault-onboarding-namespace-tn001"
+  tfc_working_directory = "./namespace-tn001"
+
+  vault_address         = var.vault_address
+  vault_namespace       = module.tn001_namespace.namespace
 }
 ```
 
-### workspace
+### Tenant Configuration
 
-Creates a HCP Terraform workspace integrated with HCP Vault using JWT authentication.
-
-```hcl
-module "engineering_workspace" {
-  source = "./modules/workspace"
-
-  tfc_organization      = "my-org"
-  tfc_project           = "vault-onboarding"
-  tfc_workspace         = "engineering-infra"
-  tfc_working_directory = "terraform/engineering"
-
-  vault_address         = "https://vault.example.com"
-  vault_namespace       = module.engineering_namespace.namespace
-}
-```
-
-### kv-engine
-
-Manages KV v2 secrets engines within a namespace.
+Defined in `namespace-tn001/main.tf`, tenants manage their own secrets engines and other resources.
 
 ```hcl
-module "engineering_secrets" {
-  source    = "./modules/kv-engine"
-  namespace = module.engineering_namespace.namespace
-  path      = "app-secrets"
+module "kv_engine" {
+  source      = "../modules/kv-engine"
+  path        = "shared/"
+  description = "KV v2 secrets"
 }
 ```
 
@@ -163,19 +150,7 @@ HCP Vault policy HCL files are stored in the `policies/` directory:
 | `namespace_admin_policy.hcl` | Namespace administrator permissions |
 | `vault_admin_policy.hcl` | Vault Admin ACL policy |
 
-## Notes
-
-- Do not use a self-signed certificate for HCP Vault TLS or an OIDC workflow will error on login.
-
 ## Development
-
-### Local Testing (CI Simulation)
-
-You can run the GitHub Actions CI workflow locally using [act](https://github.com/nektos/act). This requires Docker to be installed and running.
-
-```bash
-task test-ci
-```
 
 ### Linting & Formatting
 

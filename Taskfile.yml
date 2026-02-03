@@ -10,9 +10,10 @@ vars:
 
 tasks:
   lint:
-    desc: Run all pre-commit hooks
+    desc: Run all pre-commit hooks and format Vault policies
     cmds:
       - pre-commit run --all-files
+      - ls policies/*.hcl | xargs -L1 vault policy fmt
 
   clean:
     desc: Remove all .terraform directories and lock files
