@@ -83,6 +83,7 @@
 | <a name="input_token_type"></a> [token\_type](#input\_token\_type) | Token type for Vault tokens | `string` | `"default-service"` | no |
 | <a name="input_vault_auth_path"></a> [vault\_auth\_path](#input\_vault\_auth\_path) | Mount path where JWT Auth will be configured | `string` | `"jwt/tfc"` | no |
 | <a name="input_vault_auth_role_prefix"></a> [vault\_auth\_role\_prefix](#input\_vault\_auth\_role\_prefix) | Vault role name | `string` | `"tfc-admin"` | no |
+| <a name="input_vault_namespace"></a> [vault\_namespace](#input\_vault\_namespace) | Vault namespace | `string` | `"admin"` | no |
 | <a name="input_vault_policy"></a> [vault\_policy](#input\_vault\_policy) | Vault policy name | `string` | `"tfc-admin"` | no |
 
 ## Outputs

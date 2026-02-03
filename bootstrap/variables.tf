@@ -73,6 +73,12 @@ variable "vault_policy" {
   default     = "tfc-admin"
 }
 
+variable "vault_namespace" {
+  type        = string
+  description = "Vault namespace"
+  default     = "admin"
+}
+
 variable "okta_org_name" {
   type        = string
   description = "Okta organization name"

@@ -2,14 +2,23 @@
 
 version: '3'
 
+dotenv: ['.env']
+
 vars:
-  TF_DIRS: [bootstrap, namespace-vending, namespace-root]
+  TF_DIRS:
+    sh: ls -d bootstrap namespace-* modules/*/ 2>/dev/null | xargs
 
 tasks:
   lint:
     desc: Run all pre-commit hooks
     cmds:
       - pre-commit run --all-files
+
+  clean:
+    desc: Remove all .terraform directories and lock files
+    cmds:
+      - find . -name ".terraform" -type d -prune -exec rm -rf {} +
+      - find . -name ".terraform.lock.hcl" -type f -delete
 
   init:
     desc: Initialize Terraform (no backend) for all primary directories
@@ -19,82 +28,72 @@ tasks:
 
   validate:
     desc: Initialize and validate all Terraform configurations
-    deps: [lint, init]
+    deps: [init]
+    sources:
+      - "{{.ITEM}}/*.tf"
+      - "{{.ITEM}}/*.hcl"
     cmds:
       - for: { var: TF_DIRS }
-        cmd: terraform -chdir={{.ITEM}} validate
+        cmd: |
+          echo "--> Validating: {{.ITEM}}"
+          terraform -chdir={{.ITEM}} validate
 
-  # Shared Environment for Vault tasks
-  _vault_env: &vault_env
-    VAULT_ADDR:
-      sh: ./scripts/env.sh addr
-    VAULT_TOKEN:
-      sh: ./scripts/env.sh token
-    VAULT_NAMESPACE: admin
-
-  vault:vars:
-    desc: Output Vault environment variables for shell export
-    aliases: [vars]
-    env: *vault_env
-    cmds:
-      - echo "export VAULT_ADDR=$VAULT_ADDR"
-      - echo "export VAULT_TOKEN=$VAULT_TOKEN"
-      - echo "export VAULT_NAMESPACE=$VAULT_NAMESPACE"
-    silent: true
-
-  update-env:
-    desc: Update .env file from Terraform outputs
-    env: *vault_env
-    cmds:
-      - ./scripts/update_env.sh
-    silent: true
-
-  bootstrap-apply:
-    desc: Apply bootstrap infrastructure (requires local .tfvars)
-    deps: [lint]
+  bootstrap:apply:
+    desc: Apply bootstrap infrastructure
     dir: ./bootstrap
-    dotenv: [.env]
     preconditions:
       - &tfvars_precondition
         sh: test -f terraform.tfvars
-        msg: "terraform.tfvars not found. Copy terraform.tfvars.example to terraform.tfvars and configure your values."
+        msg: "terraform.tfvars not found. Copy terraform.tfvars.example to terraform.tfvars."
     cmds:
       - terraform init
-      - terraform validate
       - terraform apply -auto-approve
       - task: update-env
 
-  bootstrap-destroy:
+  bootstrap:destroy:
     desc: Destroy bootstrap infrastructure
-    deps: [lint]
     dir: ./bootstrap
-    dotenv: [.env]
     cmds:
-      - terraform validate
       - terraform destroy
 
-  bootstrap-destroy-vault:
-    desc: Destroy only the HCP Vault cluster
-    deps: [init]
-    dir: ./bootstrap
-    cmds:
-      - terraform destroy -target=hcp_vault_cluster.vault
-
-  bootstrap-plan:
+  bootstrap:plan:
     desc: Plan bootstrap infrastructure changes
-    deps: [lint]
     dir: ./bootstrap
-    dotenv: [.env]
     preconditions:
       - *tfvars_precondition
     cmds:
       - terraform init
       - terraform plan
 
-  bootstrap-refresh:
-    desc: Refresh bootstrap state without making changes
-    deps: [lint]
+  bootstrap:refresh:
+    desc: Refresh bootstrap state
     dir: ./bootstrap
-    dotenv: [.env]
     cmds:
       - terraform plan -refresh-only
+
+  debug:
+    desc: Debug variable evaluation
+    cmds:
+      - echo "TF_DIRS = {{.TF_DIRS}}"
+
+  test-ci:
+    desc: Run GitHub Actions locally using act (requires Docker)
+    preconditions:
+      - sh: command -v act >/dev/null 2>&1
+        msg: "act is not installed. Install it with 'brew install act' or visit https://github.com/nektos/act"
+    cmds:
+      - task: clean
+      - act --validate
+      - act --container-architecture linux/amd64 -P ubuntu-latest=catthehacker/ubuntu:act-latest
+      - task: clean
+
+  vault:status:
+    desc: Check Vault status
+    cmds:
+      - vault status
+
+  update-env:
+    desc: Update .env file from Terraform outputs
+    cmds:
+      - ./scripts/update_env.sh
+    silent: true
