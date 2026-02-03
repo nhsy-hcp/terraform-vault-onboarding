@@ -28,13 +28,13 @@
 variable "default_lease_ttl" {
   type        = string
   description = "Default lease TTL for Vault tokens"
-  default     = "10m"
+  default     = "8h"
 }
 
 variable "max_lease_ttl" {
   type        = string
   description = "Maximum lease TTL for Vault tokens"
-  default     = "30m"
+  default     = "24h"
 }
 
 variable "token_type" {
