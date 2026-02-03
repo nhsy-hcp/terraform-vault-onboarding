@@ -92,6 +92,13 @@ tasks:
     cmds:
       - vault status
 
+  vault:ui:
+    desc: Open Vault UI in the browser and copy token to clipboard
+    aliases: [ui]
+    cmds:
+      - echo -n $VAULT_TOKEN | pbcopy
+      - open $VAULT_ADDR
+
   update-env:
     desc: Update .env file from Terraform outputs
     cmds:

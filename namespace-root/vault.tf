@@ -53,7 +53,7 @@ resource "vault_jwt_auth_backend" "okta" {
   type               = "oidc"
   default_role       = "okta-group"
   bound_issuer       = data.okta_auth_server.default.issuer
-  oidc_discovery_url = "https://${var.okta_org_name}.${var.okta_base_url}"
+  oidc_discovery_url = data.okta_auth_server.default.issuer
   oidc_client_id     = data.okta_app_oauth.default.client_id
   oidc_client_secret = data.okta_app_oauth.default.client_secret
 

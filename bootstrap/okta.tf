@@ -68,13 +68,19 @@ resource "okta_auth_server" "default" {
   status      = "ACTIVE"
 }
 
+resource "okta_auth_server_scope" "groups" {
+  auth_server_id = okta_auth_server.default.id
+  name           = "groups"
+  description    = "Groups scope"
+}
+
 resource "okta_auth_server_claim" "default" {
   auth_server_id          = okta_auth_server.default.id
   name                    = "groups"
   always_include_in_token = true
   claim_type              = "IDENTITY"
   group_filter_type       = "STARTS_WITH"
-  scopes                  = ["profile"]
+  scopes                  = [okta_auth_server_scope.groups.name]
   value                   = "vault-"
   value_type              = "GROUPS"
 }
@@ -94,7 +100,7 @@ resource "okta_auth_server_policy_rule" "default" {
   policy_id       = okta_auth_server_policy.default.id
   priority        = 1
   group_whitelist = [okta_group.mgmt["vault-user"].id]
-  scope_whitelist = ["openid", "profile"]
+  scope_whitelist = ["openid", "profile", "groups"]
 
   grant_type_whitelist = [
     "client_credentials",
