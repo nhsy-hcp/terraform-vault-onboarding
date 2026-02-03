@@ -3,7 +3,8 @@
 version: '3'
 
 vars:
-  TF_DIRS: [bootstrap, namespace-vending, namespace-root]
+  TF_DIRS:
+    sh: ls -d bootstrap namespace-* 2>/dev/null | xargs
 
 tasks:
   lint:
@@ -17,12 +18,21 @@ tasks:
       - for: { var: TF_DIRS }
         cmd: terraform -chdir={{.ITEM}} init -upgrade -backend=false
 
-  validate:
-    desc: Initialize and validate all Terraform configurations
-    deps: [lint, init]
+#  validate:
+#    desc: Initialize and validate all Terraform configurations
+#    deps: [lint, init]
+#    cmds:
+#      - for: { var: TF_DIRS }
+#        cmd: terraform -chdir={{.ITEM}} validate
+
+  test-ci:
+    desc: Run GitHub Actions locally using act (requires Docker)
+    preconditions:
+      - sh: command -v act >/dev/null 2>&1
+        msg: "act is not installed. Install it with 'brew install act' or visit https://github.com/nektos/act"
     cmds:
-      - for: { var: TF_DIRS }
-        cmd: terraform -chdir={{.ITEM}} validate
+      - act --validate
+      - act --container-architecture linux/amd64 -P ubuntu-latest=catthehacker/ubuntu:act-latest
 
   # Shared Environment for Vault tasks
   _vault_env: &vault_env

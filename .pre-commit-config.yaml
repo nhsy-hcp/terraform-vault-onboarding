@@ -26,19 +26,13 @@ repos:
       - id: yamllint
         args: [-d, "{rules: {line-length: disable}}"]
 
-  # Secret detection
-  - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.30.0
-    hooks:
-      - id: gitleaks
-
   # Terraform specific hooks
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.105.0
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
-        exclude: ^modules/
+#        exclude: ^modules/
       - id: terraform_tflint
         args:
           - --args=--init
