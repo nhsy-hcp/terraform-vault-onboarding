@@ -85,7 +85,16 @@ TFC Agent pools are supported but disabled by default (`enable_tfc_agent_pool = 
 **Note:** The previous `vault_address_tfc_agent` variable is obsolete as HCP Vault provides a consistent public or private endpoint URL.
 
 ## Usage
-...
+
+### namespace
+
+Creates a HashiCorp Vault namespace with:
+- Vault namespace resource
+- Okta OIDC identity group mapping
+- Vault identity groups (internal/external)
+- Namespace administrator policies
+- Optional Vault quotas (Lease count and Rate limit)
+
 ### workspace
 
 Creates a HCP Terraform workspace integrated with Vault:

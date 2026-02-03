@@ -1,10 +1,8 @@
 module "bu01_namespace" {
-  source            = "../modules/namespace"
-  namespace         = "bu01"
-  description       = "bu01 namespace"
-  admin_group_name  = "vault-bu01-admin"
-  quota_lease_count = 101
-  quota_rate_limit  = 102
+  source           = "../modules/namespace"
+  namespace        = "bu01"
+  description      = "bu01 namespace"
+  admin_group_name = "vault-bu01-admin"
   rbac_delegation = {
     "bu01-team1-reader" = {
       group_name = "vault-bu01-team1-viewer"

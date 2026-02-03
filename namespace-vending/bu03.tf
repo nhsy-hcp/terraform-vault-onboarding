@@ -1,10 +1,8 @@
 module "bu03_namespace" {
-  source            = "../modules/namespace"
-  namespace         = "bu03"
-  description       = "bu03 namespace"
-  admin_group_name  = "vault-bu03-admin"
-  quota_lease_count = 101
-  quota_rate_limit  = 102
+  source           = "../modules/namespace"
+  namespace        = "bu03"
+  description      = "bu03 namespace"
+  admin_group_name = "vault-bu03-admin"
 }
 
 module "bu03_workspace" {
