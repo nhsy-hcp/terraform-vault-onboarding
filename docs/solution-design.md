@@ -1,13 +1,13 @@
-# Solution Design: HCP Terraform & Vault Integration
+# Solution Design: HCP Terraform & HCP Vault Integration
 
 ## Overview
 
-This solution provides automated provisioning and management of HashiCorp Vault infrastructure integrated with HCP Terraform (HCP Terraform). It implements a multi-tenant namespace architecture that enables isolated secret management for multiple business units while maintaining centralized administration and consistent security policies.
+This solution provides automated provisioning and management of HCP Vault infrastructure integrated with HCP Terraform. It implements a multi-tenant namespace architecture that enables isolated secret management for multiple business units while maintaining centralized administration and consistent security policies.
 
 ### Key Capabilities
 
-- Automated Vault namespace provisioning for business units
-- HCP Terraform workspace creation with Vault authentication
+- Automated HCP Vault namespace provisioning for business units
+- HCP Terraform workspace creation with HCP Vault authentication
 - OIDC integration with Okta for human access
 - JWT-based authentication for HCP Terraform workspaces
 - Policy-based access control with least privilege
@@ -30,7 +30,7 @@ This solution provides automated provisioning and management of HashiCorp Vault 
           │                  │                  │
           ▼                  ▼                  ▼
 ┌────────────────────────────────────────────────────────────────┐
-│                      HashiCorp Vault                           │
+│                           HCP Vault                            │
 │  ┌──────────────────────────────────────────────────────────┐  │
 │  │  Root Namespace                                          │  │
 │  │  - JWT Auth Backend (HCP Terraform)                      │  │
@@ -97,20 +97,20 @@ Business Unit Namespaces (bu01, bu02, bu03)
 **Location:** `bootstrap/`
 
 **Key Resources:**
-- Vault JWT authentication backend for HCP Terraform
+- HCP Vault JWT authentication backend for HCP Terraform
 - Okta OAuth application and authorization server
 - HCP Terraform workspaces for `namespace-root` and `namespace-vending`
 - Admin policies for HCP Terraform workspaces
 
 **Responsibilities:**
-- Configure Vault-HCP Terraform authentication
+- Configure HCP Vault HCP Terraform authentication
 - Set up Okta integration
 - Create initial HCP Terraform workspaces
 - Establish admin access patterns
 
 ### 2. Namespace Root
 
-**Purpose:** Configure root Vault namespace
+**Purpose:** Configure root HCP Vault namespace
 
 **Location:** `namespace-root/`
 
@@ -120,7 +120,7 @@ Business Unit Namespaces (bu01, bu02, bu03)
 - Okta user and group mappings
 
 **Responsibilities:**
-- Enable human access to Vault via Okta
+- Enable human access to HCP Vault via Okta
 - Configure identity-based access control
 - Establish root namespace policies
 
@@ -131,14 +131,14 @@ Business Unit Namespaces (bu01, bu02, bu03)
 **Location:** `namespace-vending/`
 
 **Key Resources:**
-- Child Vault namespaces (one per BU)
+- Child HCP Vault namespaces (one per BU)
 - HCP Terraform workspaces for each BU namespace
 - Namespace-specific policies
 - RBAC delegation configurations
 
 **Responsibilities:**
 - Create isolated namespaces per business unit
-- Provision HCP Terraform workspaces with Vault integration
+- Provision HCP Terraform workspaces with HCP Vault integration
 - Configure namespace-level policies
 - Set up delegated administration
 
@@ -168,14 +168,13 @@ Business Unit Namespaces (bu01, bu02, bu03)
 - `namespace` - Namespace name
 - `description` - Namespace description
 - `admin_group_name` - Admin group for the namespace
-- `quota_lease_count` - Lease count quota
 - `quota_rate_limit` - Rate limit quota
 - `rbac_delegation` - Map of RBAC delegations
 
 **Outputs:**
 - `namespace` - Created namespace name
 
-**Purpose:** Creates a Vault namespace with quotas, identity groups, and policies
+**Purpose:** Creates a HCP Vault namespace with quotas, identity groups, and policies
 
 ### workspace Module
 
@@ -186,17 +185,17 @@ Business Unit Namespaces (bu01, bu02, bu03)
 - `tfc_project` - HCP Terraform project name
 - `tfc_organization` - HCP Terraform org name
 - `tfc_working_directory` - Working directory in repo
-- `vault_address` - Vault server URL
+- `vault_address` - HCP Vault server URL
 - `vault_auth_path` - JWT auth mount path
 - `vault_auth_role` - Role name for workspace
-- `vault_namespace` - Target Vault namespace (optional)
+- `vault_namespace` - Target HCP Vault namespace (optional)
 - `github_organization` - GitHub org name
 - `github_repository` - GitHub repo name
 
 **Outputs:**
 - `workspace_id` - HCP Terraform workspace ID
 
-**Purpose:** Creates a HCP Terraform workspace with Vault authentication configured via JWT
+**Purpose:** Creates a HCP Terraform workspace with HCP Vault authentication configured via JWT
 
 ### kv-engine Module
 
@@ -204,14 +203,14 @@ Business Unit Namespaces (bu01, bu02, bu03)
 
 **Inputs:**
 - `path` - Mount path for KV engine
-- `namespace` - Target Vault namespace
+- `namespace` - Target HCP Vault namespace
 - `max_versions` - Maximum secret versions to retain
 
 **Purpose:** Manages KV v2 secrets engine mounts
 
 ## Authentication & Authorization
 
-### HCP Terraform to Vault (JWT)
+### HCP Terraform to HCP Vault (JWT)
 
 **Flow:**
 
@@ -220,22 +219,22 @@ Business Unit Namespaces (bu01, bu02, bu03)
 │ HCP Terraform Workspace │
 │ (Terraform Run)         │
 └────────┬────────────────┘
-         │ 1. Request Vault token
+         │ 1. Request HCP Vault token
          │    (with JWT from HCP Terraform)
          ▼
-┌─────────────────────────┐
-│ Vault JWT Auth Backend  │
-│ - Validates JWT         │
-│ - Checks bound claims   │
-│ - Issues Vault token    │
-└────────┬────────────────┘
-         │ 2. Vault token
+┌─────────────────────────────┐
+│ HCP Vault JWT Auth Backend  │
+│ - Validates JWT             │
+│ - Checks bound claims       │
+│ - Issues HCP Vault token    │
+└────────┬────────────────────┘
+         │ 2. HCP Vault token
          │    (scoped to policies)
          ▼
 ┌──────────────────────────┐
 │ HCP Terraform Workspace  │
 │ Uses token to            │
-│ manage Vault             │
+│ manage HCP Vault         │
 └──────────────────────────┘
 ```
 
@@ -252,11 +251,11 @@ Business Unit Namespaces (bu01, bu02, bu03)
    - Token TTL: Defined by `default_lease_ttl` and `max_lease_ttl`
 
 3. **Workspace Variables** (set by workspace module):
-   - `HCP Terraform_VAULT_PROVIDER_AUTH=true`
-   - `HCP Terraform_VAULT_ADDR` - Vault server address
-   - `HCP Terraform_VAULT_NAMESPACE` - Target namespace (if applicable)
-   - `HCP Terraform_VAULT_RUN_ROLE` - Role name for authentication
-   - `HCP Terraform_VAULT_AUTH_PATH` - JWT backend mount path
+   - `HCP_TERRAFORM_VAULT_PROVIDER_AUTH=true`
+   - `HCP_TERRAFORM_VAULT_ADDR` - HCP Vault server address
+   - `HCP_TERRAFORM_VAULT_NAMESPACE` - Target namespace (if applicable)
+   - `HCP_TERRAFORM_VAULT_RUN_ROLE` - Role name for authentication
+   - `HCP_TERRAFORM_VAULT_AUTH_PATH` - JWT backend mount path
 
 **Security:**
 - Tokens are short-lived (configurable TTL)
@@ -264,7 +263,7 @@ Business Unit Namespaces (bu01, bu02, bu03)
 - Policies grant least-privilege access
 - No static credentials stored in HCP Terraform
 
-### Okta to Vault (OIDC)
+### Okta to HCP Vault (OIDC)
 
 **Flow:**
 
@@ -281,18 +280,18 @@ Business Unit Namespaces (bu01, bu02, bu03)
 └──────┬───────────┘
        │ 2. ID token + custom claims
        ▼
-┌─────────────────────────┐
-│ Vault OIDC Auth Backend │
-│ - Validate token        │
-│ - Map groups            │
-│ - Issue Vault token     │
-└──────┬──────────────────┘
-       │ 3. Vault token
+┌─────────────────────────────┐
+│ HCP Vault OIDC Auth Backend │
+│ - Validate token            │
+│ - Map groups                │
+│ - Issue HCP Vault token     │
+└──────┬──────────────────────┘
+       │ 3. HCP Vault token
        │    (with group policies)
        ▼
 ┌─────────────┐
 │   User      │
-│ Access Vault│
+│ Access HCP Vault │
 └─────────────┘
 ```
 
@@ -302,9 +301,9 @@ Business Unit Namespaces (bu01, bu02, bu03)
    - Authorization server with custom claims
    - Groups claim: `groups`
    - Application type: Web
-   - Redirect URIs: Vault callback URLs
+   - Redirect URIs: HCP Vault callback URLs
 
-2. **Vault OIDC Auth** (configured in `namespace-root/vault.tf`):
+2. **HCP Vault OIDC Auth** (configured in `namespace-root/vault.tf`):
    - OIDC discovery URL: Okta authorization server
    - Bound audiences: Okta client ID
    - Group claims: `groups`
@@ -318,7 +317,7 @@ Business Unit Namespaces (bu01, bu02, bu03)
 - OIDC tokens are validated cryptographically
 - Group membership determines policy assignment
 - MFA enforced via Okta policies
-- Session duration controlled by Vault token TTL
+- Session duration controlled by HCP Vault token TTL
 
 ## Policy Model
 
@@ -356,30 +355,6 @@ Namespace-Specific Policies (per BU)
 - Version controlled
 - Applied via Terraform `vault_policy` resources
 
-### Example Policy Structure
-
-```hcl
-# HCP Terraform Admin Policy
-path "sys/*" {
-  capabilities = ["create", "read", "update", "delete", "list"]
-}
-
-path "*" {
-  capabilities = ["create", "read", "update", "delete", "list"]
-}
-```
-
-```hcl
-# Namespace-Scoped Policy
-path "kv/data/bu01/*" {
-  capabilities = ["read", "list"]
-}
-
-path "kv/metadata/bu01/*" {
-  capabilities = ["list"]
-}
-```
-
 ## Data Flows
 
 ### Workspace Provisioning Flow
@@ -390,14 +365,14 @@ path "kv/metadata/bu01/*" {
       ▼
 2. Terraform apply creates:
       ├── HCP Terraform workspace resource
-      ├── Vault JWT auth role (bound to workspace)
-      └── Vault policy granting workspace access
+      ├── HCP Vault JWT auth role (bound to workspace)
+      └── HCP Vault policy granting workspace access
       │
       ▼
-3. HCP Terraform workspace can now authenticate to Vault
+3. HCP Terraform workspace can now authenticate to HCP Vault
       │
       ▼
-4. Workspace runs use Vault for secret retrieval
+4. Workspace runs use HCP Vault for secret retrieval
 ```
 
 ### Namespace Creation Flow
@@ -407,7 +382,7 @@ path "kv/metadata/bu01/*" {
       │
       ▼
 2. Module creates:
-      ├── Vault namespace
+      ├── HCP Vault namespace
       ├── Namespace quota limits
       ├── Identity groups (admin, readers, contributors)
       └── Namespace-specific policies
@@ -425,10 +400,10 @@ path "kv/metadata/bu01/*" {
 ### Secret Access Pattern
 
 ```
-Application → HCP Terraform Workspace → Vault (JWT) → Namespace KV Store → Secret
-      │              │              │              │
-      │              │              │              └─ Path: kv/data/app/config
-      │              │              └─ Policy: bu01-kv-read
+Application → HCP Terraform Workspace → HCP Vault (JWT) → Namespace KV Store → Secret
+      │              │                    │              │
+      │              │                    │              └─ Path: kv/data/app/config
+      │              │                    └─ Policy: bu01-kv-read
       │              └─ JWT Auth Role: tfc-bu01-workspace
       └─ Triggered by: terraform apply
 ```
@@ -472,7 +447,7 @@ Application → HCP Terraform Workspace → Vault (JWT) → Namespace KV Store �
 
 ### Audit & Compliance
 
-- Vault audit logs all API requests
+- HCP Vault audit logs all API requests
 - HCP Terraform maintains run logs
 - Identity-based access tracking via Okta
 - Policy changes version controlled in Git
@@ -524,7 +499,7 @@ Step 4: Business Unit Namespaces (parallel)
 
 **Disaster Recovery:**
 - HCP Terraform maintains state backups automatically
-- Vault data backed up separately (not managed by Terraform)
+- HCP Vault data backed up separately (not managed by Terraform)
 - Okta configuration external to this solution
 - Re-apply bootstrap to recreate JWT auth
 
@@ -560,7 +535,7 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 - Audit trail for all state changes
 - Secure variable storage
 - Workspace-based isolation
-- Native Vault integration
+- Native HCP Vault integration
 
 **Alternatives Considered:**
 - S3 backend: Requires additional locking infrastructure (DynamoDB)
@@ -569,18 +544,18 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 
 ### Namespace-Based Multi-Tenancy
 
-**Decision:** Use Vault namespaces to isolate business units
+**Decision:** Use HCP Vault namespaces to isolate business units
 
 **Rationale:**
 - Strong isolation boundaries
 - Independent policy management
 - Quota enforcement per namespace
 - Simplified access control
-- Native Vault feature (Enterprise)
+- Native HCP Vault feature (Enterprise)
 
 **Alternatives Considered:**
 - Path-based isolation: Weaker boundaries, complex policies
-- Separate Vault clusters: Higher operational overhead
+- Separate HCP Vault clusters: Higher operational overhead
 - Shared namespace with strict policies: Risk of policy errors
 
 ### Module Decomposition
@@ -594,8 +569,8 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 - Easier testing and validation
 
 **Module Design:**
-- **namespace:** Creates Vault namespace with RBAC
-- **workspace:** Creates HCP Terraform workspace with Vault auth
+- **namespace:** Creates HCP Vault namespace with RBAC
+- **workspace:** Creates HCP Terraform workspace with HCP Vault auth
 - **kv-engine:** Mounts KV secrets engine
 
 ### GitHub App Integration
@@ -644,7 +619,7 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 1. Modify policy HCL in `policies/` directory
 2. Update Terraform resource referencing policy
 3. Run `terraform plan` to preview changes
-4. Apply changes to update Vault policy
+4. Apply changes to update HCP Vault policy
 
 **Policy Testing:**
 - Use `vault policy fmt` to validate syntax
@@ -654,13 +629,13 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 ### Monitoring & Observability
 
 **Recommended Integrations:**
-- Vault audit logs → SIEM (Splunk, ELK)
+- HCP Vault audit logs → SIEM (Splunk, ELK)
 - HCP Terraform run notifications → Slack/PagerDuty
-- Vault telemetry → Prometheus/Grafana
+- HCP Vault telemetry → Prometheus/Grafana
 - Okta event hooks → Security monitoring
 
 **Key Metrics:**
-- Vault token creation rate
+- HCP Vault token creation rate
 - Failed authentication attempts
 - HCP Terraform workspace run success rate
 - Namespace quota utilization
@@ -680,12 +655,12 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
    - Time-based access controls
 
 3. **Multi-Region Support**
-   - Vault replication configuration
+   - HCP Vault replication configuration
    - Region-aware workspace provisioning
    - Disaster recovery automation
 
 4. **Enhanced Observability**
-   - Custom Vault metrics exporters
+   - Custom HCP Vault metrics exporters
    - HCP Terraform run analytics dashboards
    - Policy compliance reporting
 
@@ -696,7 +671,7 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 
 ## References
 
-- [Vault Enterprise Namespaces](https://developer.hashicorp.com/vault/docs/enterprise/namespaces)
+- [HCP Vault Enterprise Namespaces](https://developer.hashicorp.com/vault/docs/enterprise/namespaces)
 - [HCP Terraform Workload Identity](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/dynamic-provider-credentials/vault-configuration)
-- [Vault JWT/OIDC Auth](https://developer.hashicorp.com/vault/docs/auth/jwt)
+- [HCP Vault JWT/OIDC Auth](https://developer.hashicorp.com/vault/docs/auth/jwt)
 - [Okta OIDC Integration](https://developer.okta.com/docs/guides/implement-oauth-for-okta/main/)
