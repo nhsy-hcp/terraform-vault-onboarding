@@ -53,6 +53,7 @@
 | <a name="input_vault_address"></a> [vault\_address](#input\_vault\_address) | Vault API endpoint | `string` | n/a | yes |
 | <a name="input_vault_auth_path"></a> [vault\_auth\_path](#input\_vault\_auth\_path) | Mount path where JWT Auth will be configured | `string` | n/a | yes |
 | <a name="input_vault_auth_role"></a> [vault\_auth\_role](#input\_vault\_auth\_role) | Vault role name | `string` | `"tfc-namespace-admin"` | no |
+| <a name="input_vault_namespace"></a> [vault\_namespace](#input\_vault\_namespace) | The parent Vault namespace | `string` | `"admin"` | no |
 
 ## Outputs
 

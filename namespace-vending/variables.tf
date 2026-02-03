@@ -62,6 +62,12 @@ variable "vault_auth_role" {
   default     = "tfc-namespace-admin"
 }
 
+variable "vault_namespace" {
+  type        = string
+  description = "The parent Vault namespace"
+  default     = "admin"
+}
+
 variable "enable_tfc_agent_pool" {
   type    = bool
   default = false

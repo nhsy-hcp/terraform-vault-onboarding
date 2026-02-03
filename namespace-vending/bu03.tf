@@ -23,6 +23,7 @@ module "bu03_workspace" {
   vault_auth_path       = var.vault_auth_path
   vault_auth_role       = var.vault_auth_role
   vault_namespace       = module.bu03_namespace.namespace
+  tfc_vault_namespace   = var.vault_namespace != null ? "${var.vault_namespace}/${module.bu03_namespace.namespace}" : module.bu03_namespace.namespace
 
   depends_on = [module.bu03_namespace]
 }
