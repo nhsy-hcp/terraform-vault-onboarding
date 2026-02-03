@@ -25,7 +25,9 @@ backend.tf
 
 tests/
 
-.claude/*
+.claude/
+.gemini/
+conductor/
 plans/
 CLAUDE.md
 GEMINI.md

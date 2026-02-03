@@ -2,11 +2,11 @@
 
 ## Overview
 
-This solution provides automated provisioning and management of HCP Vault infrastructure integrated with HCP Terraform. It implements a multi-tenant namespace architecture that enables isolated secret management for multiple business units while maintaining centralized administration and consistent security policies.
+This solution provides automated provisioning and management of HCP Vault infrastructure integrated with HCP Terraform. It implements a multi-tenant namespace architecture that enables isolated secret management for multiple tenants while maintaining centralized administration and consistent security policies.
 
 ### Key Capabilities
 
-- Automated HCP Vault namespace provisioning for business units
+- Automated HCP Vault namespace provisioning for tenants
 - HCP Terraform workspace creation with HCP Vault authentication
 - OIDC integration with Okta for human access
 - JWT-based authentication for HCP Terraform workspaces
@@ -22,7 +22,7 @@ This solution provides automated provisioning and management of HCP Vault infras
 │                         HCP Terraform                          │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
 │  │  Bootstrap   │  │ Namespace    │  │  BU Workspace│          │
-│  │  Workspace   │  │  Vending     │  │  (bu01)      │          │
+│  │  Workspace   │  │  Vending     │  │  (tn001)      │          │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘          │
 │         │                  │                  │                │
 │         │ JWT Auth         │ JWT Auth         │ JWT Auth       │
@@ -42,7 +42,7 @@ This solution provides automated provisioning and management of HCP Vault infras
 │         ▼                           ▼              ▼           │
 │  ┌──────────────┐          ┌──────────────┐  ┌──────────────┐  │
 │  │ Namespace:   │          │ Namespace:   │  │ Namespace:   │  │
-│  │   bu01       │          │   bu02       │  │   bu03       │  │
+│  │   tn001       │          │   tn002       │  │   tn003       │  │
 │  │              │          │              │  │              │  │
 │  │ - KV Store   │          │ - KV Store   │  │ - KV Store   │  │
 │  │ - Policies   │          │ - Policies   │  │ - Policies   │  │
@@ -78,12 +78,12 @@ Namespace Root
         ▼
 Namespace Vending
     │
-    ├── Creates Child Namespaces (bu01, bu02, bu03)
+    ├── Creates Child Namespaces (tn001, tn002, tn003)
     ├── Provisions HCP Terraform Workspaces per BU
     └── Configures Namespace-Specific Policies
         │
         ▼
-Business Unit Namespaces (bu01, bu02, bu03)
+Tenant Namespaces (tn001, tn002, tn003)
     │
     └── Custom Resources per BU (KV engines, additional policies)
 ```
@@ -126,7 +126,7 @@ Business Unit Namespaces (bu01, bu02, bu03)
 
 ### 3. Namespace Vending
 
-**Purpose:** Automated business unit namespace provisioning
+**Purpose:** Automated tenant namespace provisioning
 
 **Location:** `namespace-vending/`
 
@@ -137,16 +137,16 @@ Business Unit Namespaces (bu01, bu02, bu03)
 - RBAC delegation configurations
 
 **Responsibilities:**
-- Create isolated namespaces per business unit
+- Create isolated namespaces per tenant
 - Provision HCP Terraform workspaces with HCP Vault integration
 - Configure namespace-level policies
 - Set up delegated administration
 
-### 4. Business Unit Namespaces
+### 4. Tenant Namespaces
 
 **Purpose:** Per-BU customization and resource management
 
-**Location:** `namespace-bu01/`, `namespace-bu02/`, `namespace-bu03/`
+**Location:** `namespace-tn001/`, `namespace-tn002/`, `namespace-tn003/`
 
 **Key Resources:**
 - KV v2 secrets engines
@@ -311,7 +311,7 @@ Business Unit Namespaces (bu01, bu02, bu03)
 3. **Identity Groups** (mapped to Okta groups):
    - `vault-admin` - Full administrative access
    - `vault-user` - Read-only access
-   - BU-specific groups (e.g., `vault-bu01-admin`)
+   - BU-specific groups (e.g., `vault-tn001-admin`)
 
 **Security:**
 - OIDC tokens are validated cryptographically
@@ -360,7 +360,7 @@ Namespace-Specific Policies (per BU)
 ### Workspace Provisioning Flow
 
 ```
-1. Developer defines new workspace in namespace-vending/bu{XX}.tf
+1. Developer defines new workspace in namespace-vending/tn{XXX}.tf
       │
       ▼
 2. Terraform apply creates:
@@ -378,7 +378,7 @@ Namespace-Specific Policies (per BU)
 ### Namespace Creation Flow
 
 ```
-1. Define namespace in namespace-vending/bu{XX}.tf
+1. Define namespace in namespace-vending/tn{XXX}.tf
       │
       ▼
 2. Module creates:
@@ -391,7 +391,7 @@ Namespace-Specific Policies (per BU)
 3. Workspace module associates HCP Terraform workspace with namespace
       │
       ▼
-4. Business unit namespace config (namespace-bu{XX}/) can now:
+4. Tenant namespace config (namespace-tn{XXX}/) can now:
       ├── Mount KV engines
       ├── Define custom policies
       └── Manage secrets within namespace
@@ -403,8 +403,8 @@ Namespace-Specific Policies (per BU)
 Application → HCP Terraform Workspace → HCP Vault (JWT) → Namespace KV Store → Secret
       │              │                    │              │
       │              │                    │              └─ Path: kv/data/app/config
-      │              │                    └─ Policy: bu01-kv-read
-      │              └─ JWT Auth Role: tfc-bu01-workspace
+      │              │                    └─ Policy: tn001-kv-read
+      │              └─ JWT Auth Role: tfc-tn001-workspace
       └─ Triggered by: terraform apply
 ```
 
@@ -412,7 +412,7 @@ Application → HCP Terraform Workspace → HCP Vault (JWT) → Namespace KV Sto
 
 ### Namespace Isolation
 
-- Each business unit has a dedicated namespace
+- Each tenant has a dedicated namespace
 - Policies are scoped to namespace paths
 - Cross-namespace access requires explicit policy grants
 - Root namespace access restricted to platform administrators
@@ -475,10 +475,10 @@ Step 3: Namespace Vending
     └── Depends on: Root namespace configuration
          │
          ▼
-Step 4: Business Unit Namespaces (parallel)
-    ├── Apply: namespace-bu01/
-    ├── Apply: namespace-bu02/
-    ├── Apply: namespace-bu03/
+Step 4: Tenant Namespaces (parallel)
+    ├── Apply: namespace-tn001/
+    ├── Apply: namespace-tn002/
+    ├── Apply: namespace-tn003/
     └── Depends on: Namespace vending completion
 ```
 
@@ -544,7 +544,7 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 
 ### Namespace-Based Multi-Tenancy
 
-**Decision:** Use HCP Vault namespaces to isolate business units
+**Decision:** Use HCP Vault namespaces to isolate tenants
 
 **Rationale:**
 - Strong isolation boundaries
@@ -564,7 +564,7 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 
 **Rationale:**
 - Single responsibility per module
-- Reusable across business units
+- Reusable across tenants
 - Clear abstraction boundaries
 - Easier testing and validation
 
@@ -590,16 +590,16 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 
 ## Scalability & Maintenance
 
-### Adding New Business Units
+### Adding New Tenants
 
 **Process:**
-1. Create `namespace-vending/bu{XX}.tf`
+1. Create `namespace-vending/tn{XXX}.tf`
 2. Define namespace using namespace module
 3. Define workspace using workspace module
 4. Apply namespace-vending configuration
-5. Create `namespace-bu{XX}/` directory
+5. Create `namespace-tn{XXX}/` directory
 6. Add backend, providers, variables, main configurations
-7. Apply business unit configuration
+7. Apply tenant configuration
 
 **Estimated Time:** 15-20 minutes per BU
 

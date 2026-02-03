@@ -16,9 +16,9 @@ okta_mgmt_groups = [
 ]
 
 okta_namespace_groups = [
-  "vault-bu01-admin",
-  "vault-bu02-admin",
-  "vault-bu03-admin",
+  "vault-tn001-admin",
+  "vault-tn002-admin",
+  "vault-tn003-admin",
 ]
 
 okta_users = {
@@ -32,6 +32,6 @@ okta_users = {
     first_name = "testuser"
     last_name  = "bu1-team1-viewer"
     password   = ""
-    groups     = ["vault-bu01-team1-viewer"]
+    groups     = ["vault-tn001-team1-viewer"]
   }
 }
