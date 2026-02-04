@@ -44,7 +44,10 @@ resource "vault_identity_group_alias" "vault_admin" {
 resource "vault_identity_group_policies" "vault_admin" {
   group_id  = vault_identity_group.vault_admin.id
   exclusive = false
-  policies  = ["okta-vault-admin"]
+  policies = [
+    resource.vault_policy.vault_admin.name,
+    resource.vault_policy.vault_admin_namespace.name
+  ]
 }
 
 resource "vault_jwt_auth_backend" "okta" {
@@ -87,7 +90,12 @@ resource "vault_jwt_auth_backend_role" "okta_group" {
   }
 }
 
-resource "vault_policy" "okta_vault_admin" {
-  name   = "okta-vault-admin"
+resource "vault_policy" "vault_admin" {
+  name   = "vault-admin"
   policy = file("./${path.module}/../policies/vault_admin_policy.hcl")
+}
+
+resource "vault_policy" "vault_admin_namespace" {
+  name   = "vault-admin-namespace"
+  policy = file("./${path.module}/../policies/vault_admin_namespace_policy.hcl")
 }

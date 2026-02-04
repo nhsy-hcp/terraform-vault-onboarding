@@ -31,7 +31,8 @@ No modules.
 | [vault_identity_group_policies.vault_admin](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/identity_group_policies) | resource |
 | [vault_jwt_auth_backend.okta](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/jwt_auth_backend) | resource |
 | [vault_jwt_auth_backend_role.okta_group](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/jwt_auth_backend_role) | resource |
-| [vault_policy.okta_vault_admin](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/policy) | resource |
+| [vault_policy.vault_admin](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/policy) | resource |
+| [vault_policy.vault_admin_namespace](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/policy) | resource |
 | [okta_app_oauth.default](https://registry.terraform.io/providers/okta/okta/latest/docs/data-sources/app_oauth) | data source |
 | [okta_auth_server.default](https://registry.terraform.io/providers/okta/okta/latest/docs/data-sources/auth_server) | data source |
 | [okta_group.mgmt](https://registry.terraform.io/providers/okta/okta/latest/docs/data-sources/group) | data source |
