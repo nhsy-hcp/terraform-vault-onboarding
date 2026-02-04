@@ -88,6 +88,30 @@ tasks:
       - act --container-architecture linux/amd64 -P ubuntu-latest=catthehacker/ubuntu:act-latest
       - task: clean
 
+  vault:vars:
+    aliases: [vars]
+    desc: export vault environment variables (eval this output)
+    vars:
+      VAULT_ADDR:
+        sh: terraform -chdir=bootstrap output -raw hcp_public_endpoint 2>/dev/null || echo ""
+      VAULT_TOKEN:
+        sh: terraform -chdir=bootstrap output -raw hcp_admin_token 2>/dev/null || echo ""
+      VAULT_NAMESPACE:
+        sh: terraform -chdir=bootstrap output -raw namespace 2>/dev/null || echo "admin"
+    cmds:
+      - |
+        if [ -z "{{.VAULT_ADDR}}" ] || [ -z "{{.VAULT_TOKEN}}" ]; then
+          echo "Error: Vault configuration not found. Run 'task bootstrap:apply' first." >&2
+          exit 1
+        fi
+        echo "export VAULT_ADDR='{{.VAULT_ADDR}}'"
+        echo "export VAULT_TOKEN='{{.VAULT_TOKEN}}'"
+        echo "export VAULT_NAMESPACE='{{.VAULT_NAMESPACE}}'"
+        echo ""
+        echo "# Run the following to set environment variables:"
+        echo "# eval \"\$(task vault:vars)\""
+    silent: true
+
   vault:status:
     desc: Check Vault status
     cmds:
