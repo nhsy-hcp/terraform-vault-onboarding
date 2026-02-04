@@ -32,4 +32,6 @@ plans/
 CLAUDE.md
 GEMINI.md
 
+.task/
+
 tmp/
