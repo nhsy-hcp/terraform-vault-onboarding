@@ -21,14 +21,14 @@ This solution provides automated provisioning and management of HCP Vault infras
 ┌────────────────────────────────────────────────────────────────┐
 │                         HCP Terraform                          │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
-│  │  Bootstrap   │  │ Namespace    │  │  BU Workspace│          │
-│  │  Workspace   │  │  Vending     │  │  (tn001)      │          │
+│  │  Bootstrap   │  │ Namespace    │  │   Tenant     │          │
+│  │  Workspace   │  │  Vending     │  │  Workspace   │          │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘          │
-│         │                  │                  │                │
-│         │ JWT Auth         │ JWT Auth         │ JWT Auth       │
-└─────────┼──────────────────┼──────────────────┼────────────────┘
-          │                  │                  │
-          ▼                  ▼                  ▼
+│         │                 │                 │                  │
+│         │ JWT Auth        │ JWT Auth        │ JWT Auth         │
+└─────────┼─────────────────┼───────────── ───┼──────────────────┘
+          │                 │                 │
+          ▼                 ▼                 ▼
 ┌────────────────────────────────────────────────────────────────┐
 │                           HCP Vault                            │
 │  ┌──────────────────────────────────────────────────────────┐  │
@@ -42,7 +42,7 @@ This solution provides automated provisioning and management of HCP Vault infras
 │         ▼                           ▼              ▼           │
 │  ┌──────────────┐          ┌──────────────┐  ┌──────────────┐  │
 │  │ Namespace:   │          │ Namespace:   │  │ Namespace:   │  │
-│  │   tn001       │          │   tn002       │  │   tn003       │  │
+│  │    tn001     │          │    tn002     │  │    tn003     │  │
 │  │              │          │              │  │              │  │
 │  │ - KV Store   │          │ - KV Store   │  │ - KV Store   │  │
 │  │ - Policies   │          │ - Policies   │  │ - Policies   │  │
@@ -79,13 +79,13 @@ Namespace Root
 Namespace Vending
     │
     ├── Creates Child Namespaces (tn001, tn002, tn003)
-    ├── Provisions HCP Terraform Workspaces per BU
+    ├── Provisions HCP Terraform Workspaces per tenant
     └── Configures Namespace-Specific Policies
         │
         ▼
 Tenant Namespaces (tn001, tn002, tn003)
     │
-    └── Custom Resources per BU (KV engines, additional policies)
+    └── Custom Resources per tenant (KV engines, additional policies)
 ```
 
 ## Core Components
@@ -131,8 +131,8 @@ Tenant Namespaces (tn001, tn002, tn003)
 **Location:** `namespace-vending/`
 
 **Key Resources:**
-- Child HCP Vault namespaces (one per BU)
-- HCP Terraform workspaces for each BU namespace
+- Child HCP Vault namespaces (one per tenant)
+- HCP Terraform workspaces for each tenant namespace
 - Namespace-specific policies
 - RBAC delegation configurations
 
@@ -144,7 +144,7 @@ Tenant Namespaces (tn001, tn002, tn003)
 
 ### 4. Tenant Namespaces
 
-**Purpose:** Per-BU customization and resource management
+**Purpose:** Per-tenant customization and resource management
 
 **Location:** `namespace-tn001/`, `namespace-tn002/`, `namespace-tn003/`
 
@@ -154,9 +154,9 @@ Tenant Namespaces (tn001, tn002, tn003)
 - Additional auth methods (if needed)
 
 **Responsibilities:**
-- Manage BU-specific secrets
-- Customize policies for BU requirements
-- Configure BU-specific integrations
+- Manage tenant-specific secrets
+- Customize policies for tenant requirements
+- Configure tenant-specific integrations
 
 ## Reusable Modules
 
@@ -291,7 +291,7 @@ Tenant Namespaces (tn001, tn002, tn003)
        ▼
 ┌─────────────┐
 │   User      │
-│ Access HCP Vault │
+│ Access Vault│
 └─────────────┘
 ```
 
@@ -311,7 +311,7 @@ Tenant Namespaces (tn001, tn002, tn003)
 3. **Identity Groups** (mapped to Okta groups):
    - `vault-admin` - Full administrative access
    - `vault-user` - Read-only access
-   - BU-specific groups (e.g., `vault-tn001-admin`)
+   - tenant-specific groups (e.g., `vault-tn001-admin`)
 
 **Security:**
 - OIDC tokens are validated cryptographically
@@ -331,11 +331,11 @@ Root Namespace Policies
     └── namespace-admin-policy (Namespace-level admin)
         │
         ▼
-Namespace-Specific Policies (per BU)
+Namespace-Specific Policies (per tenant)
     │
-    ├── {bu}-kv-read (Read-only KV access)
-    ├── {bu}-kv-write (Write KV access)
-    └── {bu}-admin (Full namespace admin)
+    ├── {tn}-kv-read (Read-only KV access)
+    ├── {tn}-kv-write (Write KV access)
+    └── {tn}-admin (Full namespace admin)
 ```
 
 ### Policy Scoping
@@ -347,8 +347,8 @@ Namespace-Specific Policies (per BU)
 
 **Namespace-Level Policies:**
 - Scoped to specific namespace path
-- Applied to BU-specific workspaces
-- Delegated to BU administrators
+- Applied to tenant-specific workspaces
+- Delegated to tenant administrators
 
 **Policy Files:**
 - Stored in `policies/` directory
@@ -471,7 +471,7 @@ Step 2: Namespace Root
          ▼
 Step 3: Namespace Vending
     ├── Apply: namespace-vending/
-    ├── Creates: BU namespaces, BU workspaces
+    ├── Creates: tenant namespaces, tenant workspaces
     └── Depends on: Root namespace configuration
          │
          ▼
@@ -486,7 +486,7 @@ Step 4: Tenant Namespaces (parallel)
 
 - **Bootstrap → Namespace Root:** JWT auth backend must exist
 - **Namespace Root → Namespace Vending:** OIDC configuration must be complete
-- **Namespace Vending → BU Namespaces:** Namespaces must be created
+- **Namespace Vending → Tenant Namespaces:** Namespaces must be created
 - **All components → HCP Terraform:** Remote state stored in HCP Terraform backend
 
 ### Rollback Procedures
@@ -495,7 +495,7 @@ Step 4: Tenant Namespaces (parallel)
 1. Identify last known good state
 2. Revert to previous Terraform code version
 3. Run `terraform plan` to preview rollback
-4. Apply changes in reverse dependency order (BU → Vending → Root → Bootstrap)
+4. Apply changes in reverse dependency order (Tenant → Vending → Root → Bootstrap)
 
 **Disaster Recovery:**
 - HCP Terraform maintains state backups automatically
@@ -576,7 +576,7 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 6. Add backend, providers, variables, main configurations
 7. Apply tenant configuration
 
-**Estimated Time:** 15-20 minutes per BU
+**Estimated Time:** 15-20 minutes per tenant
 
 ### Policy Lifecycle Management
 

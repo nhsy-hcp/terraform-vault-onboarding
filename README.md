@@ -42,7 +42,7 @@ The configurations should be applied in the following order:
 1. **Bootstrap**: Sets up the HCP HVN and HCP Vault Cluster, initial HCP Terraform projects, workspaces, and HCP Vault JWT authentication.
 2. **Namespace Root**: Configures the HCP Vault (admin) namespace with OIDC authentication and identity groups.
 3. **Namespace Vending**: Creates child namespaces for tenants with standardized configurations.
-4. **Tenant Namespaces**: Individual BU namespaces can be customized independently.
+4. **Tenant Namespaces**: Individual tenant namespaces can be customized independently.
 
 ## Bootstrap Demo Setup
 

@@ -57,6 +57,13 @@ tasks:
     cmds:
       - terraform destroy
 
+  bootstrap:destroy-vault:
+    desc: Destroy only HCP Vault cluster resources (HVN, cluster, admin token)
+    dir: ./bootstrap
+    cmds:
+      - terraform init
+      - terraform destroy -target=hcp_vault_cluster.vault
+
   bootstrap:plan:
     desc: Plan bootstrap infrastructure changes
     dir: ./bootstrap
