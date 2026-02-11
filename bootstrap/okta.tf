@@ -100,7 +100,7 @@ resource "okta_auth_server_policy_rule" "default" {
   policy_id       = okta_auth_server_policy.default.id
   priority        = 1
   group_whitelist = [okta_group.mgmt["vault-user"].id]
-  scope_whitelist = ["openid", "profile", "groups"]
+  scope_whitelist = ["openid", "profile", "groups", "email"]
 
   grant_type_whitelist = [
     "client_credentials",

@@ -75,8 +75,8 @@ resource "vault_jwt_auth_backend_role" "okta_group" {
   bound_audiences       = local.okta_audiences
   bound_claims_type     = "glob"
   allowed_redirect_uris = data.okta_app_oauth.default.redirect_uris
-  user_claim            = "sub"
-  oidc_scopes           = ["profile", "groups"]
+  user_claim            = "email"
+  oidc_scopes           = ["profile", "groups", "email"]
   groups_claim          = "groups"
   token_policies        = ["default"]
 
