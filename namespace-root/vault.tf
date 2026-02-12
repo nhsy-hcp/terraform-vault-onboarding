@@ -56,6 +56,7 @@ resource "vault_jwt_auth_backend" "okta" {
   type               = "oidc"
   default_role       = "okta-group"
   bound_issuer       = data.okta_auth_server.default.issuer
+  namespace_in_state = true
   oidc_discovery_url = data.okta_auth_server.default.issuer
   oidc_client_id     = data.okta_app_oauth.default.client_id
   oidc_client_secret = data.okta_app_oauth.default.client_secret
