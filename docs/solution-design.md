@@ -454,6 +454,8 @@ Application → HCP Terraform Workspace → HCP Vault (JWT) → Namespace KV Sto
 
 ## Deployment Workflow
 
+> **Note:** This deployment workflow describes the monorepo structure used for demonstration purposes. For production multi-repository architecture recommendations, see the [Repository Structure design decision](#repository-structure-monorepo-vs-multi-repo).
+
 ### Initial Deployment Sequence
 
 ```
@@ -525,6 +527,57 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 
 ## Design Decisions
 
+### Repository Structure: Monorepo vs Multi-Repo
+
+**Decision:** Use a monorepo structure for demonstration purposes
+
+**Current Implementation:**
+All components (bootstrap, namespace-root, namespace-vending, tenant namespaces, and modules) are contained in a single repository for ease of demonstration and learning.
+
+**Production Recommendation:**
+For production deployments, it is strongly recommended to adopt a multi-repository architecture with the following structure:
+
+1. **Infrastructure Foundation Repository**
+   - Contains: `bootstrap/` and `namespace-root/`
+   - Purpose: Platform team manages core infrastructure
+   - Access: Restricted to platform administrators
+
+2. **Namespace Vending Repository**
+   - Contains: `namespace-vending/` configurations
+   - Purpose: Centralized tenant namespace provisioning
+   - Access: Platform team with approval workflows for new tenants
+
+3. **Shared Modules Repository**
+   - Contains: `modules/` directory (namespace, workspace, kv-engine)
+   - Purpose: Versioned, reusable Terraform modules
+   - Access: Platform team maintains, all teams consume
+   - Distribution: Published to private Terraform registry with semantic versioning
+
+4. **Tenant-Specific Repositories**
+   - Contains: Individual `namespace-tn{XXX}/` configurations
+   - Purpose: Each tenant manages their own resources independently
+   - Access: Scoped to specific tenant teams
+   - Examples: `vault-tenant-001`, `vault-tenant-002`, `vault-tenant-003`
+
+**Multi-Repo Benefits:**
+- **Security Isolation**: Tenant teams cannot access or modify other tenants' configurations
+- **Access Control**: Fine-grained repository permissions aligned with organizational boundaries
+- **Independent Versioning**: Each component can evolve independently with clear version history
+- **CI/CD Independence**: Separate pipelines prevent cross-tenant deployment interference
+- **Module Governance**: Centralized module repository enables version pinning and controlled rollouts
+- **Scalability**: As the number of tenants grows, repository complexity remains manageable
+- **Audit Trail**: Clear separation of changes by team and component
+- **Blast Radius Reduction**: Configuration errors in one tenant don't risk other tenants
+
+**Migration Path:**
+When transitioning from the monorepo to multi-repo structure:
+1. Establish the shared modules repository and publish initial versions to a Terraform registry
+2. Create separate repositories for infrastructure foundation and namespace vending
+3. Migrate tenant configurations to individual repositories
+4. Update module source references to point to the registry
+5. Configure appropriate CI/CD pipelines for each repository
+6. Implement branch protection and approval workflows
+
 ### Why HCP Terraform for State Management
 
 **Decision:** Use HCP Terraform as remote backend for all configurations
@@ -567,7 +620,7 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 
 ### Adding New Tenants
 
-**Process:**
+**Monorepo Process (Current Implementation):**
 1. Create `namespace-vending/tn{XXX}.tf`
 2. Define namespace using namespace module
 3. Define workspace using workspace module
@@ -577,6 +630,24 @@ To ensure high-quality contributions and minimize CI failures, developers can ut
 7. Apply tenant configuration
 
 **Estimated Time:** 15-20 minutes per tenant
+
+**Multi-Repo Process (Production Recommendation):**
+1. **Namespace Vending Repository**:
+   - Create PR adding `tn{XXX}.tf` with namespace and workspace definitions
+   - Review and merge after approval
+   - Apply via CI/CD pipeline
+2. **New Tenant Repository**:
+   - Create new repository from tenant template
+   - Configure backend pointing to HCP Terraform workspace
+   - Update module sources to reference shared modules registry
+   - Configure CI/CD pipeline
+   - Tenant team applies initial configuration
+
+**Multi-Repo Benefits:**
+- Tenant teams have full autonomy over their namespace configuration
+- Changes require approval only within tenant team (after initial provisioning)
+- Namespace vending changes are centrally controlled and audited
+- No risk of tenants accidentally modifying each other's configurations
 
 ### Policy Lifecycle Management
 

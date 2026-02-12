@@ -24,6 +24,18 @@ terraform-vault-onboarding/
 └── Taskfile.yml            # Task automation configuration
 ```
 
+### Monorepo Structure
+
+This project uses a monorepo structure for simplification and ease of demonstration. All components (bootstrap, namespace-root, namespace-vending, and tenant namespaces) are contained in a single repository.
+
+> **Production Recommendation:** For production deployments, it is recommended to separate `namespace-vending`, individual tenant namespaces (`namespace-tn001`, `namespace-tn002`, etc.), and the `modules/` directory into their own repositories. This separation provides:
+> - **Improved isolation**: Tenant teams can manage their own repositories with appropriate access controls
+> - **Independent CI/CD**: Each tenant can have separate pipelines and deployment schedules
+> - **Better security boundaries**: Reduces the risk of accidental cross-tenant modifications
+> - **Scalability**: As the number of tenants grows, separate repositories prevent a single monorepo from becoming unwieldy
+> - **Module versioning**: Separate module repositories enable proper semantic versioning and controlled rollout of changes
+> - **Reusability**: Modules can be published to a private Terraform registry and shared across multiple projects
+
 > **Architecture & Design:** See [Solution Design Documentation](./docs/solution-design.md) for detailed architecture, authentication flows, and design decisions.
 
 ## Prerequisites
